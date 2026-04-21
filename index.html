@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aircraft MSN Locator</title>
+    <script src="https://cloudflare.com"></script>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f4f7f9; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; }
+        h1 { color: #1a202c; }
+        .search-box { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #cbd5e0; font-size: 18px; margin-bottom: 30px; box-sizing: border-box; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: transform 0.2s; }
+        .card:hover { transform: translateY(-5px); }
+        .manufacturer { color: #718096; font-size: 12px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
+        .model { color: #2d3748; font-size: 20px; margin: 5px 0 15px 0; }
+        .location-bubble { background: #ebf8ff; color: #3182ce; padding: 10px 15px; border-radius: 8px; font-size: 14px; border-left: 4px solid #3182ce; line-height: 1.4; }
+        .notes { font-size: 12px; color: #a0aec0; margin-top: 15px; font-style: italic; }
+        .no-results { text-align: center; color: #718096; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>✈️ Aircraft MSN Locator</h1>
+        <p>Find the exact location of construction number plates.</p>
+        <input type="text" id="searchInput" class="search-box" placeholder="Search by Manufacturer or Aircraft Type (e.g. F-16, Boeing, Mi-8)...">
+    </header>
+
+    <div id="resultsGrid" class="grid"></div>
+    <div id="noResults" class="no-results" style="display:none;">No aircraft found matching your search.</div>
+</div>
+
+<script>
+    let aircraftData = [];
+    // Vervang 'aircraft_plates_db.csv' door de exacte naam van je bestand
+    const csvUrl = 'aircraft_plates_db.csv'; 
+
+    // CSV inladen
+    Papa.parse(csvUrl, {
+        download: true,
+        header: true,
+        complete: function(results) {
+            aircraftData = results.data;
+            displayResults(aircraftData);
+        }
+    });
+
+    // Zoekfunctie
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const filtered = aircraftData.filter(item => 
+            item.Manufacturer?.toLowerCase().includes(searchTerm) || 
+            item.Model?.toLowerCase().includes(searchTerm)
+        );
+        displayResults(filtered);
+    });
+
+    function displayResults(data) {
+        const grid = document.getElementById('resultsGrid');
+        const noResults = document.getElementById('noResults');
+        grid.innerHTML = '';
+
+        if (data.length === 0) {
+            noResults.style.display = 'block';
+            return;
+        }
+
+        noResults.style.display = 'none';
+        data.forEach(item => {
+            if(!item.Manufacturer) return;
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="manufacturer">${item.Manufacturer}</div>
+                <div class="model">${item.Model}</div>
+                <div class="location-bubble">📍 ${item.Plate_Location}</div>
+                ${item.Notes ? `<div class="notes">${item.Notes}</div>` : ''}
+            `;
+            grid.appendChild(card);
+        });
+    }
+</script>
+
+</body>
+</html>
