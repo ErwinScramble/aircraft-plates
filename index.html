@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aircraft MSN Locator</title>
-    <!-- We use PapaParse to read the CSV file -->
+    <!-- PapaParse helps reading the CSV database -->
     <script src="https://cloudflare.com"></script>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
@@ -37,12 +37,13 @@
             display: flex;
             flex-direction: column;
             border: 1px solid #e2e8f0;
+            transition: transform 0.2s;
         }
+        .card:hover { transform: translateY(-5px); }
         
         .manufacturer { color: #3182ce; font-size: 13px; text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 8px; }
         .model { font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #1a202c; }
         
-        /* The "Speech Bubble" style for the location */
         .location-bubble { 
             background: #edf2f7; 
             color: #2d3748; 
@@ -56,7 +57,6 @@
 
         .notes { font-size: 13px; color: #718096; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #e2e8f0; }
         .no-results { text-align: center; font-size: 1.2rem; color: #a0aec0; margin-top: 100px; }
-        
         .loading { text-align: center; margin-top: 50px; font-weight: bold; color: #3182ce; }
     </style>
 </head>
@@ -65,36 +65,35 @@
 <div class="container">
     <header>
         <h1>✈️ Aircraft MSN Locator</h1>
-        <p class="subtitle">Global database for finding Construction Number plates</p>
+        <p class="subtitle">Global spotting guide for Construction Number plates</p>
         <input type="text" id="searchInput" class="search-box" placeholder="Start typing (e.g. F-16, Boeing, Mi-8)...">
     </header>
 
-    <div id="loading" class="loading">Loading database...</div>
+    <div id="loading" class="loading">Loading aircraft database...</div>
     <div id="resultsGrid" class="grid"></div>
-    <div id="noResults" class="no-results" style="display:none;">No aircraft found. Try another search term.</div>
+    <div id="noResults" class="no-results" style="display:none;">No matches found. Try another aircraft.</div>
 </div>
 
 <script>
     let aircraftData = [];
+    // HIER GEBRUIKEN WE NU DE EXACTE NAAM:
     const csvUrl = 'aircraft_plates_db.csv'; 
 
-    // Parse CSV with PapaParse
     Papa.parse(csvUrl, {
         download: true,
         header: true,
         skipEmptyLines: true,
         complete: function(results) {
             document.getElementById('loading').style.display = 'none';
-            // We use the data and ensure we only have valid rows
-            aircraftData = results.data.filter(row => Object.values(row).some(v => v !== ""));
+            // Clean data
+            aircraftData = results.data.filter(row => Object.values(row).some(v => v && v.trim() !== ""));
             displayResults(aircraftData);
         },
         error: function(err) {
-            document.getElementById('loading').innerText = "Error loading CSV. Check filename.";
+            document.getElementById('loading').innerText = "Error: Could not find 'aircraft_plates_db.csv'.";
         }
     });
 
-    // Search Interaction
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
         const filtered = aircraftData.filter(item => {
@@ -116,7 +115,6 @@
 
         noResults.style.display = 'none';
         data.forEach(item => {
-            // Mapping columns based on order to be safe
             const cols = Object.values(item);
             if (cols.length < 2) return;
 
@@ -129,7 +127,7 @@
                     <strong>📍 Plate Location:</strong><br>
                     ${cols[2] || 'Not specified'}
                 </div>
-                ${cols[3] ? `<div class="notes"><strong>Note:</strong> ${cols[3]}</div>` : ''}
+                ${cols[3] ? `<div class="notes"><strong>Pro Tip:</strong> ${cols[3]}</div>` : ''}
             `;
             grid.appendChild(card);
         });
