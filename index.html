@@ -4,22 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aircraft MSN Locator</title>
+    <!-- We use PapaParse to read the CSV file -->
     <script src="https://cloudflare.com"></script>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background: #f4f7f9; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 40px; }
-        h1 { color: #1a202c; }
-        .search-box { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #cbd5e0; font-size: 18px; margin-bottom: 30px; box-sizing: border-box; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: transform 0.2s; }
-        .card:hover { transform: translateY(-5px); }
-        .manufacturer { color: #718096; font-size: 12px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
-        .model { color: #2d3748; font-size: 20px; margin: 5px 0 15px 0; }
-        .location-bubble { background: #ebf8ff; color: #3182ce; padding: 10px 15px; border-radius: 8px; font-size: 14px; border-left: 4px solid #3182ce; line-height: 1.4; }
-        .notes { font-size: 12px; color: #a0aec0; margin-top: 15px; font-style: italic; }
-        .no-results { text-align: center; color: #718096; margin-top: 50px; }
+        body { font-family: 'Inter', sans-serif; background: #f0f4f8; margin: 0; padding: 20px; color: #1a202c; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; color: #2d3748; }
+        .subtitle { color: #4a5568; margin-bottom: 30px; }
+        
+        .search-box { 
+            width: 100%; 
+            max-width: 600px;
+            padding: 18px 25px; 
+            border-radius: 50px; 
+            border: 2px solid #cbd5e0; 
+            font-size: 18px; 
+            outline: none;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .search-box:focus { border-color: #3182ce; box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+        
+        .card { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); 
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .manufacturer { color: #3182ce; font-size: 13px; text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 8px; }
+        .model { font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #1a202c; }
+        
+        /* The "Speech Bubble" style for the location */
+        .location-bubble { 
+            background: #edf2f7; 
+            color: #2d3748; 
+            padding: 15px; 
+            border-radius: 12px; 
+            font-size: 15px; 
+            position: relative;
+            border-left: 5px solid #3182ce;
+            line-height: 1.5;
+        }
+
+        .notes { font-size: 13px; color: #718096; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #e2e8f0; }
+        .no-results { text-align: center; font-size: 1.2rem; color: #a0aec0; margin-top: 100px; }
+        
+        .loading { text-align: center; margin-top: 50px; font-weight: bold; color: #3182ce; }
     </style>
 </head>
 <body>
@@ -27,36 +65,42 @@
 <div class="container">
     <header>
         <h1>✈️ Aircraft MSN Locator</h1>
-        <p>Find the exact location of construction number plates.</p>
-        <input type="text" id="searchInput" class="search-box" placeholder="Search by Manufacturer or Aircraft Type (e.g. F-16, Boeing, Mi-8)...">
+        <p class="subtitle">Global database for finding Construction Number plates</p>
+        <input type="text" id="searchInput" class="search-box" placeholder="Start typing (e.g. F-16, Boeing, Mi-8)...">
     </header>
 
+    <div id="loading" class="loading">Loading database...</div>
     <div id="resultsGrid" class="grid"></div>
-    <div id="noResults" class="no-results" style="display:none;">No aircraft found matching your search.</div>
+    <div id="noResults" class="no-results" style="display:none;">No aircraft found. Try another search term.</div>
 </div>
 
 <script>
     let aircraftData = [];
-    // Vervang 'aircraft_plates_db.csv' door de exacte naam van je bestand
     const csvUrl = 'aircraft_plates_db.csv'; 
 
-    // CSV inladen
+    // Parse CSV with PapaParse
     Papa.parse(csvUrl, {
         download: true,
         header: true,
+        skipEmptyLines: true,
         complete: function(results) {
-            aircraftData = results.data;
+            document.getElementById('loading').style.display = 'none';
+            // We use the data and ensure we only have valid rows
+            aircraftData = results.data.filter(row => Object.values(row).some(v => v !== ""));
             displayResults(aircraftData);
+        },
+        error: function(err) {
+            document.getElementById('loading').innerText = "Error loading CSV. Check filename.";
         }
     });
 
-    // Zoekfunctie
+    // Search Interaction
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase();
-        const filtered = aircraftData.filter(item => 
-            item.Manufacturer?.toLowerCase().includes(searchTerm) || 
-            item.Model?.toLowerCase().includes(searchTerm)
-        );
+        const filtered = aircraftData.filter(item => {
+            const rowText = Object.values(item).join(' ').toLowerCase();
+            return rowText.includes(searchTerm);
+        });
         displayResults(filtered);
     });
 
@@ -72,14 +116,20 @@
 
         noResults.style.display = 'none';
         data.forEach(item => {
-            if(!item.Manufacturer) return;
+            // Mapping columns based on order to be safe
+            const cols = Object.values(item);
+            if (cols.length < 2) return;
+
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
-                <div class="manufacturer">${item.Manufacturer}</div>
-                <div class="model">${item.Model}</div>
-                <div class="location-bubble">📍 ${item.Plate_Location}</div>
-                ${item.Notes ? `<div class="notes">${item.Notes}</div>` : ''}
+                <div class="manufacturer">${cols[0] || 'Unknown'}</div>
+                <div class="model">${cols[1] || 'Unknown Type'}</div>
+                <div class="location-bubble">
+                    <strong>📍 Plate Location:</strong><br>
+                    ${cols[2] || 'Not specified'}
+                </div>
+                ${cols[3] ? `<div class="notes"><strong>Note:</strong> ${cols[3]}</div>` : ''}
             `;
             grid.appendChild(card);
         });
