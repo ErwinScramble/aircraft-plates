@@ -3,25 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aircraft MSN Locator - Custom Silhouettes</title>
+    <title>Aircraft MSN Locator</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root { --blue: #2563eb; --dark: #0f172a; --gray: #f1f5f9; }
         body { font-family: 'Inter', sans-serif; background: var(--gray); margin: 0; padding: 20px; color: var(--dark); }
         .container { max-width: 1200px; margin: 0 auto; text-align: center; }
         
-        /* Display Area voor jouw eigen afbeeldingen */
+        /* Display Area voor jouw PNG bestanden */
         .display-box { 
-            background: white; border-radius: 24px; padding: 40px; margin: 20px auto;
-            max-width: 900px; height: 400px; box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+            background: white; border-radius: 24px; padding: 20px; margin: 20px auto;
+            max-width: 900px; height: 450px; box-shadow: 0 15px 40px rgba(0,0,0,0.05);
             position: relative; border: 1px solid #e2e8f0;
             display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
         }
         
-        #aircraft-img { max-width: 95%; max-height: 95%; display: none; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); }
+        #aircraft-img { 
+            max-width: 100%; max-height: 100%; object-fit: contain;
+            display: none; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1)); 
+        }
 
         .marker-dot { 
-            position: absolute; width: 24px; height: 24px; background: #ef4444; 
+            position: absolute; width: 20px; height: 20px; background: #ef4444; 
             border-radius: 50%; border: 3px solid white; display: none;
             box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); z-index: 100;
             transform: translate(-50%, -50%); pointer-events: none;
@@ -34,7 +38,7 @@
         .card.selected { border: 2px solid var(--blue); background: #eff6ff; }
         .search-box { width: 100%; max-width: 600px; padding: 15px 25px; border-radius: 50px; border: 2px solid #e2e8f0; font-size: 18px; outline: none; margin-bottom: 30px; }
         .bubble { background: var(--dark); color: white; padding: 12px 25px; border-radius: 50px; font-size: 14px; margin-top: 15px; display: none; font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .error-label { color: #ef4444; font-size: 14px; margin-top: 5px; display: none; font-weight: bold; }
+        .error-label { color: #718096; font-size: 14px; padding: 20px; background: #edf2f7; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -43,19 +47,19 @@
     <h1>✈️ Aircraft MSN Locator</h1>
 
     <div id="editorPanel" class="editor-ui">
-        <strong>🛠 Editor Mode:</strong> Klik op de afbeelding voor coördinaten.<br>
+        <strong>🛠 Editor Mode:</strong> Klik op de PNG-afbeelding om de stip te plaatsen.<br>
         <div id="log" style="font-family:monospace; color:#10b981; margin-top:10px; background:#000; padding:10px; border-radius:5px;">Selecteer een vliegtuig uit de lijst...</div>
     </div>
     <button onclick="toggleEditor()" style="margin-bottom: 20px; cursor:pointer; padding: 10px 20px; border-radius: 10px; border: 1px solid #ccc; background: white; font-weight: bold;">Toggle Editor Mode</button>
 
     <div class="display-box" id="map" onclick="getClickCoords(event)">
         <img id="aircraft-img" src="" alt="Silhouette">
-        <div id="img-error" class="error-label">Afbeelding niet gevonden in /silhouettes/</div>
+        <div id="img-error" class="error-label" style="display:none;">Geen PNG gevonden voor dit type.</div>
         <div id="marker" class="marker-dot"></div>
     </div>
 
     <div id="infoBubble" class="bubble"></div>
-    <input type="text" id="search" class="search-box" placeholder="Search (e.g. Cessna, Boeing, Mi-8)...">
+    <input type="text" id="search" class="search-box" placeholder="Search (An-2, MiG-21, C-130, UH-1)...">
     <div id="results" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:15px; text-align:left;"></div>
 </div>
 
@@ -70,8 +74,7 @@
                 mfr: c[0] || "", 
                 model: c[1] || "", 
                 loc: (c[2]||"").replace(/"/g,""), 
-                note: c[3] || "",
-                cat: (c[4]||"Airliner").trim(), 
+                cat: (c[4]||"").trim(), 
                 x: c[5] || null, 
                 y: c[6] || null 
             };
@@ -95,15 +98,15 @@
         const img = document.getElementById('aircraft-img');
         const err = document.getElementById('img-error');
         
-        // Matcht exact met de namen in de map 'silhouettes' op GitHub
-        const fileName = encodeURIComponent(item.cat) + '.svg';
-        img.src = `silhouettes/${fileName}`;
+        // WE ZOEKEN NU NAAR .png BESTANDEN
+        const imagePath = `silhouettes/${item.cat}.png`;
+        img.src = imagePath;
         
         img.onload = () => { img.style.display = 'block'; err.style.display = 'none'; };
         img.onerror = () => { 
             img.style.display = 'none'; 
             err.style.display = 'block'; 
-            err.innerHTML = `Error: silhouettes/${item.cat}.svg niet gevonden.`; 
+            err.innerHTML = `PNG nodig: Maak <b>${item.cat}.png</b> en upload naar de map 'silhouettes'.`; 
         };
 
         const dot = document.getElementById('marker');
@@ -126,7 +129,7 @@
         dot.style.left = x + '%'; dot.style.top = y + '%';
         dot.classList.add('active');
 
-        document.getElementById('log').innerText = `${selected.mfr},${selected.model},"${selected.loc}","${selected.note}",${selected.cat},${x},${y}`;
+        document.getElementById('log').innerText = `${selected.mfr},${selected.model},"${selected.loc}","",${selected.cat},${x},${y}`;
     }
 
     function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; }
