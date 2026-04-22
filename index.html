@@ -10,56 +10,133 @@
         .container { max-width: 1100px; margin: 0 auto; text-align: center; }
         .visual-guide { 
             background: white; border-radius: 24px; padding: 20px; margin: 20px auto 40px;
-            max-width: 900px; min-height: 300px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative;
+            max-width: 900px; height: 350px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative;
             border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center;
         }
-        svg { width: 85%; height: auto; fill: #cbd5e0; position: absolute; transition: opacity 0.3s; display: none; pointer-events: none; }
+        svg { width: 100%; height: 100%; display: none; }
         svg.active { display: block; }
-        .marker {
-            position: absolute; width: 24px; height: 24px; background: #e53e3e;
-            border-radius: 50%; border: 3px solid white; display: none;
-            box-shadow: 0 0 15px rgba(229, 62, 62, 0.6); z-index: 100; transform: translate(-50%, -50%);
-        }
-        .marker.visible { display: block; animation: pulse 1.5s infinite; }
-        .speech-bubble {
-            position: absolute; background: #2d3748; color: white; padding: 12px 16px;
-            border-radius: 12px; font-size: 14px; font-weight: 600; width: 220px;
-            bottom: 40px; left: 50%; transform: translateX(-50%); box-shadow: 0 10px 15px rgba(0,0,0,0.2);
-            line-height: 1.4; pointer-events: none;
-        }
-        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.2); } 100% { transform: translate(-50%, -50%) scale(1); } }
+        
+        /* De rode marker binnen de SVG */
+        .marker-point { fill: #e53e3e; stroke: white; stroke-width: 5; animation: pulse 1.5s infinite; display: none; }
+        .marker-point.visible { display: block; }
+        
+        @keyframes pulse { 0% { r: 8; opacity: 1; } 50% { r: 12; opacity: 0.7; } 100% { r: 8; opacity: 1; } }
+        
         .search-box { width: 100%; max-width: 600px; padding: 18px 25px; border-radius: 50px; border: 2px solid #3182ce; font-size: 18px; margin-bottom: 25px; outline: none; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; text-align: left; }
         .card { background: white; padding: 20px; border-radius: 16px; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.3s; }
         .card:hover { border-color: #3182ce; transform: translateY(-3px); }
-        .mfr-badge { color: #3182ce; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
+        .location-info { background: #2d3748; color: white; padding: 10px; border-radius: 8px; font-size: 14px; margin-top: 20px; display: none; }
     </style>
 </head>
 <body>
 <div class="container">
     <header>
         <h1>✈️ Aircraft MSN Locator</h1>
-        <div class="visual-guide">
-            <svg id="img-airliner" class="active" viewBox="0 0 512 256"><path d="M480,120 C500,125 512,135 512,145 C512,155 500,165 480,170 L100,170 C60,170 10,155 10,140 C10,125 60,110 100,110 L440,110 L480,40 L505,40 L485,115 Z"/><path d="M180,140 L350,210 L390,210 L280,140 Z" fill="#a0aec0"/></svg>
-            <svg id="img-fighter" viewBox="0 0 512 256"><path d="M10,140 L150,110 L250,110 L280,40 L350,40 L320,110 L480,110 L512,50 L512,170 L480,110 L512,230 L480,230 L450,160 L320,160 L350,230 L280,230 L250,160 L150,160 Z"/></svg>
-            <svg id="img-heli" viewBox="0 0 512 256"><path d="M60,180 C60,140 120,90 260,90 L480,90 L500,50 L512,50 L500,110 L480,110 L300,110 C300,170 180,200 60,180 Z"/><path d="M220,90 L230,30 L300,30 L310,90 Z" fill="#a0aec0"/><path d="M120,30 L420,30 L420,38 L120,38 Z" fill="#4a5568"/></svg>
-            <svg id="img-prop" viewBox="0 0 512 256"><path d="M40,150 L100,130 L400,130 L440,60 L470,60 L450,135 L480,135 L480,165 L100,165 L40,150 Z"/><path d="M150,130 L180,60 L240,60 L210,130 Z" fill="#a0aec0"/></svg>
-            <svg id="img-biplane" viewBox="0 0 512 256"><path d="M40,160 L120,140 L400,140 L440,70 L470,70 L450,145 L100,175 L40,160 Z"/><path d="M120,110 L300,110 L300,118 L120,118 Z" fill="#a0aec0"/><path d="M130,175 L310,175 L310,183 L130,183 Z" fill="#a0aec0"/><rect x="180" y="118" width="8" height="57" fill="#4a5568"/></svg>
-            <div id="marker" class="marker"><div id="bubble" class="speech-bubble">Location Info</div></div>
+        <div class="visual-guide" id="guide">
+            <!-- AIRLINER / PASSENGER -->
+            <svg id="img-airliner" class="active" viewBox="0 0 500 200">
+                <path d="M450,100 C480,105 500,115 500,125 C500,135 480,145 450,150 L100,150 C60,150 20,135 20,120 C20,105 60,90 100,90 L420,90 L460,40 L480,40 L460,95 Z" fill="#cbd5e0"/>
+                <circle id="m-airliner" class="marker-point" cx="250" cy="100" r="10" />
+            </svg>
+            <!-- FIGHTER / JET -->
+            <svg id="img-fighter" viewBox="0 0 500 200">
+                <path d="M20,110 L150,90 L250,90 L280,30 L350,30 L320,90 L450,90 L480,40 L500,40 L480,110 L500,180 L480,180 L450,130 L320,130 L350,190 L280,190 L250,130 L150,130 Z" fill="#cbd5e0"/>
+                <circle id="m-fighter" class="marker-point" cx="250" cy="100" r="10" />
+            </svg>
+            <!-- HELICOPTER -->
+            <svg id="img-heli" viewBox="0 0 500 200">
+                <path d="M50,140 C50,110 100,70 240,70 L460,70 L480,40 L500,40 L480,90 L460,90 L280,90 C280,140 180,170 50,150 Z" fill="#cbd5e0"/>
+                <circle id="m-heli" class="marker-point" cx="250" cy="100" r="10" />
+            </svg>
+            <!-- PROP / GENERAL AVIATION -->
+            <svg id="img-prop" viewBox="0 0 500 200">
+                <path d="M40,150 L100,130 L400,130 L440,60 L470,60 L450,135 L480,135 L480,165 L100,165 L40,150 Z" fill="#cbd5e0"/>
+                <circle id="m-prop" class="marker-point" cx="250" cy="100" r="10" />
+            </svg>
         </div>
-        <input type="text" id="searchInput" class="search-box" placeholder="Search (e.g. An-2, Cessna, F-16, Bell)...">
+        <div id="info-box" class="location-info"></div>
+        <input type="text" id="searchInput" class="search-box" placeholder="Search (e.g. F-16, Bell, Cessna)...">
     </header>
     <div id="resultsGrid" class="grid"></div>
 </div>
+
 <script>
     let aircraftData = [];
     const csvUrl = 'aircraft_plates_db.csv';
+    
+    // Uitgebreide herkenning op basis van jouw lijst
     const cats = {
-        fighter: ['f-16','f-15','mig','sukhoi','mirage','rafale','fighter','a-10','viggen','draken','l-159','l-29'],
+        fighter: ['f-16','f-15','mig','sukhoi','mirage','rafale','fighter','a-10','viggen','gripen','typhoon','f-35'],
         heli: ['bell','agusta','eurocopter','mil','sikorsky','kamov','lynx','heli','rotor','pumas','bo105','gazelle','nh90'],
-        biplane: ['an-2','stearman','bücker','jungmann','biplane','chipmunk'],
-        prop: ['cessna','piper','beech','mooney','diamond','socata','wilga','yak-52']
+        prop: ['cessna','piper','beech','mooney','diamond','socata','wilga','yak-52','an-2','stearman','chipmunk']
     };
+
+    function updateMarker(item) {
+        const full = (item.Manufacturer + " " + item.Model).toLowerCase();
+        const loc = (item.Plate_Location || "").toLowerCase();
+        
+        let type = 'airliner';
+        if (cats.fighter.some(k => full.includes(k))) type = 'fighter';
+        else if (cats.heli.some(k => full.includes(k))) type = 'heli';
+        else if (cats.prop.some(k => full.includes(k))) type = 'prop';
+
+        // Wissel SVG
+        document.querySelectorAll('svg').forEach(s => s.classList.remove('active'));
+        const activeSvg = document.getElementById('img-' + type);
+        activeSvg.classList.add('active');
+        
+        // Update Marker positie binnen de SVG
+        const marker = document.getElementById('m-' + type);
+        document.querySelectorAll('.marker-point').forEach(m => m.classList.remove('visible'));
+        marker.classList.add('visible');
+
+        // Coördinaten (X, Y) gebaseerd op de 500x200 viewbox van de SVG
+        let x = 250, y = 100; 
+
+        if (type === 'airliner') {
+            if (loc.includes('nose')) { x = 60; y = 125; }
+            else if (loc.includes('tail') || loc.includes('rear')) { x = 440; y = 95; }
+            else if (loc.includes('cockpit') || loc.includes('door')) { x = 140; y = 105; }
+            else if (loc.includes('wheel') || loc.includes('gear')) { x = 250; y = 150; }
+        } else if (type === 'fighter') {
+            if (loc.includes('nose')) { x = 50; y = 110; }
+            else if (loc.includes('tail')) { x = 440; y = 80; }
+            else if (loc.includes('cockpit')) { x = 160; y = 95; }
+            else if (loc.includes('wheel') || loc.includes('gear')) { x = 250; y = 140; }
+        } else if (type === 'heli') {
+            if (loc.includes('nose')) { x = 90; y = 135; }
+            else if (loc.includes('boom') || loc.includes('tail')) { x = 430; y = 85; }
+            else if (loc.includes('cockpit') || loc.includes('console')) { x = 190; y = 125; }
+            else if (loc.includes('ceiling') || loc.includes('radio')) { x = 230; y = 85; }
+        } else {
+            if (loc.includes('nose') || loc.includes('firewall')) { x = 80; y = 150; }
+            else if (loc.includes('tail') || loc.includes('stabilizer')) { x = 430; y = 130; }
+            else if (loc.includes('door') || loc.includes('cockpit')) { x = 180; y = 145; }
+        }
+
+        marker.setAttribute('cx', x);
+        marker.setAttribute('cy', y);
+
+        // Toon info box
+        const info = document.getElementById('info-box');
+        info.style.display = 'block';
+        info.innerHTML = `<strong>${item.Model}:</strong> ${item.Plate_Location}`;
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    // [Rest van de fetch en display logica blijft hetzelfde als voorheen]
+    fetch(csvUrl).then(res => res.text()).then(text => {
+        const lines = text.split(/\r?\n/);
+        const headers = lines[0].split(',');
+        aircraftData = lines.slice(1).filter(l => l.trim() !== "").map(line => {
+            const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            let obj = {};
+            headers.forEach((h, i) => obj[h.trim()] = values[i] ? values[i].replace(/^"|"$/g, "").trim() : "");
+            return obj;
+        });
+        displayResults(aircraftData);
+    });
 
     function displayResults(data) {
         const grid = document.getElementById('resultsGrid');
@@ -67,69 +144,11 @@
         data.forEach(item => {
             const card = document.createElement('div');
             card.className = 'card';
-            card.onclick = () => { updateMarker(item); window.scrollTo({top: 0, behavior: 'smooth'}); };
-            card.innerHTML = `
-                <div class="mfr-badge">${item.Manufacturer || 'Unknown'}</div>
-                <div style="font-size:18px; font-weight:700; margin-bottom:5px;">${item.Model || 'Unknown'}</div>
-                <div style="font-size:13px; color:#4a5568;">📍 ${item.Plate_Location || 'N/A'}</div>
-            `;
+            card.onclick = () => updateMarker(item);
+            card.innerHTML = `<div class="mfr-badge">${item.Manufacturer}</div><div style="font-size:18px; font-weight:700; margin-bottom:5px;">${item.Model}</div><div style="font-size:13px; color:#4a5568;">📍 ${item.Plate_Location}</div>`;
             grid.appendChild(card);
         });
     }
-
-    function updateMarker(item) {
-        const full = (item.Manufacturer + " " + item.Model).toLowerCase();
-        const loc = (item.Plate_Location || "").toLowerCase();
-        let type = 'airliner';
-        if (cats.fighter.some(k => full.includes(k))) type = 'fighter';
-        else if (cats.heli.some(k => full.includes(k))) type = 'heli';
-        else if (cats.biplane.some(k => full.includes(k))) type = 'biplane';
-        else if (cats.prop.some(k => full.includes(k))) type = 'prop';
-
-        document.querySelectorAll('svg').forEach(s => s.classList.remove('active'));
-        document.getElementById('img-' + type).classList.add('active');
-        const marker = document.getElementById('marker');
-        const bubble = document.getElementById('bubble');
-        marker.classList.add('visible');
-        bubble.innerText = item.Plate_Location;
-
-        let x = 50, y = 50;
-        if (type === 'airliner') {
-            if (loc.includes('nose')) { x = 12; y = 145; }
-            else if (loc.includes('tail') || loc.includes('rear')) { x = 88; y = 115; }
-            else if (loc.includes('cockpit') || loc.includes('door')) { x = 28; y = 125; }
-            else if (loc.includes('wheel') || loc.includes('gear')) { x = 50; y = 175; }
-        } else if (type === 'fighter') {
-            if (loc.includes('nose')) { x = 10; y = 140; }
-            else if (loc.includes('tail')) { x = 88; y = 110; }
-            else if (loc.includes('cockpit')) { x = 32; y = 120; }
-            else if (loc.includes('wheel') || loc.includes('gear')) { x = 50; y = 160; }
-        } else if (type === 'heli') {
-            if (loc.includes('nose')) { x = 18; y = 180; }
-            else if (loc.includes('boom') || loc.includes('tail')) { x = 85; y = 100; }
-            else if (loc.includes('cockpit') || loc.includes('console')) { x = 38; y = 160; }
-            else if (loc.includes('ceiling') || loc.includes('radio')) { x = 45; y = 100; }
-        } else {
-            if (loc.includes('nose') || loc.includes('firewall')) { x = 15; y = 150; }
-            else if (loc.includes('tail') || loc.includes('stabilizer')) { x = 85; y = 130; }
-            else if (loc.includes('door') || loc.includes('cockpit')) { x = 35; y = 145; }
-        }
-        marker.style.left = x + "%"; marker.style.top = y + "%";
-    }
-
-    fetch(csvUrl)
-        .then(res => res.text())
-        .then(text => {
-            const lines = text.split(/\r?\n/);
-            const headers = lines[0].split(',');
-            aircraftData = lines.slice(1).filter(l => l.trim() !== "").map(line => {
-                const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                let obj = {};
-                headers.forEach((h, i) => obj[h.trim()] = values[i] ? values[i].replace(/^"|"$/g, "").trim() : "");
-                return obj;
-            });
-            displayResults(aircraftData);
-        });
 
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
