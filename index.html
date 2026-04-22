@@ -33,31 +33,31 @@
         <h1>✈️ MSN Locator Dashboard</h1>
 
         <div id="editorPanel" class="editor-ui">
-            <!-- GitHub Direct Push -->
+            <!-- GitHub Push Area -->
             <div style="background: #1e293b; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #334155;">
-                <label class="label-small">GitHub Personal Access Token (PAT)</label>
-                <input type="password" id="ghToken" placeholder="Paste ghp_... here" style="width: 95%; margin-bottom: 10px;">
-                <button class="btn btn-green" style="width: 100%;" onclick="pushToGitHub()">🚀 Save all changes to GitHub</button>
-                <small id="statusMsg" style="display:block; margin-top:8px; color:#94a3b8;">Changes are temporary until you push them.</small>
+                <label class="label-small">GitHub Token (Classic PAT with 'repo' scope)</label>
+                <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx" style="width: 95%; margin-bottom: 10px;">
+                <button class="btn btn-green" style="width: 100%;" onclick="pushToGitHub()">🚀 Save & Sync with GitHub</button>
+                <small id="statusMsg" style="display:block; margin-top:8px; color:#94a3b8;">Changes only become permanent after pushing.</small>
             </div>
 
-            <!-- Edit Selected Section -->
+            <!-- Edit Selected -->
             <div id="editFields" style="display:none; border-bottom: 1px solid #334155; padding-bottom: 20px; margin-bottom: 20px;">
-                <strong>Modify Selected Aircraft:</strong>
+                <strong>Edit Current Aircraft:</strong>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top:10px;">
                     <div><span class="label-small">Manufacturer</span><input type="text" id="editMfr" oninput="applyChanges()" style="width:90%"></div>
                     <div><span class="label-small">Model Name</span><input type="text" id="editModel" oninput="applyChanges()" style="width:90%"></div>
                     <div><span class="label-small">PNG Name</span><input type="text" id="editCat" oninput="applyChanges()" style="width:90%"></div>
                 </div>
                 <div id="markerControls" style="margin-top: 15px;"></div>
-                <button class="btn btn-blue" style="margin-top:10px" onclick="addNewPoint()">+ Add Point</button>
-                <button class="btn btn-red" style="float: right; margin-top:10px" onclick="deleteAircraft()">Delete Aircraft</button>
+                <button class="btn btn-blue" style="margin-top:10px" onclick="addNewPoint()">+ Add Marker</button>
+                <button class="btn btn-red" style="float: right; margin-top:10px" onclick="deleteAircraft()">Delete</button>
             </div>
 
-            <!-- Add New Section -->
+            <!-- Add New -->
             <div>
-                <strong>Add New Aircraft:</strong><br>
-                <input type="text" id="newMfr" placeholder="Manufacturer">
+                <strong>Quick Add Aircraft:</strong><br>
+                <input type="text" id="newMfr" placeholder="Mfr">
                 <input type="text" id="newModel" placeholder="Model">
                 <input type="text" id="newCat" placeholder="PNG Name">
                 <button class="btn btn-blue" onclick="addNewAircraft()">+ Add to List</button>
@@ -67,12 +67,8 @@
         <button onclick="toggleEditor()" id="editBtn" class="btn btn-toggle">⚙️ Toggle Editor Mode</button>
 
         <div class="selection-area">
-            <div><label class="label-small">Manufacturer:</label>
-                <select id="mfrSelect" onchange="updateModelList()"><option value="">-- Choose --</option></select>
-            </div>
-            <div><label class="label-small">Model / Type:</label>
-                <select id="modelSelect" onchange="loadAircraft()" disabled><option value="">-- Select Type --</option></select>
-            </div>
+            <div><label class="label-small">1. Choose Manufacturer:</label><select id="mfrSelect" onchange="updateModelList()"><option value="">-- Choose --</option></select></div>
+            <div><label class="label-small">2. Choose Model:</label><select id="modelSelect" onchange="loadAircraft()" disabled><option value="">-- Select Type --</option></select></div>
         </div>
 
         <div class="display-box" id="map" onmousemove="onMouseMove(event)" onmouseup="onMouseUp(event)">
@@ -85,7 +81,7 @@
 <script>
     let db = []; let selected = null; let isEdit = false; let draggingIdx = -1;
 
-    // 1. DATA LADEN (HARDCODED FILENAME)
+    // DATA LADEN
     fetch('aircraft_plates_db.csv').then(r => r.text()).then(t => {
         const rows = t.split(/\r?\n/);
         db = rows.slice(1).filter(r => r.trim()).map(r => {
@@ -97,24 +93,24 @@
 
     function refreshMfrDropdown() {
         const select = document.getElementById('mfrSelect');
-        const prevMfr = select.value;
-        select.innerHTML = '<option value="">-- Choose Manufacturer --</option>';
+        const prev = select.value;
+        select.innerHTML = '<option value="">-- Choose --</option>';
         [...new Set(db.map(i => i.mfr))].sort().forEach(m => {
             const opt = document.createElement('option'); opt.value = opt.innerText = m;
             select.appendChild(opt);
         });
-        select.value = prevMfr;
+        select.value = prev;
     }
 
     function updateModelList() {
         const mfr = document.getElementById('mfrSelect').value;
-        const modelSelect = document.getElementById('modelSelect');
-        modelSelect.innerHTML = '<option value="">-- Select Type --</option>';
-        modelSelect.disabled = !mfr;
+        const select = document.getElementById('modelSelect');
+        select.innerHTML = '<option value="">-- Select Type --</option>';
+        select.disabled = !mfr;
         if (mfr) {
             db.filter(i => i.mfr === mfr).forEach(item => {
                 const opt = document.createElement('option'); opt.value = item.model; opt.innerText = item.model;
-                modelSelect.appendChild(opt);
+                select.appendChild(opt);
             });
         }
     }
@@ -170,23 +166,23 @@
 
     function onMouseUp() { draggingIdx = -1; }
     function applyChanges() { if(!selected) return; selected.mfr = document.getElementById('editMfr').value; selected.model = document.getElementById('editModel').value; selected.cat = document.getElementById('editCat').value; refreshMfrDropdown(); updateModelList(); }
-    function deleteAircraft() { if(!selected || !confirm("Delete this aircraft?")) return; db = db.filter(i => i !== selected); selected = null; refreshMfrDropdown(); updateModelList(); loadAircraft(); }
-    function addNewAircraft() { const mfr = document.getElementById('newMfr').value; const model = document.getElementById('newModel').value; db.push({ mfr, model, notes: "", cat: document.getElementById('newCat').value, points: "50|50|New" }); refreshMfrDropdown(); alert("Added locally. Press Push to save to GitHub."); }
+    function deleteAircraft() { if(!selected || !confirm("Delete?")) return; db = db.filter(i => i !== selected); selected = null; refreshMfrDropdown(); updateModelList(); loadAircraft(); }
+    function addNewAircraft() { const mfr = document.getElementById('newMfr').value; const model = document.getElementById('newModel').value; db.push({ mfr, model, cat: document.getElementById('newCat').value, points: "50|50|New" }); refreshMfrDropdown(); }
     function addNewPoint() { if(!selected) return; selected.points = selected.points ? selected.points + ';50|50|New' : '50|50|New'; drawMarkers(); }
     function removeMarker(idx) { let pts = selected.points.split(';'); pts.splice(idx, 1); selected.points = pts.join(';'); drawMarkers(); }
     function updateLabel(idx, val) { let pts = selected.points.split(';'); let p = pts[idx].split('|'); pts[idx] = `${p[0]}|${p[1]}|${val}`; selected.points = pts.join(';'); }
     function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; if(selected) loadAircraft(); }
 
-    // 2. GITHUB PUSH (HARDCODED URLS)
+    // GITHUB PUSH - CLEANED & DIRECT
     async function pushToGitHub() {
         const token = document.getElementById('ghToken').value.trim();
         const status = document.getElementById('statusMsg');
-        if (!token) return alert("Voer eerst je GitHub Token in!");
+        if (!token) return alert("Enter GitHub Token!");
         
-        status.innerText = "⏳ Verbinding maken met GitHub...";
+        status.innerText = "⏳ Saving to GitHub...";
         status.style.color = "var(--blue)";
 
-        const url = "https://github.com";
+        const apiUrl = "https://github.com";
         
         let csv = "Manufacturer,Model,Plate_Location,Notes,Category,Points\n";
         db.forEach(i => {
@@ -196,32 +192,38 @@
         });
 
         try {
-            const res = await fetch(url, { 
-                headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' } 
+            // 1. Get current SHA
+            const res = await fetch(apiUrl, { 
+                headers: { 'Authorization': `Bearer ${token}` } 
             });
-            if (!res.ok) throw new Error("Bestand niet gevonden op GitHub.");
+            
+            if (!res.ok) throw new Error("GitHub error: Check your token or repo name.");
             const fileData = await res.json();
 
-            const putRes = await fetch(url, {
+            // 2. Put new file
+            const putRes = await fetch(apiUrl, {
                 method: 'PUT',
-                headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json' 
+                },
                 body: JSON.stringify({
-                    message: "Database update via Web Editor",
+                    message: "Database updated",
                     content: btoa(unescape(encodeURIComponent(csv))),
                     sha: fileData.sha
                 })
             });
 
             if (putRes.ok) {
-                status.innerText = "✅ Succesvol opgeslagen op GitHub!";
+                status.innerText = "✅ Saved Successfully!";
                 status.style.color = "var(--green)";
             } else {
-                throw new Error("Opslaan mislukt. Controleer je token rechten.");
+                const err = await putRes.json();
+                throw new Error(err.message);
             }
         } catch (e) {
-            status.innerText = "❌ Fout: " + e.message;
+            status.innerText = "❌ Error: " + e.message;
             status.style.color = "var(--red)";
-            console.error(e);
         }
     }
 </script>
