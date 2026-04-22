@@ -2,5 +2,5 @@ Manufacturer,Model,Plate_Location,Notes,Category,X1,Y1,X2,Y2
 Antonov,An-2,"Below tail (LH side) or 2nd joist behind cockpit","Check engine bulkhead for Russian builds.",An-2,85,45,,
 Lockheed,C-130 Hercules,"Cockpit ceiling or RH bench (J model)","Behind flight engineer panel.",C-130,25,40,,
 Mikoyan Gurevich (MiG),MiG-21,"Nose wheel bay (strut or bulkhead)","Wing plates unreliable.",MiG-21,15,65,,
-Bell,204 / 205 / UH-1,"The construction number is visible from the outside, located left of the central control panel near the pilot's feet.","",UH-1.png,27,63,,
+Bell,204 / 205 / UH-1,"Located inside the cockpit on the left of the center console, near the pilot's feet. Visible from the outside.","",UH-1,27,63,,
 Cessna,General (Single Engine),"Forward edge of LH door frame","Most also have a plate below LH/RH stabilizer.",Cessna,32,55,,
