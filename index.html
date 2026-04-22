@@ -3,189 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aircraft MSN Locator - High Detail Edition</title>
+    <title>Aircraft MSN Locator - Professional</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background: #f0f4f8; margin: 0; padding: 20px; color: #1a202c; }
-        .container { max-width: 1200px; margin: 0 auto; text-align: center; }
+        body { font-family: 'Inter', sans-serif; background: #f0f4f8; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; text-align: center; }
         
+        /* De Visual Guide met Blueprint-stijl */
         .visual-guide { 
-            background: white; border-radius: 24px; padding: 40px; margin: 20px auto;
-            max-width: 900px; height: 350px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); position: relative;
-            border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center;
+            background: #ffffff; border-radius: 20px; padding: 20px; margin: 20px auto;
+            max-width: 800px; height: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            position: relative; border: 2px solid #3182ce;
+            display: flex; align-items: center; justify-content: center;
         }
         
-        /* Silhouette Styling - Veel gedetailleerder */
-        svg.stencil { width: 90%; height: 90%; fill: #cbd5e0; position: absolute; transition: all 0.3s; display: none; pointer-events: none; }
-        svg.active { display: block; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1)); fill: #4a5568; }
+        .blueprint { width: 100%; height: 100%; object-fit: contain; pointer-events: none; opacity: 0.8; }
         
-        .marker-point { fill: #e53e3e; stroke: white; stroke-width: 3; display: none; }
-        .marker-point.visible { display: block; animation: pulse 1.5s infinite; }
-        
-        @keyframes pulse { 0% { r: 6; opacity: 1; } 50% { r: 10; opacity: 0.7; } 100% { r: 6; opacity: 1; } }
+        /* De Rode Marker (Nu echt zichtbaar) */
+        .marker {
+            position: absolute; width: 24px; height: 24px; background: #ff0000;
+            border-radius: 50%; border: 3px solid white; display: none;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); z-index: 999;
+            transform: translate(-50%, -50%); pointer-events: none;
+        }
+        .marker.active { display: block; animation: pulse 1s infinite; }
 
-        /* Editor styling */
-        .editor-panel { background: #2d3748; color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: left; display: none; }
-        .log-area { width: 100%; height: 80px; background: #1a202c; color: #48bb78; font-family: monospace; font-size: 11px; padding: 10px; margin: 10px 0; border-radius: 5px; overflow-y: auto; }
-        .btn { padding: 10px 20px; border-radius: 8px; cursor: pointer; border: none; font-weight: bold; margin: 5px; transition: 0.2s; }
-        .btn-blue { background: #3182ce; color: white; }
-        .btn-green { background: #48bb78; color: white; }
-        .btn:hover { opacity: 0.8; transform: translateY(-1px); }
+        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.3); } 100% { transform: translate(-50%, -50%) scale(1); } }
 
-        .search-box { width: 100%; max-width: 600px; padding: 18px 30px; border-radius: 50px; border: 2px solid #3182ce; font-size: 18px; margin-bottom: 30px; outline: none; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; text-align: left; }
-        .card { background: white; padding: 25px; border-radius: 18px; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.3s; }
-        .card.active-card { border-color: #3182ce; background: #ebf8ff; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .card:hover { transform: translateY(-3px); border-color: #3182ce; }
+        /* Editor Menu */
+        .editor-box { background: #2d3748; color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: left; display: none; }
+        .search-box { width: 100%; padding: 15px; border-radius: 30px; border: 2px solid #3182ce; margin-bottom: 20px; font-size: 16px; outline: none; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; text-align: left; }
+        .card { background: white; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; cursor: pointer; }
+        .card:hover { border-color: #3182ce; }
+        .card.selected { background: #ebf8ff; border-color: #3182ce; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <h1>✈️ MSN Locator & Editor</h1>
-        
-        <div id="editorPanel" class="editor-panel">
-            <strong>🛠 Editor Active:</strong> 1. Click an aircraft card | 2. Click the image to set the marker.<br>
-            Current: <span id="selName" style="color:#63b3ed">Select an aircraft</span> | X: <span id="coordX">0</span> | Y: <span id="coordY">0</span>
-            <div id="logOutput" class="log-area">Ready for coordinates...</div>
-            <button class="btn btn-green" onclick="copyLogs()">Copy Selection for CSV</button>
-        </div>
+    <h1>✈️ Aircraft MSN Locator</h1>
 
-        <button class="btn btn-blue" onclick="toggleEditor()">Toggle Editor Mode</button>
+    <div id="editor" class="editor-box">
+        <strong>Editor Mode:</strong> Click on the blueprint to set marker.<br>
+        <code id="output" style="color:#63b3ed">Select aircraft first...</code>
+    </div>
 
-        <div class="visual-guide" id="guideArea" onclick="getCoords(event)">
-            <!-- 1. AIRLINER (Detailed) -->
-            <svg id="img-airliner" class="stencil active" viewBox="0 0 200 100">
-                <path d="M10,55 C10,50 30,45 60,45 L150,45 C170,45 190,50 190,55 C190,60 170,65 150,65 L30,65 C20,65 10,60 10,55 Z"/> <!-- Romp -->
-                <path d="M155,45 L175,25 L185,25 L170,45 Z" fill="#718096"/> <!-- Staart -->
-                <path d="M70,55 L120,85 L140,85 L95,55 Z" fill="#a0aec0"/> <!-- Vleugel -->
-                <circle class="marker-point" cx="0" cy="0" r="4" />
-            </svg>
+    <button onclick="toggleEditor()" style="margin-bottom:15px; cursor:pointer;">Toggle Editor</button>
 
-            <!-- 2. FIGHTER (Detailed Jet) -->
-            <svg id="img-fighter" class="stencil" viewBox="0 0 200 100">
-                <path d="M20,55 L60,48 L150,48 L155,30 L175,30 L170,48 L185,48 L185,62 L170,62 L175,80 L155,80 L150,62 L60,62 L20,55 Z"/> <!-- Romp -->
-                <path d="M160,48 L170,20 L185,20 L180,48 Z" fill="#2d3748"/> <!-- Vertical tail -->
-                <circle class="marker-point" cx="0" cy="0" r="4" />
-            </svg>
+    <div class="visual-guide" id="clickArea" onclick="setPoint(event)">
+        <!-- We gebruiken hier SVG paden die ECHT lijken op de types -->
+        <svg id="svg-display" viewBox="0 0 100 100" style="width:100%; height:100%;">
+            <!-- Airliner Shape -->
+            <g id="shape-airliner">
+                <path d="M10,50 Q10,40 50,40 L90,40 Q95,40 95,50 Q95,60 90,60 L10,60 Z" fill="#cbd5e0"/>
+                <path d="M70,40 L85,20 L95,20 L85,40 Z" fill="#a0aec0"/> 
+                <path d="M40,60 L60,85 L75,85 L55,60 Z" fill="#718096"/>
+            </g>
+            <!-- Heli Shape -->
+            <g id="shape-heli" style="display:none">
+                <path d="M20,60 C10,60 10,40 30,35 L80,35 L95,20 L95,50 L80,50 L40,55 C40,70 30,75 20,60 Z" fill="#cbd5e0"/>
+                <rect x="30" y="15" width="40" height="4" fill="#4a5568"/>
+            </g>
+        </svg>
+        <div id="marker" class="marker"></div>
+    </div>
 
-            <!-- 3. HELICOPTER (Detailed Standard) -->
-            <svg id="img-heli" class="stencil" viewBox="0 0 200 100">
-                <path d="M30,70 C20,70 15,55 20,45 C25,35 45,30 70,30 L160,30 L175,15 L180,15 L170,35 L160,40 L70,40 C70,60 50,70 30,70 Z"/> <!-- Romp & Tail -->
-                <path d="M45,30 L45,15 L110,15 L110,18 L48,18 L48,30 Z" fill="#2d3748"/> <!-- Rotors -->
-                <path d="M35,70 L35,78 L80,78 M45,70 L45,78" fill="none" stroke="#718096" stroke-width="2"/> <!-- Skids -->
-                <circle class="marker-point" cx="0" cy="0" r="4" />
-            </svg>
-
-            <!-- 4. CHINOOK (Double Rotor) -->
-            <svg id="img-chinook" class="stencil" viewBox="0 0 200 100">
-                <path d="M30,40 L160,40 L165,30 L175,30 L175,60 L30,60 Z"/> <!-- Body -->
-                <path d="M35,40 L35,25 L80,25 M155,30 L155,15 L110,15" fill="none" stroke="#2d3748" stroke-width="2"/> <!-- Rotors -->
-                <circle class="marker-point" cx="0" cy="0" r="4" />
-            </svg>
-
-            <!-- 5. SPORT PROP (High Wing Cessna Style) -->
-            <svg id="img-prop" class="stencil" viewBox="0 0 200 100">
-                <path d="M25,55 L40,45 L150,45 L170,25 L185,25 L175,45 L180,45 L180,60 L40,60 L25,55 Z"/> <!-- Romp -->
-                <path d="M45,45 L120,45 L120,40 L45,40 Z" fill="#a0aec0"/> <!-- High Wing -->
-                <line x1="25" y1="40" x2="25" y2="70" stroke="#2d3748" stroke-width="2"/> <!-- Propeller line -->
-                <circle class="marker-point" cx="0" cy="0" r="4" />
-            </svg>
-        </div>
-
-        <input type="text" id="searchInput" class="search-box" placeholder="Search (e.g. Cessna, F-16, Chinook)...">
-    </header>
-
-    <div id="resultsGrid" class="grid"></div>
+    <input type="text" id="search" class="search-box" placeholder="Type to search (e.g. Boeing, Cessna, Bell)...">
+    <div id="results" class="grid"></div>
 </div>
 
 <script>
-    let aircraftData = [];
-    const csvUrl = 'aircraft_plates_db.csv';
-    let editMode = false;
-    let activeItem = null;
+    let data = [];
+    let selectedItem = null;
+    let isEdit = false;
 
-    const catMap = {
-        'fighter': 'fighter', 'jet': 'fighter', 'heli': 'heli', 
-        'chinook': 'chinook', 'prop': 'prop', 'cessna': 'prop', 'piper': 'prop'
-    };
+    // Inladen Data
+    fetch('aircraft_plates_db.csv').then(r => r.text()).then(t => {
+        const rows = t.split('\n').slice(1);
+        data = rows.filter(r => r.trim()).map(r => {
+            const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            return { mfr: c[0], model: c[1], loc: c[2], note: c[3], cat: c[4], x: c[5], y: c[6] };
+        });
+        render();
+    });
+
+    function render(filter = '') {
+        const grid = document.getElementById('results');
+        grid.innerHTML = '';
+        data.filter(i => (i.mfr+i.model).toLowerCase().includes(filter.toLowerCase())).forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.innerHTML = `<strong>${item.mfr}</strong><br>${item.model}<br><small>${item.loc}</small>`;
+            div.onclick = () => select(item, div);
+            grid.appendChild(div);
+        });
+    }
+
+    function select(item, el) {
+        selectedItem = item;
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+
+        // Toon juiste vorm
+        document.getElementById('shape-airliner').style.display = (item.cat === 'Heli') ? 'none' : 'block';
+        document.getElementById('shape-heli').style.display = (item.cat === 'Heli') ? 'block' : 'none';
+
+        // Toon Stip
+        const m = document.getElementById('marker');
+        if(item.x && item.y) {
+            m.style.left = item.x + '%';
+            m.style.top = item.y + '%';
+            m.classList.add('active');
+        } else {
+            m.classList.remove('active');
+        }
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    function setPoint(e) {
+        if(!isEdit || !selectedItem) return;
+        const rect = document.getElementById('clickArea').getBoundingClientRect();
+        const x = Math.round(((e.clientX - rect.left) / rect.width) * 100);
+        const y = Math.round(((e.clientY - rect.top) / rect.height) * 100);
+        
+        document.getElementById('marker').style.left = x + '%';
+        document.getElementById('marker').style.top = y + '%';
+        document.getElementById('marker').classList.add('active');
+        
+        const newLine = `${selectedItem.mfr},${selectedItem.model},"${selectedItem.loc}","${selectedItem.note}",${selectedItem.cat},${x},${y}`;
+        document.getElementById('output').innerText = "Copy to CSV: " + newLine;
+    }
 
     function toggleEditor() {
-        editMode = !editMode;
-        document.getElementById('editorPanel').style.display = editMode ? 'block' : 'none';
+        isEdit = !isEdit;
+        document.getElementById('editor').style.display = isEdit ? 'block' : 'none';
     }
 
-    function getCoords(event) {
-        if (!editMode || !activeItem) return;
-        const rect = document.getElementById('guideArea').getBoundingClientRect();
-        // Bereken X en Y in % (0-100) voor stabiliteit op alle schermen
-        const x = Math.round(((event.clientX - rect.left) / rect.width) * 200);
-        const y = Math.round(((event.clientY - rect.top) / rect.height) * 100);
-        
-        document.getElementById('coordX').innerText = x;
-        document.getElementById('coordY').innerText = y;
-
-        const logLine = `${activeItem.Manufacturer},${activeItem.Model},"${activeItem.Plate_Location}","${activeItem.Notes}",${activeItem.Category || 'Airliner'},${x},${y}`;
-        document.getElementById('logOutput').innerText = logLine;
-
-        const m = document.querySelector('svg.active .marker-point');
-        m.setAttribute('cx', x); m.setAttribute('cy', y);
-        m.classList.add('visible');
-    }
-
-    function copyLogs() {
-        const text = document.getElementById('logOutput').innerText;
-        navigator.clipboard.writeText(text);
-        alert("Line copied! Paste it over the old line in your CSV file.");
-    }
-
-    fetch(csvUrl).then(res => res.text()).then(text => {
-        const lines = text.split(/\r?\n/);
-        const headers = lines[0].split(',');
-        aircraftData = lines.slice(1).filter(l => l.trim() !== "").map(line => {
-            const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            let obj = {};
-            headers.forEach((h, i) => obj[h.trim()] = values[i]?.replace(/^"|"$/g, "").trim());
-            return obj;
-        });
-        displayResults(aircraftData);
-    });
-
-    function displayResults(data) {
-        const grid = document.getElementById('resultsGrid');
-        grid.innerHTML = '';
-        data.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.onclick = () => {
-                activeItem = item;
-                document.querySelectorAll('.card').forEach(c => c.classList.remove('active-card'));
-                card.classList.add('active-card');
-                document.getElementById('selName').innerText = item.Model;
-                
-                const cat = (item.Category || 'airliner').toLowerCase();
-                document.querySelectorAll('.stencil').forEach(s => s.classList.remove('active'));
-                const activeSvg = document.getElementById('img-' + (catMap[cat] || 'airliner')) || document.getElementById('img-airliner');
-                activeSvg.classList.add('active');
-                
-                const m = activeSvg.querySelector('.marker-point');
-                if (item.X && item.Y) {
-                    m.setAttribute('cx', item.X); m.setAttribute('cy', item.Y);
-                    m.classList.add('visible');
-                } else { m.classList.remove('visible'); }
-                window.scrollTo({top: 0, behavior: 'smooth'});
-            };
-            card.innerHTML = `<div style="font-size:10px; font-weight:800; color:#3182ce; text-transform:uppercase; margin-bottom:5px;">${item.Category || 'Airliner'}</div><strong>${item.Manufacturer}</strong> ${item.Model}<br><small>📍 ${item.Plate_Location}</small>`;
-            grid.appendChild(card);
-        });
-    }
-
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        const filtered = aircraftData.filter(item => Object.values(item).join(' ').toLowerCase().includes(term));
-        displayResults(filtered);
-    });
+    document.getElementById('search').oninput = (e) => render(e.target.value);
 </script>
 </body>
 </html>
