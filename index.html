@@ -3,61 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSN Locator & Pro Editor</title>
+    <title>MSN Locator - Multi-Point Editor</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root { --blue: #2563eb; --dark: #0f172a; --gray: #f1f5f9; --green: #10b981; --red: #ef4444; }
         body { font-family: 'Inter', sans-serif; background: var(--gray); margin: 0; padding: 20px; color: var(--dark); }
-        .container { max-width: 1200px; margin: 0 auto; text-align: center; }
-        .editor-panel { background: var(--dark); color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; text-align: left; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .edit-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-        label { font-size: 11px; text-transform: uppercase; color: #94a3b8; margin-bottom: 5px; font-weight: bold; }
-        input { padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; width: 100%; box-sizing: border-box; }
-        .display-box { background: white; border-radius: 24px; padding: 40px; margin: 20px auto; height: 450px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); position: relative; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        /* Editor Panel */
+        .editor-ui { background: var(--dark); color: white; padding: 25px; border-radius: 20px; margin-bottom: 20px; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .marker-list { background: #1e293b; padding: 15px; border-radius: 12px; margin-top: 15px; max-height: 200px; overflow-y: auto; }
+        .marker-item { display: flex; gap: 10px; margin-bottom: 8px; align-items: center; background: #334155; padding: 8px; border-radius: 6px; }
+        
+        .display-box { 
+            background: white; border-radius: 24px; padding: 40px; margin: 20px auto;
+            height: 450px; box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+            position: relative; border: 1px solid #e2e8f0;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+        
         #aircraft-img { max-width: 100%; max-height: 100%; object-fit: contain; pointer-events: none; }
-        .marker { position: absolute; width: 26px; height: 26px; border-radius: 50%; border: 3px solid white; transform: translate(-50%, -50%); z-index: 100; display: none; pointer-events: none; }
-        #marker1 { background: var(--red); box-shadow: 0 0 15px rgba(239, 68, 68, 0.8); }
-        #marker2 { background: #f59e0b; box-shadow: 0 0 15px rgba(245, 158, 11, 0.8); }
-        .marker.active { display: block; animation: pulse 1.5s infinite; }
-        .search-box { width: 100%; max-width: 600px; padding: 15px 25px; border-radius: 50px; border: 2px solid #e2e8f0; font-size: 18px; margin-bottom: 30px; outline: none; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-        .card { background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; cursor: pointer; text-align: left; }
+        
+        .marker-dot { 
+            position: absolute; width: 22px; height: 22px; background: var(--red); 
+            border-radius: 50%; border: 3px solid white; 
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); z-index: 100;
+            transform: translate(-50%, -50%); cursor: pointer;
+        }
+        .marker-dot:hover::after { content: attr(data-label); position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); background: black; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px; white-space: nowrap; z-index: 110; }
+
+        input { padding: 8px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: white; }
+        .btn { padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
+        .btn-add { background: var(--blue); color: white; }
+        .btn-del { background: var(--red); color: white; padding: 5px 10px; font-size: 11px; }
+        .btn-download { background: var(--green); color: white; width: 100%; margin-top: 15px; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; margin-top: 20px; }
+        .card { background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; cursor: pointer; }
         .card.selected { border: 2px solid var(--blue); background: #eff6ff; }
-        .btn { padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
-        .save-btn { background: var(--green); color: white; width: 100%; font-size: 16px; margin-top: 10px; }
-        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.2); } 100% { transform: translate(-50%, -50%) scale(1); } }
+        .search-box { width: 100%; padding: 15px; border-radius: 50px; border: 2px solid #e2e8f0; margin-bottom: 20px; outline: none; }
     </style>
 </head>
 <body>
+
 <div class="container">
-    <h1>✈️ MSN Locator & Pro Editor</h1>
-    <div id="editorPanel" class="editor-panel">
-        <div class="edit-grid">
-            <div><label>Primary Location</label><input type="text" id="inLoc" oninput="sync()"></div>
-            <div><label>Secondary Location</label><input type="text" id="inNote" oninput="sync()"></div>
-            <div><label>PNG Filename (e.g. UH-1)</label><input type="text" id="inCat" oninput="sync(); loadImg();"></div>
+    <header style="text-align: center;">
+        <h1>✈️ MSN Multi-Point Locator</h1>
+        
+        <div id="editorPanel" class="editor-ui">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong>🛠 Editor Mode</strong>
+                <button class="btn btn-add" onclick="addNewMarker()">+ Add New Location Point</button>
+            </div>
+            
+            <div id="markerControls" class="marker-list">
+                <!-- Wordt gevuld door JS -->
+            </div>
+            
+            <div style="margin-top:15px; display: grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <label>PNG Category: <input type="text" id="editCat" oninput="updateCat()"></label>
+                <label>Notes: <input type="text" id="editNotes" style="width:80%" oninput="updateNotes()"></label>
+            </div>
+            <button class="btn btn-download" onclick="downloadCSV()">💾 Download Updated CSV</button>
         </div>
-        <p style="font-size: 12px; color: #94a3b8;"><b>Left Click</b> = Red Point | <b>Right Click</b> = Orange Point</p>
-        <button class="btn save-btn" onclick="downloadCSV()">💾 Download Updated CSV for GitHub</button>
-    </div>
-    <button onclick="toggleEdit()" class="btn" style="background:white; border:1px solid #ccc; margin-bottom:20px;">⚙️ Toggle Editor Mode</button>
-    <div class="display-box" id="canvas" onclick="setPos(event, 1)" oncontextmenu="setPos(event, 2); return false;">
-        <img id="aircraft-img" src="" alt="">
-        <div id="marker1" class="marker"></div>
-        <div id="marker2" class="marker"></div>
-    </div>
-    <input type="text" id="search" class="search-box" placeholder="Search (An-2, C-130, MiG-21, UH-1, Cessna)...">
+
+        <button onclick="toggleEditor()" id="editBtn" class="btn" style="background:white; border:1px solid #ccc; margin-bottom:20px;">⚙️ Toggle Editor Mode</button>
+
+        <div class="display-box" id="map" onclick="handleMapClick(event)">
+            <img id="aircraft-img" src="" alt="Select aircraft">
+            <div id="markerContainer"></div>
+        </div>
+
+        <input type="text" id="search" class="search-box" placeholder="Search for aircraft...">
+    </header>
+
     <div id="results" class="grid"></div>
 </div>
 
 <script>
     let db = []; let selected = null; let isEdit = false;
-    // Laad CSV met cache-buster
-    fetch('aircraft_plates_db.csv?v=' + Date.now()).then(r => r.text()).then(t => {
-        const lines = t.split(/\r?\n/).filter(l => l.trim());
-        db = lines.slice(1).map(line => {
-            const c = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            return { mfr: c[0]||"", model: c[1]||"", loc: (c[2]||"").replace(/"/g,""), note: (c[3]||"").replace(/"/g,""), cat: (c[4]||"").trim(), x1: c[5]||null, y1: c[6]||null, x2: c[7]||null, y2: c[8]||null };
+
+    fetch('aircraft_plates_db.csv').then(r => r.text()).then(t => {
+        const rows = t.split(/\r?\n/);
+        const headers = rows[0].split(',');
+        db = rows.slice(1).filter(r => r.trim()).map(r => {
+            const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            // Points worden opgeslagen als: x1|y1|label1;x2|y2|label2
+            return { mfr: c[0], model: c[1], notes: c[3]||"", cat: c[4]||"", points: c[5] ? c[5].replace(/"/g,"") : "" };
         });
         render();
     });
@@ -67,51 +99,96 @@
         db.filter(i => (i.mfr+i.model).toLowerCase().includes(f.toLowerCase())).forEach(item => {
             const d = document.createElement('div'); d.className = `card ${selected === item ? 'selected' : ''}`;
             d.innerHTML = `<strong>${item.mfr}</strong><br>${item.model}`;
-            d.onclick = () => select(item); g.appendChild(d);
+            d.onclick = () => selectAircraft(item); g.appendChild(d);
         });
     }
 
-    function select(item) {
+    function selectAircraft(item) {
         selected = item; render(document.getElementById('search').value);
-        loadImg();
+        document.getElementById('aircraft-img').src = `silhouettes/${item.cat}.png`;
+        document.getElementById('aircraft-img').style.display = 'block';
         if(isEdit) {
-            document.getElementById('inLoc').value = item.loc;
-            document.getElementById('inNote').value = item.note;
-            document.getElementById('inCat').value = item.cat;
+            document.getElementById('editCat').value = item.cat;
+            document.getElementById('editNotes').value = item.notes;
         }
-        updateMarkers();
+        drawMarkers();
     }
 
-    function loadImg() {
-        const img = document.getElementById('aircraft-img');
-        if(!selected || !selected.cat) { img.style.display = 'none'; return; }
-        // Force refresh afbeelding
-        img.src = `silhouettes/${selected.cat}.png?v=${Date.now()}`;
-        img.style.display = 'block';
+    function drawMarkers() {
+        const container = document.getElementById('markerContainer');
+        const controls = document.getElementById('markerControls');
+        container.innerHTML = '';
+        controls.innerHTML = '';
+        
+        if(!selected.points) { controls.innerHTML = '<small>No points yet. Click on the image to add the first one.</small>'; return; }
+
+        const pointsArr = selected.points.split(';');
+        pointsArr.forEach((p, idx) => {
+            const [x, y, label] = p.split('|');
+            
+            // Teken punt op afbeelding
+            const dot = document.createElement('div');
+            dot.className = 'marker-dot';
+            dot.style.left = x + '%'; dot.style.top = y + '%';
+            dot.setAttribute('data-label', label);
+            container.appendChild(dot);
+
+            // Maak control in editor
+            if(isEdit) {
+                const item = document.createElement('div');
+                item.className = 'marker-item';
+                item.innerHTML = `
+                    <small>P${idx+1}</small>
+                    <input type="text" value="${label}" oninput="updateLabel(${idx}, this.value)" style="flex:1">
+                    <button class="btn btn-del" onclick="removeMarker(${idx})">Delete</button>
+                `;
+                controls.appendChild(item);
+            }
+        });
     }
 
-    function updateMarkers() {
-        const m1 = document.getElementById('marker1'); const m2 = document.getElementById('marker2');
-        if(selected.x1 && selected.y1) { m1.style.left = selected.x1+'%'; m1.style.top = selected.y1+'%'; m1.classList.add('active'); } else { m1.classList.remove('active'); }
-        if(selected.x2 && selected.y2) { m2.style.left = selected.x2+'%'; m2.style.top = selected.y2+'%'; m2.classList.add('active'); } else { m2.classList.remove('active'); }
-    }
-
-    function setPos(e, num) {
+    function handleMapClick(e) {
         if(!isEdit || !selected) return;
-        const rect = document.getElementById('canvas').getBoundingClientRect();
+        const rect = document.getElementById('map').getBoundingClientRect();
         const x = Math.round(((e.clientX - rect.left) / rect.width) * 100);
         const y = Math.round(((e.clientY - rect.top) / rect.height) * 100);
-        if(num === 1) { selected.x1 = x; selected.y1 = y; } else { selected.x2 = x; selected.y2 = y; }
-        updateMarkers();
+        
+        const newPoint = `${x}|${y}|New Location`;
+        selected.points = selected.points ? selected.points + ';' + newPoint : newPoint;
+        drawMarkers();
     }
 
-    function sync() { if(selected) { selected.loc = document.getElementById('inLoc').value; selected.note = document.getElementById('inNote').value; selected.cat = document.getElementById('inCat').value; } }
-    function toggleEdit() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; }
-    function downloadCSV() {
-        let csv = "Manufacturer,Model,Plate_Location,Notes,Category,X1,Y1,X2,Y2\n";
-        db.forEach(i => { csv += `${i.mfr},${i.model},"${i.loc}","${i.note}",${i.cat},${i.x1||""},${i.y1||""},${i.x2||""},${i.y2||""}\n`; });
-        const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'aircraft_plates_db.csv'; a.click();
+    function updateLabel(idx, val) {
+        const pointsArr = selected.points.split(';');
+        const p = pointsArr[idx].split('|');
+        pointsArr[idx] = `${p[0]}|${p[1]}|${val}`;
+        selected.points = pointsArr.join(';');
     }
+
+    function removeMarker(idx) {
+        let pointsArr = selected.points.split(';');
+        pointsArr.splice(idx, 1);
+        selected.points = pointsArr.join(';');
+        drawMarkers();
+    }
+
+    function updateCat() { selected.cat = document.getElementById('editCat').value; }
+    function updateNotes() { selected.notes = document.getElementById('editNotes').value; }
+
+    function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; drawMarkers(); }
+
+    function downloadCSV() {
+        let csv = "Manufacturer,Model,Plate_Location,Notes,Category,Points\n";
+        db.forEach(i => {
+            csv += `${i.mfr},${i.model},"", "${i.notes}",${i.cat},"${i.points}"\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute("download", "aircraft_plates_db.csv");
+        link.click();
+    }
+
     document.getElementById('search').oninput = (e) => render(e.target.value);
 </script>
 </body>
