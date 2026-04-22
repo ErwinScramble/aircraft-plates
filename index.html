@@ -18,7 +18,7 @@
         .editor-ui { background: var(--dark); color: white; padding: 25px; border-radius: 20px; margin-bottom: 20px; display: none; text-align: left; }
         .marker-item { display: flex; gap: 10px; margin-bottom: 8px; align-items: center; background: #334155; padding: 8px; border-radius: 6px; }
         input { padding: 8px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: white; }
-        .btn { padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
+        .btn { padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; }
         .btn-green { background: var(--green); color: white; width: 100%; margin-bottom: 15px; }
         .btn-toggle { background: white; border: 1px solid #ccc; margin-bottom: 10px; }
         .label-small { font-size: 11px; color: #94a3b8; text-transform: uppercase; font-weight: bold; display: block; margin-bottom: 4px; }
@@ -31,14 +31,14 @@
 
     <div id="editorPanel" class="editor-ui">
         <div style="background: #1e293b; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #334155;">
-            <label class="label-small">GitHub Token (ghp_...)</label>
-            <input type="password" id="ghToken" placeholder="Plak hier je ghp_ token" style="width: 90%; margin-bottom: 10px;">
-            <button class="btn btn-green" onclick="pushToGitHub()">🚀 Sla alle wijzigingen op naar GitHub</button>
+            <label class="label-small">GitHub Token (Classic PAT)</label>
+            <input type="password" id="ghToken" placeholder="Plak je ghp_... token hier" style="width: 90%; margin-bottom: 10px;">
+            <button class="btn btn-green" onclick="pushToGitHub()">🚀 Sla alles op naar GitHub</button>
             <small id="statusMsg" style="color:#94a3b8; display: block; margin-top: 5px;">Status: Gereed</small>
         </div>
 
         <div id="editFields" style="display:none; border-bottom: 1px solid #444; padding-bottom: 20px; margin-bottom: 20px;">
-            <strong>Vliegtuig Bewerken:</strong>
+            <strong>Toestel Bewerken:</strong>
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top:10px;">
                 <input type="text" id="editMfr" oninput="applyChanges()" placeholder="Fabrikant">
                 <input type="text" id="editModel" oninput="applyChanges()" placeholder="Model">
@@ -50,11 +50,11 @@
         </div>
 
         <div>
-            <strong>Nieuw Vliegtuig Toevoegen:</strong><br>
+            <strong>Nieuw Vliegtuig:</strong><br>
             <input type="text" id="newMfr" placeholder="Fabrikant">
             <input type="text" id="newModel" placeholder="Model">
             <input type="text" id="newCat" placeholder="PNG Naam">
-            <button class="btn" style="background:var(--blue); color:white" onclick="addNewAircraft()">+ Toevoegen aan lijst</button>
+            <button class="btn" style="background:var(--blue); color:white" onclick="addNewAircraft()">+ Toevoegen</button>
         </div>
     </div>
 
@@ -82,7 +82,7 @@
             const rows = t.split(/\r?\n/);
             db = rows.slice(1).filter(r => r.trim()).map(r => {
                 const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                return { mfr: (c[0] || "").trim(), model: (c[1] || "").trim(), notes: (c[3] || "").replace(/"/g, ""), cat: (c[4] || "airliner").trim(), points: (c[5] || "").replace(/"/g, "") };
+                return { mfr: (c[0] || "").trim(), model: (c[1] || "").trim(), notes: (c[3] || "").replace(/"/g, "").trim(), cat: (c[4] || "airliner").trim(), points: (c[5] || "").replace(/"/g, "") };
             });
             refreshMfrDropdown();
         });
@@ -139,12 +139,12 @@
             const pts = p.split('|');
             const dot = document.createElement('div');
             dot.className = 'marker-dot'; dot.style.left = pts[0] + '%'; dot.style.top = pts[1] + '%';
-            dot.setAttribute('data-label', pts[2] || 'Point');
+            dot.setAttribute('data-label', pts[2] || 'Punt');
             dot.onmousedown = (e) => { if(isEdit) { e.stopPropagation(); draggingIdx = idx; } };
             container.appendChild(dot);
             if(isEdit) {
                 const item = document.createElement('div'); item.className = 'marker-item';
-                item.innerHTML = `<input type="text" value="${pts[2] || ''}" oninput="updateLabel(${idx}, this.value)" style="flex:1"><button onclick="removeMarker(${idx})" style="color:var(--red); border:none; background:none; cursor:pointer">DEL</button>`;
+                item.innerHTML = `<input type="text" value="${pts[2] || ''}" oninput="updateLabel(${idx}, this.value)" style="flex:1"><button onclick="removeMarker(${idx})" style="color:var(--red); border:none; background:none;">DEL</button>`;
                 controls.appendChild(item);
             }
         });
@@ -157,7 +157,7 @@
         const y = Math.max(0, Math.min(100, Math.round(((e.clientY - rect.top) / rect.height) * 100)));
         let ptsArr = selected.points.split(';');
         let pParts = ptsArr[draggingIdx].split('|');
-        ptsArr[draggingIdx] = x + '|' + y + '|' + (pParts[2] || "New Point");
+        ptsArr[draggingIdx] = x + '|' + y + '|' + (pParts[2] || "Nieuw");
         selected.points = ptsArr.join(';');
         drawMarkers();
     }
@@ -165,52 +165,42 @@
     function onMouseUp() { draggingIdx = -1; }
     function applyChanges() { if(!selected) return; selected.mfr = document.getElementById('editMfr').value; selected.model = document.getElementById('editModel').value; selected.cat = document.getElementById('editCat').value; refreshMfrDropdown(); updateModelList(); }
     function deleteAircraft() { if(!selected || !confirm("Verwijderen?")) return; db = db.filter(i => i !== selected); selected = null; refreshMfrDropdown(); updateModelList(); loadAircraft(); }
-    function addNewAircraft() { const m = document.getElementById('newMfr').value; const mod = document.getElementById('newModel').value; db.push({ mfr: m, model: mod, cat: document.getElementById('newCat').value, points: "50|50|Nieuw punt" }); refreshMfrDropdown(); }
-    function addNewPoint() { if(!selected) return; selected.points = selected.points ? selected.points + ';50|50|Nieuw punt' : '50|50|Nieuw punt'; drawMarkers(); }
+    function addNewAircraft() { const m = document.getElementById('newMfr').value; const mod = document.getElementById('newModel').value; db.push({ mfr: m, model: mod, cat: document.getElementById('newCat').value, points: "50|50|Main Plate", notes: "" }); refreshMfrDropdown(); }
+    function addNewPoint() { if(!selected) return; selected.points = selected.points ? selected.points + ';50|50|Extra Punt' : '50|50|Main Plate'; drawMarkers(); }
     function removeMarker(idx) { let pts = selected.points.split(';'); pts.splice(idx, 1); selected.points = pts.join(';'); drawMarkers(); }
     function updateLabel(idx, val) { let pts = selected.points.split(';'); let p = pts[idx].split('|'); pts[idx] = p[0] + '|' + p[1] + '|' + val; selected.points = pts.join(';'); }
     function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; if(selected) loadAircraft(); }
 
-    // DE GITHUB FUNCTIE - VERBETERDE VERSIE
+    // GITHUB PUSH - VOLLEDIG HARDCODED URL
     async function pushToGitHub() {
         const token = document.getElementById('ghToken').value.trim();
         const status = document.getElementById('statusMsg');
         if (!token) return alert("Voer een geldig GitHub Token in!");
         
-        status.innerText = "⏳ Bezig met verbinden...";
+        status.innerText = "⏳ Bezig met opslaan...";
         status.style.color = "var(--blue)";
 
-        const repoPath = "ErwinScramble/aircraft-plates";
-        const fileName = "aircraft_plates_db.csv";
-        const apiUrl = `https://github.com{repoPath}/contents/${fileName}`;
+        const apiUrl = "https://github.com";
 
         let csv = "Manufacturer,Model,Plate_Location,Notes,Category,Points\n";
-        db.forEach(i => { csv += `${i.mfr},${i.model},"", "${i.notes}",${i.cat},"${i.points}"\n`; });
+        db.forEach(i => {
+            csv += i.mfr + "," + i.model + ",\"\", \"" + (i.notes || "") + "\"," + i.cat + ",\"" + i.points + "\"\n";
+        });
 
         try {
-            // 1. Haal de SHA op met Bearer token
             const getRes = await fetch(apiUrl, {
                 method: 'GET',
-                headers: { 
-                    'Authorization': `Bearer ${token}`, 
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Cache-Control': 'no-cache'
-                }
+                headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github.v3+json' }
             });
 
-            if (!getRes.ok) throw new Error("Verbinding mislukt. Controleer je token.");
+            if (!getRes.ok) throw new Error("GitHub verbinding mislukt. Check je token.");
             const fileData = await getRes.json();
 
-            // 2. Upload de nieuwe versie
             const putRes = await fetch(apiUrl, {
                 method: 'PUT',
-                headers: { 
-                    'Authorization': `Bearer ${token}`, 
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/vnd.github.v3+json'
-                },
+                headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    message: "Database bijgewerkt via dashboard",
+                    message: "Database update",
                     content: btoa(unescape(encodeURIComponent(csv))),
                     sha: fileData.sha
                 })
@@ -220,13 +210,11 @@
                 status.innerText = "✅ Succesvol opgeslagen!";
                 status.style.color = "var(--green)";
             } else {
-                const errJson = await putRes.json();
-                throw new Error(errJson.message || "Push mislukt.");
+                throw new Error("Push naar GitHub mislukt.");
             }
         } catch (e) {
             status.innerText = "❌ Fout: " + e.message;
             status.style.color = "var(--red)";
-            console.error("Debug info:", e);
         }
     }
 </script>
