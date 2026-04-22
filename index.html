@@ -8,16 +8,34 @@
     <style>
         body { font-family: 'Inter', sans-serif; background: #f0f4f8; margin: 0; padding: 20px; color: #1a202c; }
         .container { max-width: 1100px; margin: 0 auto; text-align: center; }
-        header { margin-bottom: 40px; }
-        .search-box { width: 100%; max-width: 600px; padding: 18px 25px; border-radius: 50px; border: 2px solid #cbd5e0; font-size: 18px; outline: none; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; text-align: left; margin-top: 30px; }
+        
+        /* Aircraft Visualization Styles */
+        .visual-guide { 
+            background: white; border-radius: 20px; padding: 20px; margin: 20px auto 40px;
+            max-width: 800px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative;
+        }
+        .plane-svg { width: 100%; height: auto; max-height: 250px; fill: #cbd5e0; }
+        
+        /* Floating Bubbles */
+        .hotspot {
+            position: absolute; width: 20px; height: 20px; background: #3182ce;
+            border-radius: 50%; border: 3px solid white; cursor: help;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* Posities van de markers op het vliegtuig-silhouet */
+        .pos-nose { top: 65%; left: 15%; }
+        .pos-cockpit { top: 45%; left: 30%; }
+        .pos-fuselage { top: 60%; left: 55%; }
+        .pos-tail { top: 35%; left: 85%; }
+
+        .search-box { width: 100%; max-width: 600px; padding: 18px 25px; border-radius: 50px; border: 2px solid #cbd5e0; font-size: 18px; outline: none; margin-bottom: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; text-align: left; }
         .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
-        .manufacturer { color: #3182ce; font-size: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
-        .model { font-size: 20px; font-weight: 700; margin: 10px 0; color: #1a202c; }
-        .location-bubble { background: #edf2f7; padding: 15px; border-radius: 10px; border-left: 5px solid #3182ce; font-size: 14px; line-height: 1.5; color: #2d3748; }
-        .notes { font-size: 12px; color: #718096; margin-top: 15px; font-style: italic; }
-        .status-msg { margin: 20px; font-weight: bold; color: #3182ce; }
-        .error-msg { color: #c53030; background: #fff5f5; padding: 15px; border-radius: 8px; border: 1px solid #feb2b2; display: none; }
+        .location-bubble { background: #edf2f7; padding: 15px; border-radius: 10px; border-left: 5px solid #3182ce; font-size: 14px; line-height: 1.5; }
+        .manufacturer { color: #3182ce; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+        .model { font-size: 20px; font-weight: 700; margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -25,12 +43,24 @@
 <div class="container">
     <header>
         <h1>✈️ Aircraft MSN Locator</h1>
-        <p>Search for the location of Construction Number plates</p>
-        <input type="text" id="searchInput" class="search-box" placeholder="Type to search (e.g. F-16, Boeing, Mi-8)...">
+        <p>Spotting guide for Construction Number plates</p>
+        
+        <div class="visual-guide" id="visualGuide">
+            <!-- Simpel vliegtuig silhouet -->
+            <svg class="plane-svg" viewBox="0 0 500 200">
+                <path d="M480,80 L450,40 L440,40 L450,80 L250,80 L200,20 L150,20 L220,80 L100,80 C80,80 20,90 20,110 C20,130 80,140 100,140 L450,140 C480,140 480,80 480,80 Z" />
+            </svg>
+            <!-- De interactieve ballonnen/hotspots -->
+            <div class="hotspot pos-nose" title="Check Nose Gear / Nose Cone Area"></div>
+            <div class="hotspot pos-cockpit" title="Check Cockpit / Door Frames"></div>
+            <div class="hotspot pos-fuselage" title="Check Main Wheel Bays / Landing Gear"></div>
+            <div class="hotspot pos-tail" title="Check Tail / Rear Fuselage"></div>
+        </div>
+
+        <input type="text" id="searchInput" class="search-box" placeholder="Search a model (e.g. F-16, Boeing, Mi-8)...">
     </header>
 
-    <div id="status" class="status-msg">Connecting to database...</div>
-    <div id="errorBox" class="error-msg"></div>
+    <div id="status" style="color: #3182ce; font-weight: bold;">Loading database...</div>
     <div id="resultsGrid" class="grid"></div>
 </div>
 
@@ -38,61 +68,47 @@
     let aircraftData = [];
     const filename = 'aircraft_plates_db.csv';
 
-    // Functie om CSV handmatig te parsen zonder externe bibliotheek
+    // Handmatige CSV parser voor stabiliteit
     function parseCSV(text) {
-        const lines = text.split('\n');
+        const lines = text.split(/\r?\n/);
+        if (lines.length < 2) return [];
         const headers = lines[0].split(',');
         return lines.slice(1).filter(line => line.trim() !== "").map(line => {
-            const values = line.split(',');
+            const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // Split op komma maar negeer komma's in quotes
             return headers.reduce((obj, header, i) => {
-                obj[header.trim()] = values[i] ? values[i].trim() : "";
+                obj[header.trim()] = values[i] ? values[i].replace(/"/g, "").trim() : "";
                 return obj;
             }, {});
         });
     }
 
-    // Data ophalen
     fetch(filename)
-        .then(response => {
-            if (!response.ok) throw new Error('File not found');
-            return response.text();
-        })
+        .then(res => res.text())
         .then(text => {
             aircraftData = parseCSV(text);
             document.getElementById('status').style.display = 'none';
             displayResults(aircraftData);
-        })
-        .catch(err => {
-            document.getElementById('status').style.display = 'none';
-            const errBox = document.getElementById('errorBox');
-            errBox.style.display = 'block';
-            errBox.innerHTML = `<strong>Error:</strong> Could not load <code>${filename}</code>. <br>Please ensure the file is named correctly on GitHub.`;
         });
 
-    // Zoekfunctie
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
-        const filtered = aircraftData.filter(item => 
-            Object.values(item).join(' ').toLowerCase().includes(term)
-        );
+        const filtered = aircraftData.filter(item => Object.values(item).join(' ').toLowerCase().includes(term));
         displayResults(filtered);
     });
 
     function displayResults(data) {
         const grid = document.getElementById('resultsGrid');
         grid.innerHTML = '';
-        if (data.length === 0) return;
-
         data.forEach(item => {
             const val = Object.values(item);
             if (val.length < 2) return;
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
-                <div class="manufacturer">${val[0] || 'Unknown'}</div>
-                <div class="model">${val[1] || 'Unknown Type'}</div>
-                <div class="location-bubble"><strong>📍 Plate Location:</strong><br>${val[2] || 'Not specified'}</div>
-                ${val[3] ? `<div class="notes">${val[3]}</div>` : ''}
+                <div class="manufacturer">${val[0]}</div>
+                <div class="model">${val[1]}</div>
+                <div class="location-bubble"><strong>📍 Plate Location:</strong><br>${val[2]}</div>
+                ${val[3] ? `<div style="font-size:12px; color:#718096; margin-top:10px;"><em>Note: ${val[3]}</em></div>` : ''}
             `;
             grid.appendChild(card);
         });
