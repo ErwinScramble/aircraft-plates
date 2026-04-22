@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aircraft MSN Locator - Editor Pro</title>
+    <title>MSN Locator - Auto-Save Edition</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root { --blue: #2563eb; --dark: #0f172a; --gray: #f1f5f9; --green: #10b981; --red: #ef4444; }
@@ -18,10 +18,11 @@
         .editor-ui { background: var(--dark); color: white; padding: 25px; border-radius: 20px; margin-bottom: 20px; display: none; }
         .marker-item { display: flex; gap: 10px; margin-bottom: 8px; align-items: center; background: #334155; padding: 8px; border-radius: 6px; }
         input { padding: 8px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 14px; }
-        .btn { padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
-        .btn-add { background: var(--blue); color: white; }
-        .btn-del { background: var(--red); color: white; }
-        .btn-download { background: var(--green); color: white; width: 100%; margin-top: 15px; }
+        .btn { padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-blue { background: var(--blue); color: white; }
+        .btn-green { background: var(--green); color: white; }
+        .btn-red { background: var(--red); color: white; }
+        .btn-toggle { background: white; border: 1px solid #ccc; margin-bottom: 10px; }
         .label-small { font-size: 11px; color: #94a3b8; text-transform: uppercase; display: block; margin-bottom: 4px; }
     </style>
 </head>
@@ -29,32 +30,38 @@
 
 <div class="container">
     <header style="text-align: center;">
-        <h1>✈️ MSN Locator <span id="viewLabel" style="color:var(--blue)">Dashboard</span></h1>
+        <h1>✈️ MSN Locator Dashboard</h1>
 
-        <div id="editorPanel" class="editor-ui">
+        <div id="editorPanel" class="editor-ui" style="text-align: left;">
+            <div style="background: #1e293b; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #334155;">
+                <label class="label-small">GitHub Token (ghp_...)</label>
+                <input type="password" id="ghToken" placeholder="Paste your token here" style="width: 100%; margin-bottom: 10px;">
+                <button class="btn btn-green" style="width: 100%;" onclick="pushToGitHub()">🚀 Save all changes to GitHub</button>
+                <small id="statusMsg" style="display:block; margin-top:8px; color:#94a3b8;">Changes are temporary until you push them.</small>
+            </div>
+
             <div id="editFields" style="display:none; border-bottom: 1px solid #334155; padding-bottom: 20px; margin-bottom: 20px;">
-                <strong>Modify Selected Aircraft:</strong>
+                <strong>Edit Selected:</strong>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top:10px;">
                     <div><span class="label-small">Manufacturer</span><input type="text" id="editMfr" oninput="applyChanges()"></div>
                     <div><span class="label-small">Model Name</span><input type="text" id="editModel" oninput="applyChanges()"></div>
                     <div><span class="label-small">PNG Name</span><input type="text" id="editCat" oninput="applyChanges()"></div>
                 </div>
                 <div id="markerControls" style="margin-top: 15px;"></div>
-                <button class="btn btn-add" style="margin-top:10px" onclick="addNewPoint()">+ Add Point</button>
-                <button class="btn btn-del" style="float: right; margin-top:10px" onclick="deleteAircraft()">Delete Aircraft</button>
+                <button class="btn btn-blue" style="margin-top:10px" onclick="addNewPoint()">+ Add Marker</button>
+                <button class="btn btn-red" style="float: right; margin-top:10px" onclick="deleteAircraft()">Delete</button>
             </div>
 
-            <div id="addNewForm">
+            <div>
                 <strong>Add New Aircraft:</strong><br>
-                <input type="text" id="newMfr" placeholder="Mfr">
+                <input type="text" id="newMfr" placeholder="Manufacturer">
                 <input type="text" id="newModel" placeholder="Model">
-                <input type="text" id="newCat" placeholder="PNG Name">
-                <button class="btn btn-add" onclick="addNewAircraft()">+ Add</button>
+                <input type="text" id="newCat" placeholder="PNG filename">
+                <button class="btn btn-blue" onclick="addNewAircraft()">+ Add to List</button>
             </div>
-            <button class="btn btn-download" onclick="downloadCSV()">💾 Download Updated CSV</button>
         </div>
 
-        <button onclick="toggleEditor()" id="editBtn" class="btn" style="background:white; border:1px solid #ccc; margin-bottom:20px;">⚙️ Toggle Editor Mode</button>
+        <button onclick="toggleEditor()" id="editBtn" class="btn btn-toggle">⚙️ Editor Mode</button>
 
         <div class="selection-area">
             <div><label>Manufacturer:</label><select id="mfrSelect" onchange="updateModelList()"><option value="">-- Choose --</option></select></div>
@@ -94,7 +101,6 @@
     function updateModelList() {
         const mfr = document.getElementById('mfrSelect').value;
         const modelSelect = document.getElementById('modelSelect');
-        const prevModel = modelSelect.value;
         modelSelect.innerHTML = '<option value="">-- Select Type --</option>';
         modelSelect.disabled = !mfr;
         if (mfr) {
@@ -103,43 +109,6 @@
                 modelSelect.appendChild(opt);
             });
         }
-        modelSelect.value = prevModel;
-    }
-
-    function applyChanges() {
-        if(!selected) return;
-        selected.mfr = document.getElementById('editMfr').value;
-        selected.model = document.getElementById('editModel').value;
-        selected.cat = document.getElementById('editCat').value;
-        refreshMfrDropdown();
-        updateModelList();
-    }
-
-    function deleteAircraft() {
-        if(!selected || !confirm("Are you sure you want to delete this aircraft?")) return;
-        db = db.filter(i => i !== selected);
-        selected = null;
-        refreshMfrDropdown();
-        updateModelList();
-        document.getElementById('aircraft-img').style.display = 'none';
-        document.getElementById('markerContainer').innerHTML = '';
-        document.getElementById('editFields').style.display = 'none';
-        alert("Deleted. Don't forget to download and save the CSV!");
-    }
-
-    function addNewAircraft() {
-        const mfr = document.getElementById('newMfr').value.trim();
-        const model = document.getElementById('newModel').value.trim();
-        const cat = document.getElementById('newCat').value.trim();
-        if(!mfr || !model) return alert("Manufacturer and Model required");
-        const newItem = { mfr, model, notes: "", cat, points: "20|50|Main Plate" };
-        db.push(newItem);
-        refreshMfrDropdown();
-        document.getElementById('mfrSelect').value = mfr;
-        updateModelList();
-        document.getElementById('modelSelect').value = model;
-        loadAircraft();
-        document.getElementById('newMfr').value = ''; document.getElementById('newModel').value = ''; document.getElementById('newCat').value = '';
     }
 
     function loadAircraft() {
@@ -186,24 +155,41 @@
         const y = Math.max(0, Math.min(100, Math.round(((e.clientY - rect.top) / rect.height) * 100)));
         let pts = selected.points.split(';');
         let parts = pts[draggingIdx].split('|');
-        pts[draggingIdx] = `${x}|y|${parts[2]}`.replace('y', y);
+        pts[draggingIdx] = `${x}|${y}|${parts[2]}`;
         selected.points = pts.join(';');
         drawMarkers();
     }
 
     function onMouseUp() { draggingIdx = -1; }
-    function addNewPoint() { if(!selected) return; selected.points = selected.points ? selected.points + ';50|50|New Location' : '50|50|New Location'; drawMarkers(); }
+    function applyChanges() { if(!selected) return; selected.mfr = document.getElementById('editMfr').value; selected.model = document.getElementById('editModel').value; selected.cat = document.getElementById('editCat').value; refreshMfrDropdown(); updateModelList(); }
+    function deleteAircraft() { if(!selected || !confirm("Delete?")) return; db = db.filter(i => i !== selected); selected = null; refreshMfrDropdown(); updateModelList(); loadAircraft(); }
+    function addNewAircraft() { const mfr = document.getElementById('newMfr').value; const model = document.getElementById('newModel').value; db.push({ mfr, model, cat: document.getElementById('newCat').value, points: "50|50|New" }); refreshMfrDropdown(); }
+    function addNewPoint() { if(!selected) return; selected.points = selected.points ? selected.points + ';50|50|New' : '50|50|New'; drawMarkers(); }
     function removeMarker(idx) { let pts = selected.points.split(';'); pts.splice(idx, 1); selected.points = pts.join(';'); drawMarkers(); }
     function updateLabel(idx, val) { let pts = selected.points.split(';'); let p = pts[idx].split('|'); pts[idx] = `${p[0]}|${p[1]}|${val}`; selected.points = pts.join(';'); }
-    function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; document.getElementById('viewLabel').innerText = isEdit ? 'Editor' : 'Dashboard'; if(selected) loadAircraft(); }
-    function downloadCSV() {
+    function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; if(selected) loadAircraft(); }
+
+    async function pushToGitHub() {
+        const token = document.getElementById('ghToken').value;
+        const status = document.getElementById('statusMsg');
+        if (!token) return alert("Enter Token!");
+        status.innerText = "⏳ Saving...";
+        const repo = "ErwinScramble/aircraft-plates";
+        const path = "aircraft_plates_db.csv";
         let csv = "Manufacturer,Model,Plate_Location,Notes,Category,Points\n";
         db.forEach(i => csv += `${i.mfr},${i.model},"", "${i.notes}",${i.cat},"${i.points}"\n`);
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.setAttribute("download", "aircraft_plates_db.csv");
-        link.click();
+        try {
+            const url = `https://github.com{repo}/contents/${path}`;
+            const res = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
+            const data = await res.json();
+            const putRes = await fetch(url, {
+                method: 'PUT',
+                headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: "Update via Web Editor", content: btoa(unescape(encodeURIComponent(csv))), sha: data.sha })
+            });
+            if (putRes.ok) { status.innerText = "✅ Saved!"; status.style.color = "var(--green)"; }
+            else { alert("Error saving!"); }
+        } catch (e) { alert("Fail: " + e.message); }
     }
 </script>
 </body>
