@@ -1,13 +1,5 @@
 Manufacturer,Model,Plate_Location,Notes,Category,X,Y
-Aermacchi,MB326 / EMB326,Cockpit bulkhead behind rear seat & fuselage below LH stabilizer,Brazilian examples have a 2nd plate below.,Fighter,160,95
-Aerospatiale,AS332 / AS532 Super Puma,Bulkhead behind/above LH pilot seat,"Large plate, visible from outside.",Heli,190,125
-Antonov,An-2,Below tail (LH side) or 2nd joist behind cockpit,Check engine bulkhead for Russian builds.,Biplane,430,130
-Beechcraft,Model 18 Twin Beech,Cockpit sub-panel or rear door frame,Components like wings have separate plates.,Prop,180,145
-Bell,204 / 205 / UH-1,LH side of central control panel,Visible through glass near pilot feet.,Heli,190,125
-Boeing,737 / 747 / 757 / 767,Top of LH forward passenger door frame,Look up when boarding.,Airliner,140,105
-Cessna,General (Single Engine),Forward edge of LH door frame,Standard FAR 45 location.,Prop,180,145
-General Dynamics,F-16,Behind radar bulkhead (LH side),Shows WWSN.,Fighter,50,110
-Lockheed,C-130 Hercules,Cockpit ceiling or RH bench (J model),Behind flight engineer panel.,Airliner,140,105
-MiG,MiG-21,Nose wheel bay (strut or bulkhead),Wing plates unreliable.,Fighter,50,110
-Mil,Mi-8 / Mi-17,Inside radio compartment (ceiling) or pneumatic lid,Radio hatch in cargo ceiling.,Heli,230,85
-Piper,PA-28 / 32 / 34,LH fuselage below stabilizer,Standard location.,Prop,430,130
+Antonov,An-2,Below tail (LH side) or 2nd joist behind cockpit,Check engine bulkhead for Russian builds.,Dubbeldekker,85,45
+Lockheed,C-130 Hercules,Cockpit ceiling or RH bench (J model),Behind flight engineer panel.,C-130 Hercules,25,40
+Cessna,General (Single Engine),Forward edge of LH door frame,Most also have a plate below LH/RH stabilizer.,Sport Hoogdekker,32,55
+Mikoyan Gurevich (MiG),MiG-21,Nose wheel bay (strut or bulkhead),Wing plates unreliable.,Straaljager,15,65
