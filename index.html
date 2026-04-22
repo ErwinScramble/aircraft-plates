@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSN Locator - Professional Dashboard</title>
+    <title>Aircraft MSN Locator - Editor Pro</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root { --blue: #2563eb; --dark: #0f172a; --gray: #f1f5f9; --green: #10b981; --red: #ef4444; }
         body { font-family: 'Inter', sans-serif; background: var(--gray); margin: 0; padding: 20px; color: var(--dark); }
         .container { max-width: 1000px; margin: 0 auto; }
         .selection-area { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e0; font-size: 16px; outline: none; cursor: pointer; }
-        .display-box { background: white; border-radius: 24px; padding: 40px; margin: 20px auto; height: 450px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); position: relative; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: crosshair; }
+        select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e0; font-size: 16px; outline: none; }
+        .display-box { background: white; border-radius: 24px; padding: 40px; margin: 20px auto; height: 450px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); position: relative; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         #aircraft-img { max-width: 100%; max-height: 100%; object-fit: contain; pointer-events: none; user-select: none; }
         .marker-dot { position: absolute; width: 24px; height: 24px; background: var(--red); border-radius: 50%; border: 3px solid white; box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); z-index: 100; transform: translate(-50%, -50%); cursor: grab; }
         .marker-dot:hover::after { content: attr(data-label); position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: black; color: white; padding: 5px 12px; border-radius: 6px; font-size: 12px; white-space: nowrap; z-index: 110; }
@@ -20,8 +20,9 @@
         input { padding: 8px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 14px; }
         .btn { padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
         .btn-add { background: var(--blue); color: white; }
+        .btn-del { background: var(--red); color: white; }
         .btn-download { background: var(--green); color: white; width: 100%; margin-top: 15px; }
-        .btn-toggle { background: white; border: 1px solid #ccc; margin-bottom: 10px; }
+        .label-small { font-size: 11px; color: #94a3b8; text-transform: uppercase; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -31,42 +32,36 @@
         <h1>✈️ MSN Locator <span id="viewLabel" style="color:var(--blue)">Dashboard</span></h1>
 
         <div id="editorPanel" class="editor-ui">
-            <h3>🛠 Editor Tools</h3>
-            <div id="addNewForm" style="border-bottom: 1px solid #334155; padding-bottom: 15px; margin-bottom: 15px;">
+            <div id="editFields" style="display:none; border-bottom: 1px solid #334155; padding-bottom: 20px; margin-bottom: 20px;">
+                <strong>Modify Selected Aircraft:</strong>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top:10px;">
+                    <div><span class="label-small">Manufacturer</span><input type="text" id="editMfr" oninput="applyChanges()"></div>
+                    <div><span class="label-small">Model Name</span><input type="text" id="editModel" oninput="applyChanges()"></div>
+                    <div><span class="label-small">PNG Name</span><input type="text" id="editCat" oninput="applyChanges()"></div>
+                </div>
+                <div id="markerControls" style="margin-top: 15px;"></div>
+                <button class="btn btn-add" style="margin-top:10px" onclick="addNewPoint()">+ Add Point</button>
+                <button class="btn btn-del" style="float: right; margin-top:10px" onclick="deleteAircraft()">Delete Aircraft</button>
+            </div>
+
+            <div id="addNewForm">
                 <strong>Add New Aircraft:</strong><br>
-                <input type="text" id="newMfr" placeholder="Manufacturer (e.g. Boeing)">
-                <input type="text" id="newModel" placeholder="Model (e.g. 737-800)">
-                <input type="text" id="newCat" placeholder="PNG Name (e.g. Airliner)">
-                <button class="btn btn-add" style="width: auto;" onclick="addNewAircraft()">+ Add to List</button>
+                <input type="text" id="newMfr" placeholder="Mfr">
+                <input type="text" id="newModel" placeholder="Model">
+                <input type="text" id="newCat" placeholder="PNG Name">
+                <button class="btn btn-add" onclick="addNewAircraft()">+ Add</button>
             </div>
-            
-            <div id="editFields" style="display:none;">
-                <strong>Edit Selected Markers:</strong>
-                <div id="markerControls"></div>
-                <button class="btn btn-add" onclick="addNewPoint()">+ Add New Location Point</button>
-                <p>Internal Notes: <input type="text" id="editNotes" style="width:70%" oninput="updateNotes()"></p>
-            </div>
-            <button class="btn btn-download" onclick="downloadCSV()">💾 Download Updated CSV for GitHub</button>
+            <button class="btn btn-download" onclick="downloadCSV()">💾 Download Updated CSV</button>
         </div>
 
-        <button onclick="toggleEditor()" id="editBtn" class="btn btn-toggle">⚙️ Toggle Editor Mode</button>
+        <button onclick="toggleEditor()" id="editBtn" class="btn" style="background:white; border:1px solid #ccc; margin-bottom:20px;">⚙️ Toggle Editor Mode</button>
 
         <div class="selection-area">
-            <div>
-                <label>1. Select Manufacturer:</label>
-                <select id="mfrSelect" onchange="updateModelList()">
-                    <option value="">-- Choose Manufacturer --</option>
-                </select>
-            </div>
-            <div>
-                <label>2. Select Aircraft Type:</label>
-                <select id="modelSelect" onchange="loadAircraft()" disabled>
-                    <option value="">-- Select Type --</option>
-                </select>
-            </div>
+            <div><label>Manufacturer:</label><select id="mfrSelect" onchange="updateModelList()"><option value="">-- Choose --</option></select></div>
+            <div><label>Model:</label><select id="modelSelect" onchange="loadAircraft()" disabled><option value="">-- Select Type --</option></select></div>
         </div>
 
-        <div class="display-box" id="map" onmousedown="onMouseDown(event)" onmousemove="onMouseMove(event)" onmouseup="onMouseUp(event)">
+        <div class="display-box" id="map" onmousemove="onMouseMove(event)" onmouseup="onMouseUp(event)">
             <img id="aircraft-img" src="" alt="" style="display:none;">
             <div id="markerContainer"></div>
         </div>
@@ -87,53 +82,64 @@
 
     function refreshMfrDropdown() {
         const select = document.getElementById('mfrSelect');
-        const currentVal = select.value;
-        select.innerHTML = '<option value="">-- Choose Manufacturer --</option>';
-        const mfrs = [...new Set(db.map(i => i.mfr))].sort();
-        mfrs.forEach(m => {
-            const opt = document.createElement('option');
-            opt.value = opt.innerText = m;
+        const prevMfr = select.value;
+        select.innerHTML = '<option value="">-- Choose --</option>';
+        [...new Set(db.map(i => i.mfr))].sort().forEach(m => {
+            const opt = document.createElement('option'); opt.value = opt.innerText = m;
             select.appendChild(opt);
         });
-        select.value = currentVal;
+        select.value = prevMfr;
     }
 
     function updateModelList() {
         const mfr = document.getElementById('mfrSelect').value;
         const modelSelect = document.getElementById('modelSelect');
+        const prevModel = modelSelect.value;
         modelSelect.innerHTML = '<option value="">-- Select Type --</option>';
         modelSelect.disabled = !mfr;
         if (mfr) {
             db.filter(i => i.mfr === mfr).forEach(item => {
-                const opt = document.createElement('option');
-                opt.value = item.model; opt.innerText = item.model;
+                const opt = document.createElement('option'); opt.value = item.model; opt.innerText = item.model;
                 modelSelect.appendChild(opt);
             });
         }
+        modelSelect.value = prevModel;
+    }
+
+    function applyChanges() {
+        if(!selected) return;
+        selected.mfr = document.getElementById('editMfr').value;
+        selected.model = document.getElementById('editModel').value;
+        selected.cat = document.getElementById('editCat').value;
+        refreshMfrDropdown();
+        updateModelList();
+    }
+
+    function deleteAircraft() {
+        if(!selected || !confirm("Are you sure you want to delete this aircraft?")) return;
+        db = db.filter(i => i !== selected);
+        selected = null;
+        refreshMfrDropdown();
+        updateModelList();
+        document.getElementById('aircraft-img').style.display = 'none';
+        document.getElementById('markerContainer').innerHTML = '';
+        document.getElementById('editFields').style.display = 'none';
+        alert("Deleted. Don't forget to download and save the CSV!");
     }
 
     function addNewAircraft() {
         const mfr = document.getElementById('newMfr').value.trim();
         const model = document.getElementById('newModel').value.trim();
         const cat = document.getElementById('newCat').value.trim();
-        if(!mfr || !model) return alert("Manufacturer and Model are required!");
-
-        const newItem = { mfr, model, notes: "", cat: cat, points: "20|50|Main Plate" };
+        if(!mfr || !model) return alert("Manufacturer and Model required");
+        const newItem = { mfr, model, notes: "", cat, points: "20|50|Main Plate" };
         db.push(newItem);
-        
-        // Update interface zonder herladen
         refreshMfrDropdown();
         document.getElementById('mfrSelect').value = mfr;
         updateModelList();
         document.getElementById('modelSelect').value = model;
-        
-        // Maak invoervelden leeg
-        document.getElementById('newMfr').value = '';
-        document.getElementById('newModel').value = '';
-        document.getElementById('newCat').value = '';
-
-        loadAircraft(); // Activeer de nieuwe selectie
-        alert("Added to temporary list. Use the green button below to save your work to a file!");
+        loadAircraft();
+        document.getElementById('newMfr').value = ''; document.getElementById('newModel').value = ''; document.getElementById('newCat').value = '';
     }
 
     function loadAircraft() {
@@ -141,13 +147,13 @@
         const model = document.getElementById('modelSelect').value;
         selected = db.find(i => i.mfr === mfr && i.model === model);
         if(!selected) return;
-
-        const img = document.getElementById('aircraft-img');
-        img.src = `silhouettes/${selected.cat}.png`;
-        img.style.display = 'block';
+        document.getElementById('aircraft-img').src = `silhouettes/${selected.cat}.png`;
+        document.getElementById('aircraft-img').style.display = 'block';
         if(isEdit) {
             document.getElementById('editFields').style.display = 'block';
-            document.getElementById('editNotes').value = selected.notes;
+            document.getElementById('editMfr').value = selected.mfr;
+            document.getElementById('editModel').value = selected.model;
+            document.getElementById('editCat').value = selected.cat;
         }
         drawMarkers();
     }
@@ -157,21 +163,17 @@
         const controls = document.getElementById('markerControls');
         container.innerHTML = ''; controls.innerHTML = '';
         if(!selected || !selected.points) return;
-
         selected.points.split(';').forEach((p, idx) => {
             if(!p) return;
             const [x, y, label] = p.split('|');
             const dot = document.createElement('div');
-            dot.className = 'marker-dot';
-            dot.style.left = x + '%'; dot.style.top = y + '%';
+            dot.className = 'marker-dot'; dot.style.left = x + '%'; dot.style.top = y + '%';
             dot.setAttribute('data-label', label || 'Point');
             dot.onmousedown = (e) => { if(isEdit) { e.stopPropagation(); draggingIdx = idx; } };
             container.appendChild(dot);
-
             if(isEdit) {
-                const item = document.createElement('div');
-                item.className = 'marker-item';
-                item.innerHTML = `<input type="text" value="${label}" oninput="updateLabel(${idx}, this.value)" style="flex:1"><button onclick="removeMarker(${idx})" style="color:var(--red); background:none; border:none; cursor:pointer; font-weight:bold;">DEL</button>`;
+                const item = document.createElement('div'); item.className = 'marker-item';
+                item.innerHTML = `<input type="text" value="${label}" oninput="updateLabel(${idx}, this.value)" style="flex:1"><button onclick="removeMarker(${idx})" style="color:var(--red); border:none; background:none; cursor:pointer;">DEL</button>`;
                 controls.appendChild(item);
             }
         });
@@ -184,17 +186,15 @@
         const y = Math.max(0, Math.min(100, Math.round(((e.clientY - rect.top) / rect.height) * 100)));
         let pts = selected.points.split(';');
         let parts = pts[draggingIdx].split('|');
-        pts[draggingIdx] = `${x}|${y}|${parts[2]}`;
+        pts[draggingIdx] = `${x}|y|${parts[2]}`.replace('y', y);
         selected.points = pts.join(';');
         drawMarkers();
     }
 
     function onMouseUp() { draggingIdx = -1; }
-    function onMouseDown(e) { if(!isEdit || !selected || e.target.className === 'marker-dot') return; }
-    function addNewPoint() { if(!selected) return; const newPt = `50|50|New Point`; selected.points = selected.points ? selected.points + ';' + newPt : newPt; drawMarkers(); }
+    function addNewPoint() { if(!selected) return; selected.points = selected.points ? selected.points + ';50|50|New Location' : '50|50|New Location'; drawMarkers(); }
     function removeMarker(idx) { let pts = selected.points.split(';'); pts.splice(idx, 1); selected.points = pts.join(';'); drawMarkers(); }
     function updateLabel(idx, val) { let pts = selected.points.split(';'); let p = pts[idx].split('|'); pts[idx] = `${p[0]}|${p[1]}|${val}`; selected.points = pts.join(';'); }
-    function updateNotes() { selected.notes = document.getElementById('editNotes').value; }
     function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; document.getElementById('viewLabel').innerText = isEdit ? 'Editor' : 'Dashboard'; if(selected) loadAircraft(); }
     function downloadCSV() {
         let csv = "Manufacturer,Model,Plate_Location,Notes,Category,Points\n";
