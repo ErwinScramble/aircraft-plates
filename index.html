@@ -3,48 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aircraft MSN Locator</title>
+    <title>Aircraft MSN Locator - Professional Edition</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        :root { --primary: #2563eb; --dark: #1e293b; --bg: #f8fafc; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--dark); }
-        .container { max-width: 1100px; margin: 0 auto; text-align: center; }
+        :root { --blue: #2563eb; --dark: #0f172a; --gray: #f1f5f9; }
+        body { font-family: 'Inter', sans-serif; background: var(--gray); margin: 0; padding: 20px; color: var(--dark); }
+        .container { max-width: 1200px; margin: 0 auto; text-align: center; }
         
-        /* Realistic Display Area */
-        .display-unit { 
+        /* Display Area */
+        .display-box { 
             background: white; border-radius: 24px; padding: 30px; margin: 20px auto;
-            max-width: 900px; height: 350px; box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            max-width: 900px; height: 400px; box-shadow: 0 20px 50px rgba(0,0,0,0.05);
             position: relative; border: 1px solid #e2e8f0;
             display: flex; align-items: center; justify-content: center;
         }
         
-        .aircraft-profile { width: 85%; height: auto; display: none; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1)); }
-        .active { display: block; }
+        svg.unit { width: 100%; height: 100%; display: none; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); }
+        svg.active { display: block; }
+        .base-shape { fill: #cbd5e0; }
+        .detail-shape { fill: #94a3b8; }
+        .window-shape { fill: #1e293b; opacity: 0.6; }
 
-        /* Marker & Bubble */
-        .marker {
-            position: absolute; width: 22px; height: 22px; background: #ef4444;
-            border-radius: 50%; border: 3px solid white; display: none;
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); z-index: 100;
-            transform: translate(-50%, -50%); pointer-events: none;
-        }
-        .marker.active { display: block; animation: pulse 1.5s infinite; }
+        /* Marker inside SVG scale */
+        .marker-dot { fill: #ef4444; stroke: white; stroke-width: 5; display: none; }
+        .marker-dot.active { display: block; animation: pulse 1.5s infinite; }
         
-        .bubble {
-            position: absolute; background: var(--dark); color: white; padding: 10px 15px;
-            border-radius: 10px; font-size: 13px; font-weight: 600; width: 200px;
-            bottom: 35px; left: 50%; transform: translateX(-50%); box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
+        @keyframes pulse { 0% { r: 10; opacity: 1; } 50% { r: 16; opacity: 0.6; } 100% { r: 10; opacity: 1; } }
 
-        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.2); } 100% { transform: translate(-50%, -50%) scale(1); } }
-
-        .search-box { width: 100%; max-width: 600px; padding: 18px 25px; border-radius: 50px; border: 2px solid #e2e8f0; font-size: 17px; outline: none; margin-bottom: 25px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; text-align: left; }
+        /* UI Elements */
+        .editor-ui { background: var(--dark); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: left; display: none; }
+        .code-output { background: #000; padding: 10px; color: #10b981; font-family: monospace; font-size: 12px; border-radius: 5px; margin-top: 10px; }
+        .search-box { width: 100%; max-width: 600px; padding: 18px 25px; border-radius: 50px; border: 2px solid #e2e8f0; font-size: 18px; outline: none; margin-bottom: 30px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; text-align: left; }
         .card { background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.2s; }
-        .card:hover { border-color: var(--primary); background: #f0f7ff; }
-        .card.selected { border-color: var(--primary); background: #eff6ff; border-width: 2px; }
-
-        .editor-ui { background: var(--dark); color: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: left; display: none; }
+        .card.selected { border: 2px solid var(--blue); background: #eff6ff; }
+        .bubble { background: var(--dark); color: white; padding: 10px 15px; border-radius: 10px; font-size: 13px; margin-top: 15px; display: none; }
     </style>
 </head>
 <body>
@@ -52,112 +45,137 @@
 <div class="container">
     <h1>✈️ Aircraft MSN Locator</h1>
 
+    <!-- Editor Mode -->
     <div id="editorPanel" class="editor-ui">
-        <strong>Editor:</strong> Click profile to get coordinates.<br>
-        <div id="logMsg" style="font-family:monospace; margin-top:5px; color:#10b981;">Select an aircraft first...</div>
+        <strong>🛠 Editor Mode:</strong> Click on the aircraft to get X/Y coördinates.<br>
+        <div id="log" class="code-output">Select an aircraft first...</div>
+    </div>
+    <button onclick="toggleEditor()" style="margin-bottom: 20px; cursor:pointer;">Toggle Editor</button>
+
+    <!-- Visualizer Container -->
+    <div class="display-box" id="map" onclick="getClickCoords(event)">
+        
+        <!-- 1. Passagiersjet (Airliner) -->
+        <svg id="view-airliner" class="unit active" viewBox="0 0 500 200">
+            <path class="base-shape" d="M30,120 Q30,100 150,100 L400,100 Q480,100 480,120 Q480,140 400,140 L100,140 Q30,140 30,120 Z"/>
+            <path class="detail-shape" d="M380,100 L450,40 L485,40 L455,100 Z"/>
+            <path class="detail-shape" d="M150,140 L300,185 L350,185 L220,140 Z"/>
+            <circle class="marker-dot" cx="0" cy="0" r="12" />
+        </svg>
+
+        <!-- 2. Straaljager (Fighter) -->
+        <svg id="view-fighter" class="unit" viewBox="0 0 500 200">
+            <path class="base-shape" d="M20,130 L150,110 L350,110 L450,40 L480,40 L460,110 L490,130 L460,150 L490,170 L480,170 L450,150 L150,150 Z"/>
+            <path class="window-shape" d="M120,110 Q180,60 250,110 Z"/>
+            <circle class="marker-dot" cx="0" cy="0" r="12" />
+        </svg>
+
+        <!-- 3. Standaard Heli -->
+        <svg id="view-heli" class="unit" viewBox="0 0 500 200">
+            <path class="base-shape" d="M50,160 Q20,160 20,110 Q20,60 100,60 L400,60 L440,30 L460,30 L440,80 L200,80 Q200,160 50,160 Z"/>
+            <rect class="detail-shape" x="180" y="20" width="10" height="40"/>
+            <rect class="window-shape" x="40" y="80" width="40" height="30" rx="5"/>
+            <circle class="marker-dot" cx="0" cy="0" r="12" />
+        </svg>
+
+        <!-- 4. Chinook (Transport Heli) -->
+        <svg id="view-chinook" class="unit" viewBox="0 0 500 200">
+            <path class="base-shape" d="M40,140 L440,140 L460,110 L460,80 L440,60 L40,60 Z"/>
+            <path class="detail-shape" d="M60,60 L70,30 L110,30 L100,60 Z M380,60 L390,30 L430,30 L420,60 Z"/>
+            <circle class="marker-dot" cx="0" cy="0" r="12" />
+        </svg>
+
+        <!-- 5. Sport Hoogdekker (Cessna) -->
+        <svg id="view-prop-high" class="unit" viewBox="0 0 500 200">
+            <path class="base-shape" d="M40,130 L100,120 L400,120 L450,60 L475,60 L460,130 L100,150 L40,130 Z"/>
+            <rect class="detail-shape" x="120" y="85" width="180" height="10"/>
+            <circle class="marker-dot" cx="0" cy="0" r="12" />
+        </svg>
+
+        <!-- 6. Dubbeldekker (Biplane) -->
+        <svg id="view-biplane" class="unit" viewBox="0 0 500 200">
+            <path class="base-shape" d="M50,140 L400,120 L450,60 L480,60 L460,130 L50,150 Z"/>
+            <rect class="detail-shape" x="100" y="90" width="200" height="8"/>
+            <rect class="detail-shape" x="100" y="150" width="200" height="8"/>
+            <circle class="marker-dot" cx="0" cy="0" r="12" />
+        </svg>
     </div>
 
-    <button onclick="toggleEditor()" style="margin-bottom:15px; cursor:pointer;">Toggle Editor</button>
+    <div id="infoBubble" class="bubble"></div>
 
-    <div class="display-unit" id="canvas" onclick="handleMapClick(event)">
-        <!-- 1. Airliner -->
-        <svg id="view-airliner" class="aircraft-profile active" viewBox="0 0 500 200">
-            <path d="M50,110 L400,110 C430,110 460,100 470,90 L450,30 L430,30 L445,90 L100,90 C70,90 40,100 40,110 Z" fill="#cbd5e0"/>
-            <path d="M120,110 L250,160 L300,160 L200,110 Z" fill="#94a3b8"/>
-        </svg>
-        <!-- 2. Fighter -->
-        <svg id="view-fighter" class="aircraft-profile" viewBox="0 0 500 200">
-            <path d="M20,110 L120,100 L250,100 L280,40 L340,40 L310,100 L450,100 L470,130 L450,150 L100,150 L20,110 Z" fill="#94a3b8"/>
-        </svg>
-        <!-- 3. Heli -->
-        <svg id="view-heli" class="aircraft-profile" viewBox="0 0 500 200">
-            <path d="M60,150 C30,150 30,90 80,70 L450,70 L470,30 L490,30 L470,90 L250,90 C250,150 150,170 60,150 Z" fill="#cbd5e0"/>
-        </svg>
-
-        <div id="marker" class="marker"><div id="bubble" class="bubble">Info</div></div>
-    </div>
-
-    <input type="text" id="search" class="search-box" placeholder="Search (e.g. F-16, Bell, Boeing)...">
+    <input type="text" id="search" class="search-box" placeholder="Search (e.g. Cessna, F-16, Chinook)...">
     <div id="results" class="grid"></div>
 </div>
 
 <script>
     let db = [];
     let selected = null;
-    let editMode = false;
+    let isEdit = false;
 
+    // Load Data
     fetch('aircraft_plates_db.csv').then(r => r.text()).then(t => {
         const rows = t.split(/\r?\n/).slice(1);
         db = rows.filter(r => r.trim()).map(r => {
-            // Split op komma maar negeer komma's in quotes
             const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            return {
-                mfr: c[0] || "",
-                model: c[1] || "",
-                loc: (c[2] || "").replace(/"/g, ""),
-                note: (c[3] || "").replace(/"/g, ""),
-                cat: (c[4] || "Airliner").trim(),
-                x: c[5] || null,
-                y: c[6] || null
-            };
+            return { mfr: c[0], model: c[1], loc: (c[2]||"").replace(/"/g,""), note: c[3], cat: (c[4]||"Airliner").trim(), x: c[5], y: c[6] };
         });
         render();
     });
 
-    function render(filter = '') {
-        const grid = document.getElementById('results');
-        grid.innerHTML = '';
-        db.filter(i => (i.mfr+i.model).toLowerCase().includes(filter.toLowerCase())).forEach(item => {
-            const card = document.createElement('div');
-            card.className = `card ${selected === item ? 'selected' : ''}`;
-            card.innerHTML = `<strong>${item.mfr}</strong><br>${item.model}<br><small>📍 ${item.loc}</small>`;
-            card.onclick = () => selectAircraft(item);
-            grid.appendChild(card);
+    function render(f = '') {
+        const g = document.getElementById('results');
+        g.innerHTML = '';
+        db.filter(i => (i.mfr+i.model).toLowerCase().includes(f.toLowerCase())).forEach(item => {
+            const d = document.createElement('div');
+            d.className = `card ${selected === item ? 'selected' : ''}`;
+            d.innerHTML = `<strong>${item.mfr}</strong><br>${item.model}<br><small>${item.loc}</small>`;
+            d.onclick = () => select(item);
+            g.appendChild(d);
         });
     }
 
-    function selectAircraft(item) {
+    function select(item) {
         selected = item;
         render(document.getElementById('search').value);
         
-        // Wissel afbeelding
-        document.querySelectorAll('.aircraft-profile').forEach(p => p.classList.remove('active'));
-        let cat = item.cat.toLowerCase();
-        let target = 'view-airliner';
-        if(cat.includes('fighter') || cat.includes('jet')) target = 'view-fighter';
-        if(cat.includes('heli')) target = 'view-heli';
-        document.getElementById(target).classList.add('active');
+        // Show correct SVG based on category mapping
+        const catMap = {
+            'Airliner': 'view-airliner', 'Fighter': 'view-fighter', 'Heli': 'view-heli',
+            'Chinook': 'view-chinook', 'Prop': 'view-prop-high', 'Biplane': 'view-biplane'
+        };
+        
+        document.querySelectorAll('.unit').forEach(u => u.classList.remove('active'));
+        const target = catMap[item.cat] || 'view-airliner';
+        const activeSvg = document.getElementById(target);
+        activeSvg.classList.add('active');
 
-        // Toon Marker
-        const m = document.getElementById('marker');
+        // Position Marker
+        const dot = activeSvg.querySelector('.marker-dot');
         if(item.x && item.y) {
-            m.style.left = item.x + '%'; m.style.top = item.y + '%';
-            m.classList.add('active');
-            document.getElementById('bubble').innerText = item.loc;
-        } else { m.classList.remove('active'); }
+            dot.setAttribute('cx', item.x); dot.setAttribute('cy', item.y);
+            dot.classList.add('active');
+            const b = document.getElementById('infoBubble');
+            b.style.display = 'block'; b.innerText = item.loc;
+        } else { dot.classList.remove('active'); document.getElementById('infoBubble').style.display='none'; }
         window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    function handleMapClick(e) {
-        if(!editMode || !selected) return;
-        const rect = document.getElementById('canvas').getBoundingClientRect();
-        const x = Math.round(((e.clientX - rect.left) / rect.width) * 100);
-        const y = Math.round(((e.clientY - rect.top) / rect.height) * 100);
+    function getClickCoords(e) {
+        if(!isEdit || !selected) return;
+        const rect = document.getElementById('map').getBoundingClientRect();
+        const x = Math.round(((e.clientX - rect.left) / rect.width) * 500);
+        const y = Math.round(((e.clientY - rect.top) / rect.height) * 200);
         
-        document.getElementById('marker').style.left = x + '%';
-        document.getElementById('marker').style.top = y + '%';
-        document.getElementById('marker').classList.add('active');
-        document.getElementById('bubble').innerText = selected.loc;
+        const activeSvg = document.querySelector('svg.active');
+        const dot = activeSvg.querySelector('.marker-dot');
+        dot.setAttribute('cx', x); dot.setAttribute('cy', y);
+        dot.classList.add('active');
 
         const row = `${selected.mfr},${selected.model},"${selected.loc}","${selected.note}",${selected.cat},${x},${y}`;
-        document.getElementById('logMsg').innerText = "Paste this line: " + row;
+        document.getElementById('log').innerText = "PASTE IN CSV: " + row;
     }
 
-    function toggleEditor() {
-        editMode = !editMode;
-        document.getElementById('editorPanel').style.display = editMode ? 'block' : 'none';
-    }
-
+    function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; }
     document.getElementById('search').oninput = (e) => render(e.target.value);
 </script>
 </body>
