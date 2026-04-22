@@ -32,37 +32,37 @@
     <div id="editorPanel" class="editor-ui">
         <div style="background: #1e293b; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #334155;">
             <label class="label-small">GitHub Token (Classic PAT)</label>
-            <input type="password" id="ghToken" placeholder="Plak je ghp_... token hier" style="width: 90%; margin-bottom: 10px;">
-            <button class="btn btn-green" onclick="pushToGitHub()">🚀 Sla alles op naar GitHub</button>
-            <small id="statusMsg" style="color:#94a3b8; display: block; margin-top: 5px;">Status: Gereed</small>
+            <input type="password" id="ghToken" placeholder="Paste your ghp_... token here" style="width: 90%; margin-bottom: 10px;">
+            <button class="btn btn-green" onclick="pushToGitHub()">🚀 Sync all changes to GitHub</button>
+            <small id="statusMsg" style="color:#94a3b8; display: block; margin-top: 5px;">Status: Ready</small>
         </div>
 
         <div id="editFields" style="display:none; border-bottom: 1px solid #444; padding-bottom: 20px; margin-bottom: 20px;">
-            <strong>Toestel Bewerken:</strong>
+            <strong>Edit Aircraft Details:</strong>
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top:10px;">
-                <input type="text" id="editMfr" oninput="applyChanges()" placeholder="Fabrikant">
-                <input type="text" id="editModel" oninput="applyChanges()" placeholder="Model">
-                <input type="text" id="editCat" oninput="applyChanges()" placeholder="PNG Bestand">
+                <div><span class="label-small">Manufacturer</span><input type="text" id="editMfr" oninput="applyChanges()" style="width:90%"></div>
+                <div><span class="label-small">Model</span><input type="text" id="editModel" oninput="applyChanges()" style="width:90%"></div>
+                <div><span class="label-small">PNG Name</span><input type="text" id="editCat" oninput="applyChanges()" style="width:90%"></div>
             </div>
             <div id="markerControls" style="margin-top: 15px;"></div>
-            <button class="btn" style="background:var(--blue); color:white" onclick="addNewPoint()">+ Punt Toevoegen</button>
-            <button class="btn" style="background:var(--red); color:white; float:right;" onclick="deleteAircraft()">Verwijder Vliegtuig</button>
+            <button class="btn" style="background:var(--blue); color:white" onclick="addNewPoint()">+ Add Point</button>
+            <button class="btn" style="background:var(--red); color:white; float:right;" onclick="deleteAircraft()">Delete Aircraft</button>
         </div>
 
         <div>
-            <strong>Nieuw Vliegtuig:</strong><br>
-            <input type="text" id="newMfr" placeholder="Fabrikant">
+            <strong>Quick Add New:</strong><br>
+            <input type="text" id="newMfr" placeholder="Manufacturer">
             <input type="text" id="newModel" placeholder="Model">
-            <input type="text" id="newCat" placeholder="PNG Naam">
-            <button class="btn" style="background:var(--blue); color:white" onclick="addNewAircraft()">+ Toevoegen</button>
+            <input type="text" id="newCat" placeholder="PNG Name">
+            <button class="btn" style="background:var(--blue); color:white" onclick="addNewAircraft()">+ Add to List</button>
         </div>
     </div>
 
     <button onclick="toggleEditor()" id="editBtn" class="btn btn-toggle">⚙️ Toggle Editor Mode</button>
 
     <div class="selection-area">
-        <div><label class="label-small">1. Kies Fabrikant</label><select id="mfrSelect" onchange="updateModelList()"><option>Laden...</option></select></div>
-        <div><label class="label-small">2. Kies Model</label><select id="modelSelect" onchange="loadAircraft()" disabled><option>-- Selecteer --</option></select></div>
+        <div><label class="label-small">1. Select Manufacturer</label><select id="mfrSelect" onchange="updateModelList()"><option value="">Loading...</option></select></div>
+        <div><label class="label-small">2. Select Model</label><select id="modelSelect" onchange="loadAircraft()" disabled><option value="">-- Choose Type --</option></select></div>
     </div>
 
     <div class="display-box" id="map" onmousemove="onMouseMove(event)" onmouseup="onMouseUp(event)">
@@ -74,7 +74,7 @@
 <script>
     let db = []; let selected = null; let isEdit = false; let draggingIdx = -1;
 
-    // DATA LADEN
+    // LOAD DATABASE
     function loadData() {
         fetch('aircraft_plates_db.csv?v=' + Date.now())
         .then(r => r.text())
@@ -82,7 +82,7 @@
             const rows = t.split(/\r?\n/);
             db = rows.slice(1).filter(r => r.trim()).map(r => {
                 const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                return { mfr: (c[0] || "").trim(), model: (c[1] || "").trim(), notes: (c[3] || "").replace(/"/g, "").trim(), cat: (c[4] || "airliner").trim(), points: (c[5] || "").replace(/"/g, "") };
+                return { mfr: (c[0] || "").trim(), model: (c[1] || "").trim(), notes: (c[3] || "").replace(/"/g, ""), cat: (c[4] || "airliner").trim(), points: (c[5] || "").replace(/"/g, "") };
             });
             refreshMfrDropdown();
         });
@@ -92,7 +92,7 @@
     function refreshMfrDropdown() {
         const select = document.getElementById('mfrSelect');
         const prev = select.value;
-        select.innerHTML = '<option value="">-- Kies Fabrikant --</option>';
+        select.innerHTML = '<option value="">-- Choose Manufacturer --</option>';
         [...new Set(db.map(i => i.mfr))].sort().forEach(m => {
             const opt = document.createElement('option'); opt.value = opt.innerText = m;
             select.appendChild(opt);
@@ -103,7 +103,7 @@
     function updateModelList() {
         const mfr = document.getElementById('mfrSelect').value;
         const select = document.getElementById('modelSelect');
-        select.innerHTML = '<option value="">-- Selecteer Type --</option>';
+        select.innerHTML = '<option value="">-- Choose Model --</option>';
         select.disabled = !mfr;
         if (mfr) {
             db.filter(i => i.mfr === mfr).forEach(item => {
@@ -139,12 +139,12 @@
             const pts = p.split('|');
             const dot = document.createElement('div');
             dot.className = 'marker-dot'; dot.style.left = pts[0] + '%'; dot.style.top = pts[1] + '%';
-            dot.setAttribute('data-label', pts[2] || 'Punt');
+            dot.setAttribute('data-label', pts[2] || 'Point');
             dot.onmousedown = (e) => { if(isEdit) { e.stopPropagation(); draggingIdx = idx; } };
             container.appendChild(dot);
             if(isEdit) {
                 const item = document.createElement('div'); item.className = 'marker-item';
-                item.innerHTML = `<input type="text" value="${pts[2] || ''}" oninput="updateLabel(${idx}, this.value)" style="flex:1"><button onclick="removeMarker(${idx})" style="color:var(--red); border:none; background:none;">DEL</button>`;
+                item.innerHTML = `<input type="text" value="${pts[2] || ''}" oninput="updateLabel(${idx}, this.value)" style="flex:1"><button onclick="removeMarker(${idx})" style="color:var(--red); border:none; background:none; cursor:pointer">DEL</button>`;
                 controls.appendChild(item);
             }
         });
@@ -157,65 +157,43 @@
         const y = Math.max(0, Math.min(100, Math.round(((e.clientY - rect.top) / rect.height) * 100)));
         let ptsArr = selected.points.split(';');
         let pParts = ptsArr[draggingIdx].split('|');
-        ptsArr[draggingIdx] = x + '|' + y + '|' + (pParts[2] || "Nieuw");
+        ptsArr[draggingIdx] = x + '|' + y + '|' + (pParts[2] || "New Location");
         selected.points = ptsArr.join(';');
         drawMarkers();
     }
 
     function onMouseUp() { draggingIdx = -1; }
     function applyChanges() { if(!selected) return; selected.mfr = document.getElementById('editMfr').value; selected.model = document.getElementById('editModel').value; selected.cat = document.getElementById('editCat').value; refreshMfrDropdown(); updateModelList(); }
-    function deleteAircraft() { if(!selected || !confirm("Verwijderen?")) return; db = db.filter(i => i !== selected); selected = null; refreshMfrDropdown(); updateModelList(); loadAircraft(); }
+    function deleteAircraft() { if(!selected || !confirm("Delete this aircraft?")) return; db = db.filter(i => i !== selected); selected = null; refreshMfrDropdown(); updateModelList(); loadAircraft(); }
     function addNewAircraft() { const m = document.getElementById('newMfr').value; const mod = document.getElementById('newModel').value; db.push({ mfr: m, model: mod, cat: document.getElementById('newCat').value, points: "50|50|Main Plate", notes: "" }); refreshMfrDropdown(); }
-    function addNewPoint() { if(!selected) return; selected.points = selected.points ? selected.points + ';50|50|Extra Punt' : '50|50|Main Plate'; drawMarkers(); }
+    function addNewPoint() { if(!selected) return; selected.points = selected.points ? selected.points + ';50|50|New Point' : '50|50|Main Plate'; drawMarkers(); }
     function removeMarker(idx) { let pts = selected.points.split(';'); pts.splice(idx, 1); selected.points = pts.join(';'); drawMarkers(); }
     function updateLabel(idx, val) { let pts = selected.points.split(';'); let p = pts[idx].split('|'); pts[idx] = p[0] + '|' + p[1] + '|' + val; selected.points = pts.join(';'); }
     function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; if(selected) loadAircraft(); }
 
-    // GITHUB PUSH - VOLLEDIG HARDCODED URL
     async function pushToGitHub() {
         const token = document.getElementById('ghToken').value.trim();
         const status = document.getElementById('statusMsg');
-        if (!token) return alert("Voer een geldig GitHub Token in!");
-        
-        status.innerText = "⏳ Bezig met opslaan...";
+        if (!token) return alert("Please enter your GitHub Token!");
+        status.innerText = "⏳ Saving to GitHub...";
         status.style.color = "var(--blue)";
 
         const apiUrl = "https://github.com";
-
         let csv = "Manufacturer,Model,Plate_Location,Notes,Category,Points\n";
-        db.forEach(i => {
-            csv += i.mfr + "," + i.model + ",\"\", \"" + (i.notes || "") + "\"," + i.cat + ",\"" + i.points + "\"\n";
-        });
+        db.forEach(i => { csv += i.mfr + "," + i.model + ",\"\", \"" + (i.notes || "") + "\"," + i.cat + ",\"" + i.points + "\"\n"; });
 
         try {
-            const getRes = await fetch(apiUrl, {
-                method: 'GET',
-                headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github.v3+json' }
-            });
-
-            if (!getRes.ok) throw new Error("GitHub verbinding mislukt. Check je token.");
+            const getRes = await fetch(apiUrl, { method: 'GET', headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github.v3+json' } });
+            if (!getRes.ok) throw new Error("Connection failed. Check token.");
             const fileData = await getRes.json();
-
             const putRes = await fetch(apiUrl, {
                 method: 'PUT',
                 headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    message: "Database update",
-                    content: btoa(unescape(encodeURIComponent(csv))),
-                    sha: fileData.sha
-                })
+                body: JSON.stringify({ message: "Update", content: btoa(unescape(encodeURIComponent(csv))), sha: fileData.sha })
             });
-
-            if (putRes.ok) {
-                status.innerText = "✅ Succesvol opgeslagen!";
-                status.style.color = "var(--green)";
-            } else {
-                throw new Error("Push naar GitHub mislukt.");
-            }
-        } catch (e) {
-            status.innerText = "❌ Fout: " + e.message;
-            status.style.color = "var(--red)";
-        }
+            if (putRes.ok) { status.innerText = "✅ Saved Successfully!"; status.style.color = "var(--green)"; }
+            else { throw new Error("Push failed."); }
+        } catch (e) { status.innerText = "❌ Error: " + e.message; status.style.color = "var(--red)"; }
     }
 </script>
 </body>
