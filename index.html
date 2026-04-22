@@ -3,39 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aircraft MSN Locator - Professional Edition</title>
+    <title>Aircraft MSN Locator - Real Silhouette Edition</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root { --blue: #2563eb; --dark: #0f172a; --gray: #f1f5f9; }
         body { font-family: 'Inter', sans-serif; background: var(--gray); margin: 0; padding: 20px; color: var(--dark); }
         .container { max-width: 1200px; margin: 0 auto; text-align: center; }
-        
-        /* Realistic Display Area */
         .display-box { 
             background: white; border-radius: 24px; padding: 40px; margin: 20px auto;
-            max-width: 900px; height: 400px; box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+            max-width: 900px; height: 350px; box-shadow: 0 15px 40px rgba(0,0,0,0.05);
             position: relative; border: 1px solid #e2e8f0;
             display: flex; align-items: center; justify-content: center;
         }
-        
-        svg.unit { width: 95%; height: 95%; display: none; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); }
+        svg.unit { width: 90%; height: 90%; display: none; fill: #475569; }
         svg.active { display: block; }
-        .base { fill: #cbd5e0; stroke: #94a3b8; stroke-width: 1; }
-        .accent { fill: #94a3b8; }
-        .window { fill: #1e293b; }
-
         .marker-dot { fill: #ef4444; stroke: white; stroke-width: 5; display: none; pointer-events: none; }
         .marker-dot.active { display: block; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { r: 10; opacity: 1; } 50% { r: 16; opacity: 0.6; } 100% { r: 10; opacity: 1; } }
-
         .editor-ui { background: var(--dark); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: left; display: none; }
-        .code-output { background: #000; padding: 12px; color: #10b981; font-family: monospace; font-size: 12px; border-radius: 5px; margin-top: 10px; border: 1px solid #333; }
-        .search-box { width: 100%; max-width: 600px; padding: 18px 25px; border-radius: 50px; border: 2px solid #e2e8f0; font-size: 18px; outline: none; margin-bottom: 30px; transition: 0.3s; }
-        .search-box:focus { border-color: var(--blue); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; text-align: left; }
-        .card { background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.2s; }
+        .code-output { background: #000; padding: 12px; color: #10b981; font-family: monospace; font-size: 12px; border-radius: 5px; margin-top: 10px; }
+        .card { background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.2s; text-align: left; }
         .card.selected { border: 2px solid var(--blue); background: #eff6ff; }
-        .bubble { background: var(--dark); color: white; padding: 10px 20px; border-radius: 50px; font-size: 14px; margin-top: 15px; display: none; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .search-box { width: 100%; max-width: 600px; padding: 18px 25px; border-radius: 50px; border: 2px solid #e2e8f0; font-size: 18px; outline: none; margin-bottom: 30px; }
+        .bubble { background: var(--dark); color: white; padding: 10px 20px; border-radius: 50px; font-size: 14px; margin-top: 15px; display: none; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -44,131 +34,95 @@
     <h1>✈️ Aircraft MSN Locator</h1>
 
     <div id="editorPanel" class="editor-ui">
-        <strong>🛠 Editor Mode:</strong> Klik op de tekening om X/Y coördinaten te krijgen voor je CSV.<br>
-        <div id="log" class="code-output">Eerst een vliegtuig selecteren uit de lijst hieronder...</div>
+        <strong>🛠 Editor Mode:</strong> Click on the real silhouette to get coordinates.<br>
+        <div id="log" class="code-output">Select aircraft first...</div>
     </div>
-    <button onclick="toggleEditor()" style="margin-bottom: 20px; cursor:pointer; padding: 10px 20px; border-radius: 10px;">Toggle Editor Mode</button>
+    <button onclick="toggleEditor()" style="margin-bottom: 20px; cursor:pointer; padding: 10px 20px;">Toggle Editor Mode</button>
 
     <div class="display-box" id="map" onclick="getClickCoords(event)">
         
-        <!-- C-130 HERCULES (Detailed) -->
+        <!-- C-130 HERCULES -->
         <svg id="view-hercules" class="unit" viewBox="0 0 500 200">
-            <path class="base" d="M20,135 C20,120 40,105 80,105 L400,105 L440,30 L485,30 L460,105 L475,120 L475,150 L420,165 L60,165 C40,165 20,150 20,135 Z"/>
-            <path class="window" d="M45,120 L85,120 L85,130 L48,135 Z"/>
-            <path class="accent" d="M120,155 L200,155 L200,165 L120,165 Z"/> <!-- Gear housing -->
+            <path d="M25,140 L45,120 L80,115 L150,115 L250,115 L350,115 L420,115 L445,40 L480,40 L460,115 L475,130 L475,155 L420,165 L100,165 L45,155 Z"/>
             <circle class="marker-dot" cx="0" cy="0" r="12" />
         </svg>
 
-        <!-- PIPER (Low Wing Prop) -->
-        <svg id="view-prop-low" class="unit" viewBox="0 0 500 200">
-            <path class="base" d="M40,140 L120,130 L400,130 L445,55 L475,55 L455,135 L480,135 L480,150 L120,155 L40,150 Z"/>
-            <rect class="accent" x="140" y="140" width="180" height="12" rx="3"/> <!-- Low Wing -->
-            <path class="window" d="M125,133 L185,133 L185,143 L125,145 Z"/>
-            <line x1="38" y1="120" x2="38" y2="170" stroke="#1e293b" stroke-width="4"/>
-            <circle class="marker-dot" cx="0" cy="0" r="12" />
-        </svg>
-
-        <!-- CESSNA (High Wing Prop) -->
-        <svg id="view-prop-high" class="unit" viewBox="0 0 500 200">
-            <path class="base" d="M40,145 L120,135 L400,135 L450,60 L480,60 L460,140 L40,155 Z"/>
-            <rect class="accent" x="120" y="90" width="200" height="10" rx="2"/> <!-- High Wing -->
-            <path class="window" d="M110,138 L160,138 L160,150 L110,152 Z"/>
-            <line x1="38" y1="125" x2="38" y2="175" stroke="#1e293b" stroke-width="4"/>
-            <circle class="marker-dot" cx="0" cy="0" r="12" />
-        </svg>
-
-        <!-- AN-2 (Detailed Biplane) -->
+        <!-- AN-2 BIPLANE -->
         <svg id="view-biplane" class="unit" viewBox="0 0 500 200">
-            <path class="base" d="M45,155 Q45,110 140,110 L400,125 L450,55 L480,55 L460,135 L400,160 L140,180 Q45,180 45,155 Z"/>
-            <rect class="accent" x="120" y="85" width="240" height="10" rx="2"/> <!-- Top Wing -->
-            <rect class="accent" x="140" y="170" width="200" height="10" rx="2"/> <!-- Bottom Wing -->
-            <path class="window" d="M100,120 L150,120 L150,140 L100,140 Z"/>
+            <path d="M40,150 Q40,100 120,100 L400,120 L450,40 L480,40 L460,130 L400,160 L120,175 Q40,175 40,150 Z M100,80 L350,80 L350,90 L100,90 Z M120,165 L320,165 L320,175 L120,175 Z"/>
             <circle class="marker-dot" cx="0" cy="0" r="12" />
         </svg>
 
-        <!-- FIGHTER (Jet) -->
+        <!-- CESSNA (High Wing) -->
+        <svg id="view-prophigh" class="unit" viewBox="0 0 500 200">
+            <path d="M40,140 L100,130 L400,130 L440,50 L470,50 L455,130 L100,155 L40,145 Z M100,90 L300,90 L300,100 L100,100 Z"/>
+            <circle class="marker-dot" cx="0" cy="0" r="12" />
+        </svg>
+
+        <!-- PIPER (Low Wing) -->
+        <svg id="view-proplow" class="unit" viewBox="0 0 500 200">
+            <path d="M40,140 L120,130 L400,130 L440,60 L470,60 L455,135 L120,155 L40,150 Z M130,135 L330,135 L330,145 L130,145 Z"/>
+            <circle class="marker-dot" cx="0" cy="0" r="12" />
+        </svg>
+
+        <!-- AIRLINER -->
+        <svg id="view-airliner" class="unit active" viewBox="0 0 500 200">
+            <path d="M40,120 Q40,100 150,100 L410,100 Q490,100 490,120 Q490,140 410,140 L100,140 Q40,140 40,120 Z M380,100 L460,30 L490,30 L460,100 Z M180,140 L350,190 L400,190 L250,140 Z"/>
+            <circle class="marker-dot" cx="0" cy="0" r="12" />
+        </svg>
+
+        <!-- FIGHTER -->
         <svg id="view-fighter" class="unit" viewBox="0 0 500 200">
-            <path class="base" d="M20,130 L150,115 L380,115 L460,40 L490,40 L470,115 L500,130 L470,145 L500,160 L490,160 L460,145 L150,145 Z"/>
-            <path class="window" d="M130,115 Q200,60 280,115 Z" opacity="0.6"/>
+            <path d="M20,120 L150,105 L350,105 L450,30 L480,30 L460,105 L495,120 L460,135 L150,135 Z"/>
             <circle class="marker-dot" cx="0" cy="0" r="12" />
         </svg>
 
         <!-- HELICOPTER -->
         <svg id="view-heli" class="unit" viewBox="0 0 500 200">
-            <path class="base" d="M50,165 Q20,165 20,110 Q20,55 120,55 L420,55 L450,25 L475,25 L460,75 L420,75 Q420,165 50,165 Z"/>
-            <rect class="accent" x="200" y="15" width="10" height="40"/>
-            <path class="window" d="M40,80 Q30,105 40,130 L90,130 L90,80 Z"/>
-            <circle class="marker-dot" cx="0" cy="0" r="12" />
-        </svg>
-
-        <!-- AIRLINER (Jet) -->
-        <svg id="view-airliner" class="unit active" viewBox="0 0 500 200">
-            <path class="base" d="M40,125 Q40,105 150,105 L410,105 Q490,105 490,125 Q490,145 410,145 L100,145 Q40,145 40,125 Z"/>
-            <path class="accent" d="M390,105 L460,40 L490,40 L460,105 Z"/>
-            <path class="accent" d="M160,145 L320,195 L370,195 L230,145 Z"/>
+            <path d="M50,160 Q20,160 20,110 L100,60 L420,60 L450,20 L480,20 L460,80 L420,80 Q420,160 50,160 Z"/>
             <circle class="marker-dot" cx="0" cy="0" r="12" />
         </svg>
 
     </div>
 
     <div id="infoBubble" class="bubble"></div>
-    <input type="text" id="search" class="search-box" placeholder="Typ merk of type (Cessna, C-130, Piper, F-16)...">
-    <div id="results" class="grid"></div>
+    <input type="text" id="search" class="search-box" placeholder="Search (e.g. An-2, Hercules, Cessna)...">
+    <div id="results" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:15px; text-align:left;"></div>
 </div>
 
 <script>
-    let db = [];
-    let selected = null;
-    let isEdit = false;
+    let db = []; let selected = null; let isEdit = false;
 
-    // Data inladen
     fetch('aircraft_plates_db.csv').then(r => r.text()).then(t => {
         const rows = t.split(/\r?\n/).slice(1);
         db = rows.filter(r => r.trim()).map(r => {
             const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            return { mfr: c[0], model: c[1], loc: (c[2]||"").replace(/"/g,""), note: c[3], cat: (c[4]||"Airliner").trim(), x: c[5], y: c[6] };
+            return { mfr: c[0], model: c[1], loc: (c[2]||"").replace(/"/g,""), cat: (c[4]||"Airliner").trim(), x: c[5], y: c[6] };
         });
         render();
     });
 
     function render(f = '') {
-        const g = document.getElementById('results');
-        g.innerHTML = '';
+        const g = document.getElementById('results'); g.innerHTML = '';
         db.filter(i => (i.mfr+i.model).toLowerCase().includes(f.toLowerCase())).forEach(item => {
-            const d = document.createElement('div');
-            d.className = `card ${selected === item ? 'selected' : ''}`;
+            const d = document.createElement('div'); d.className = `card ${selected === item ? 'selected' : ''}`;
             d.innerHTML = `<strong>${item.mfr}</strong><br>${item.model}`;
-            d.onclick = () => select(item);
-            g.appendChild(d);
+            d.onclick = () => select(item); g.appendChild(d);
         });
     }
 
     function select(item) {
-        selected = item;
-        render(document.getElementById('search').value);
-        
-        const catMap = {
-            'Airliner': 'view-airliner', 'Fighter': 'view-fighter', 'Heli': 'view-heli',
-            'PropHigh': 'view-prop-high', 'PropLow': 'view-prop-low', 'Biplane': 'view-biplane',
-            'Hercules': 'view-hercules'
-        };
-        
+        selected = item; render(document.getElementById('search').value);
+        const catMap = { 'Airliner':'view-airliner', 'Fighter':'view-fighter', 'Heli':'view-heli', 'PropHigh':'view-prophigh', 'PropLow':'view-proplow', 'Biplane':'view-biplane', 'Hercules':'view-hercules' };
         document.querySelectorAll('.unit').forEach(u => u.classList.remove('active'));
-        const target = catMap[item.cat] || 'view-airliner';
-        const activeSvg = document.getElementById(target);
+        const activeSvg = document.getElementById(catMap[item.cat] || 'view-airliner');
         activeSvg.classList.add('active');
-
         const dot = activeSvg.querySelector('.marker-dot');
         if(item.x && item.y) {
-            dot.setAttribute('cx', item.x); dot.setAttribute('cy', item.y);
-            dot.classList.add('active');
-            const b = document.getElementById('infoBubble');
-            b.style.display = 'inline-block'; b.innerText = "📍 " + item.loc;
-        } else { 
-            dot.classList.remove('active'); 
-            document.getElementById('infoBubble').style.display = 'none'; 
-        }
-        window.scrollTo({top: 0, behavior: 'smooth'});
+            dot.setAttribute('cx', item.x); dot.setAttribute('cy', item.y); dot.classList.add('active');
+            document.getElementById('infoBubble').style.display = 'inline-block';
+            document.getElementById('infoBubble').innerText = "Plate: " + item.loc;
+        } else { dot.classList.remove('active'); document.getElementById('infoBubble').style.display='none'; }
     }
 
     function getClickCoords(e) {
@@ -176,12 +130,9 @@
         const rect = document.getElementById('map').getBoundingClientRect();
         const x = Math.round(((e.clientX - rect.left) / rect.width) * 500);
         const y = Math.round(((e.clientY - rect.top) / rect.height) * 200);
-        
         const dot = document.querySelector('svg.active .marker-dot');
-        dot.setAttribute('cx', x); dot.setAttribute('cy', y);
-        dot.classList.add('active');
-
-        document.getElementById('log').innerText = `${selected.mfr},${selected.model},"${selected.loc}","${selected.note}",${selected.cat},${x},${y}`;
+        dot.setAttribute('cx', x); dot.setAttribute('cy', y); dot.classList.add('active');
+        document.getElementById('log').innerText = `${selected.mfr},${selected.model},"${selected.loc}","",${selected.cat},${x},${y}`;
     }
 
     function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; }
