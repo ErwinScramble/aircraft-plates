@@ -9,30 +9,21 @@
         :root { --blue: #2563eb; --dark: #0f172a; --gray: #f1f5f9; }
         body { font-family: 'Inter', sans-serif; background: var(--gray); margin: 0; padding: 20px; color: var(--dark); }
         .container { max-width: 1200px; margin: 0 auto; text-align: center; }
-        
-        /* Display Area voor jouw PNG bestanden */
         .display-box { 
             background: white; border-radius: 24px; padding: 20px; margin: 20px auto;
             max-width: 900px; height: 450px; box-shadow: 0 15px 40px rgba(0,0,0,0.05);
             position: relative; border: 1px solid #e2e8f0;
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
-        
-        #aircraft-img { 
-            max-width: 100%; max-height: 100%; object-fit: contain;
-            display: none; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1)); 
-        }
-
+        #aircraft-img { max-width: 100%; max-height: 100%; object-fit: contain; display: none; }
         .marker-dot { 
-            position: absolute; width: 20px; height: 20px; background: #ef4444; 
+            position: absolute; width: 22px; height: 22px; background: #ef4444; 
             border-radius: 50%; border: 3px solid white; display: none;
             box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); z-index: 100;
             transform: translate(-50%, -50%); pointer-events: none;
         }
         .marker-dot.active { display: block; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.3); } 100% { transform: translate(-50%, -50%) scale(1); } }
-
         .editor-ui { background: var(--dark); color: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: left; display: none; }
         .card { background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; cursor: pointer; text-align: left; transition: 0.2s; }
         .card.selected { border: 2px solid var(--blue); background: #eff6ff; }
@@ -42,46 +33,32 @@
     </style>
 </head>
 <body>
-
 <div class="container">
     <h1>✈️ Aircraft MSN Locator</h1>
-
     <div id="editorPanel" class="editor-ui">
-        <strong>🛠 Editor Mode:</strong> Klik op de PNG-afbeelding om de stip te plaatsen.<br>
-        <div id="log" style="font-family:monospace; color:#10b981; margin-top:10px; background:#000; padding:10px; border-radius:5px;">Selecteer een vliegtuig uit de lijst...</div>
+        <strong>🛠 Editor Mode:</strong> Click on the image to set the coordinate.<br>
+        <div id="log" style="font-family:monospace; color:#10b981; margin-top:10px; background:#000; padding:10px; border-radius:5px;">Select aircraft first...</div>
     </div>
-    <button onclick="toggleEditor()" style="margin-bottom: 20px; cursor:pointer; padding: 10px 20px; border-radius: 10px; border: 1px solid #ccc; background: white; font-weight: bold;">Toggle Editor Mode</button>
-
+    <button onclick="toggleEditor()" style="margin-bottom: 20px; cursor:pointer; padding: 10px 20px; border-radius: 10px; background:white;">Toggle Editor Mode</button>
     <div class="display-box" id="map" onclick="getClickCoords(event)">
         <img id="aircraft-img" src="" alt="Silhouette">
-        <div id="img-error" class="error-label" style="display:none;">Geen PNG gevonden voor dit type.</div>
+        <div id="img-error" class="error-label" style="display:none;">PNG not found for this category.</div>
         <div id="marker" class="marker-dot"></div>
     </div>
-
     <div id="infoBubble" class="bubble"></div>
-    <input type="text" id="search" class="search-box" placeholder="Search (An-2, MiG-21, C-130, UH-1)...">
+    <input type="text" id="search" class="search-box" placeholder="Search aircraft...">
     <div id="results" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:15px; text-align:left;"></div>
 </div>
-
 <script>
     let db = []; let selected = null; let isEdit = false;
-
     fetch('aircraft_plates_db.csv').then(r => r.text()).then(t => {
         const rows = t.split(/\r?\n/).slice(1);
         db = rows.filter(r => r.trim()).map(r => {
             const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            return { 
-                mfr: c[0] || "", 
-                model: c[1] || "", 
-                loc: (c[2]||"").replace(/"/g,""), 
-                cat: (c[4]||"").trim(), 
-                x: c[5] || null, 
-                y: c[6] || null 
-            };
+            return { mfr: c[0], model: c[1], loc: (c[2]||"").replace(/"/g,""), note: c[3], cat: (c[4]||"").trim(), x: c[5], y: c[6] };
         });
         render();
     });
-
     function render(f = '') {
         const g = document.getElementById('results'); g.innerHTML = '';
         db.filter(i => (i.mfr+i.model).toLowerCase().includes(f.toLowerCase())).forEach(item => {
@@ -90,25 +67,14 @@
             d.onclick = () => selectAircraft(item); g.appendChild(d);
         });
     }
-
     function selectAircraft(item) {
-        selected = item; 
-        render(document.getElementById('search').value);
-        
+        selected = item; render(document.getElementById('search').value);
         const img = document.getElementById('aircraft-img');
         const err = document.getElementById('img-error');
-        
-        // WE ZOEKEN NU NAAR .png BESTANDEN
-        const imagePath = `silhouettes/${item.cat}.png`;
-        img.src = imagePath;
-        
+        // Laadt de PNG op basis van de Category kolom
+        img.src = `silhouettes/${item.cat}.png`;
         img.onload = () => { img.style.display = 'block'; err.style.display = 'none'; };
-        img.onerror = () => { 
-            img.style.display = 'none'; 
-            err.style.display = 'block'; 
-            err.innerHTML = `PNG nodig: Maak <b>${item.cat}.png</b> en upload naar de map 'silhouettes'.`; 
-        };
-
+        img.onerror = () => { img.style.display = 'none'; err.style.display = 'block'; err.innerHTML = `Missing: <b>silhouettes/${item.cat}.png</b>`; };
         const dot = document.getElementById('marker');
         if(item.x && item.y) {
             dot.style.left = item.x + '%'; dot.style.top = item.y + '%';
@@ -118,20 +84,16 @@
         } else { dot.classList.remove('active'); document.getElementById('infoBubble').style.display='none'; }
         window.scrollTo({top: 0, behavior: 'smooth'});
     }
-
     function getClickCoords(e) {
         if(!isEdit || !selected) return;
         const rect = document.getElementById('map').getBoundingClientRect();
         const x = Math.round(((e.clientX - rect.left) / rect.width) * 100);
         const y = Math.round(((e.clientY - rect.top) / rect.height) * 100);
-        
-        const dot = document.getElementById('marker');
-        dot.style.left = x + '%'; dot.style.top = y + '%';
-        dot.classList.add('active');
-
-        document.getElementById('log').innerText = `${selected.mfr},${selected.model},"${selected.loc}","",${selected.cat},${x},${y}`;
+        document.getElementById('marker').style.left = x + '%';
+        document.getElementById('marker').style.top = y + '%';
+        document.getElementById('marker').classList.add('active');
+        document.getElementById('log').innerText = `${selected.mfr},${selected.model},"${selected.loc}","${selected.note}",${selected.cat},${x},${y}`;
     }
-
     function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; }
     document.getElementById('search').oninput = (e) => render(e.target.value);
 </script>
