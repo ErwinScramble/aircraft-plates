@@ -1,44 +1,108 @@
-<!-- Voeg dit toe in de <style> sectie -->
-<style>
-    .log-area { 
-        width: 100%; height: 100px; background: #1a202c; color: #48bb78; 
-        font-family: monospace; font-size: 11px; padding: 10px; margin-top: 10px;
-        border-radius: 5px; border: 1px solid #48bb78; overflow-y: auto;
-    }
-    .copy-btn { background: #48bb78; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-top: 5px; }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aircraft MSN Locator - Professional Editor</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f0f4f8; margin: 0; padding: 20px; color: #1a202c; }
+        .container { max-width: 1100px; margin: 0 auto; text-align: center; }
+        
+        .visual-guide { 
+            background: white; border-radius: 24px; padding: 20px; margin: 20px auto;
+            max-width: 900px; height: 350px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative;
+            border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center;
+        }
+        svg { width: 85%; height: 100%; display: none; pointer-events: none; }
+        svg.active { display: block; }
+        
+        .marker-point { fill: #e53e3e; stroke: white; stroke-width: 4; display: none; }
+        .marker-point.visible { display: block; animation: pulse 1.5s infinite; }
+        
+        @keyframes pulse { 0% { r: 8; } 50% { r: 12; } 100% { r: 8; } }
 
-<!-- Vervang de editor-panel div door deze -->
-<div id="editorPanel" class="editor-panel">
-    <strong>🛠 Editor Mode:</strong> Select an aircraft below, then click on the image to set coordinates.<br>
-    Selected: <span id="selName" style="color:#63b3ed">None</span> | X: <span id="coordX">0</span> | Y: <span id="coordY">0</span>
-    <div id="logOutput" class="log-area">Ready to log updates...</div>
-    <button class="copy-btn" onclick="copyLogs()">Copy All Updates</button>
+        .editor-panel { 
+            background: #2d3748; color: white; padding: 20px; border-radius: 12px; 
+            margin-bottom: 20px; text-align: left; font-size: 14px; display: none; 
+        }
+        .log-area { 
+            width: 100%; height: 100px; background: #1a202c; color: #48bb78; 
+            font-family: monospace; font-size: 11px; padding: 10px; margin-top: 10px;
+            border-radius: 5px; border: 1px solid #48bb78; overflow-y: auto; white-space: pre;
+        }
+        .copy-btn { background: #48bb78; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+
+        .search-box { width: 100%; max-width: 600px; padding: 15px; border-radius: 50px; border: 2px solid #3182ce; font-size: 16px; margin-bottom: 20px; outline: none; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; text-align: left; }
+        .card { background: white; padding: 20px; border-radius: 15px; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.3s; }
+        .card.active-card { border-color: #3182ce; background: #ebf8ff; }
+        .card:hover { border-color: #3182ce; transform: translateY(-3px); }
+        .mfr-badge { color: #3182ce; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>✈️ MSN Locator & Editor</h1>
+
+    <div id="editorPanel" class="editor-panel">
+        <strong>🛠 Editor Mode:</strong> 1. Select aircraft below | 2. Click on image to set point.<br>
+        Selected: <span id="selName" style="color:#63b3ed">None</span> | X: <span id="coordX">0</span> | Y: <span id="coordY">0</span>
+        <div id="logOutput" class="log-area">Ready to log updates...</div>
+        <button class="copy-btn" onclick="copyLogs()">Copy All Updates for CSV</button>
+    </div>
+
+    <button onclick="toggleEditor()" style="margin-bottom: 20px; padding: 10px 20px; border-radius: 8px; cursor:pointer; background: #3182ce; color:white; border:none; font-weight:bold;">Open/Close Editor</button>
+
+    <div class="visual-guide" id="guideArea" onclick="getCoords(event)">
+        <!-- Airliner -->
+        <svg id="img-airliner" class="active" viewBox="0 0 500 200">
+            <path d="M450,100 C480,105 500,115 500,125 L100,125 C60,125 20,115 20,100 C20,85 60,75 100,75 L420,75 L460,30 L480,30 L460,95 Z" fill="#cbd5e0"/>
+            <circle class="marker-point" cx="0" cy="0" r="10" />
+        </svg>
+        <!-- Fighter -->
+        <svg id="img-fighter" viewBox="0 0 500 200">
+            <path d="M20,110 L150,90 L250,90 L280,30 L350,30 L320,90 L450,90 L480,40 L500,40 L480,110 L500,180 L480,180 L450,130 L320,130 L350,190 L280,190 L250,130 L150,130 Z" fill="#cbd5e0"/>
+            <circle class="marker-point" cx="0" cy="0" r="10" />
+        </svg>
+        <!-- Heli -->
+        <svg id="img-heli" viewBox="0 0 500 200">
+            <path d="M50,140 C50,110 100,70 240,70 L460,70 L480,40 L500,40 L480,90 L460,90 L280,90 C280,140 180,170 50,150 Z" fill="#cbd5e0"/>
+            <circle class="marker-point" cx="0" cy="0" r="10" />
+        </svg>
+        <!-- Prop -->
+        <svg id="img-prop" viewBox="0 0 500 200">
+            <path d="M40,150 L100,130 L400,130 L440,60 L470,60 L450,135 L480,135 L480,165 L100,165 L40,150 Z" fill="#cbd5e0"/>
+            <circle class="marker-point" cx="0" cy="0" r="10" />
+        </svg>
+        <!-- Biplane -->
+        <svg id="img-biplane" viewBox="0 0 500 200">
+            <path d="M40,160 L120,140 L400,140 L440,70 L470,70 L450,145 L100,175 L40,160 Z" fill="#cbd5e0"/>
+            <circle class="marker-point" cx="0" cy="0" r="10" />
+        </svg>
+    </div>
+
+    <input type="text" id="searchInput" class="search-box" placeholder="Search aircraft...">
+    <div id="resultsGrid" class="grid"></div>
 </div>
 
 <script>
+    let aircraftData = [];
+    const csvUrl = 'aircraft_plates_db.csv';
+    let editMode = false;
     let activeItem = null;
     let updateLogs = [];
 
-    // Pas de displayResults functie aan zodat hij het actieve item onthoudt
-    function displayResults(data) {
-        const grid = document.getElementById('resultsGrid');
-        grid.innerHTML = '';
-        data.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.onclick = () => {
-                activeItem = item;
-                document.getElementById('selName').innerText = item.Manufacturer + " " + item.Model;
-                // ... rest van je bestaande onclick logica ...
-            };
-            // ... rest van je bestaande card.innerHTML ...
-        });
+    function toggleEditor() {
+        editMode = !editMode;
+        document.getElementById('editorPanel').style.display = editMode ? 'block' : 'none';
+        document.getElementById('guideArea').style.cursor = editMode ? 'crosshair' : 'default';
     }
 
     function getCoords(event) {
         if (!editMode || !activeItem) {
-            if(!activeItem) alert("Please select an aircraft from the list first!");
+            if(!activeItem && editMode) alert("Please select an aircraft from the list first!");
             return;
         }
         const rect = document.getElementById('guideArea').getBoundingClientRect();
@@ -48,21 +112,73 @@
         document.getElementById('coordX').innerText = x;
         document.getElementById('coordY').innerText = y;
 
-        // Log de update
+        // Loggen voor CSV
         const logLine = `${activeItem.Manufacturer},${activeItem.Model},"${activeItem.Plate_Location}","${activeItem.Notes}",${activeItem.Category},${x},${y}`;
         updateLogs.push(logLine);
         document.getElementById('logOutput').innerText = updateLogs.join('\n');
 
-        // Visualiseer marker
-        const activeMarker = document.querySelector('svg.active .marker-point');
-        activeMarker.setAttribute('cx', x);
-        activeMarker.setAttribute('cy', y);
-        activeMarker.classList.add('visible');
+        const activeSvg = document.querySelector('svg.active');
+        const marker = activeSvg.querySelector('.marker-point');
+        marker.setAttribute('cx', x);
+        marker.setAttribute('cy', y);
+        marker.classList.add('visible');
     }
 
     function copyLogs() {
         const text = document.getElementById('logOutput').innerText;
         navigator.clipboard.writeText(text);
-        alert("Updates copied to clipboard! You can now paste them into your CSV file.");
+        alert("Updates copied! Paste them into your CSV file.");
     }
+
+    fetch(csvUrl).then(res => res.text()).then(text => {
+        const lines = text.split(/\r?\n/);
+        const headers = lines[0].split(',');
+        aircraftData = lines.slice(1).filter(l => l.trim() !== "").map(line => {
+            const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            let obj = {};
+            headers.forEach((h, i) => obj[h.trim()] = values[i]?.replace(/^"|"$/g, "").trim());
+            return obj;
+        });
+        displayResults(aircraftData);
+    });
+
+    function displayResults(data) {
+        const grid = document.getElementById('resultsGrid');
+        grid.innerHTML = '';
+        data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.onclick = () => {
+                activeItem = item;
+                document.querySelectorAll('.card').forEach(c => c.classList.remove('active-card'));
+                card.classList.add('active-card');
+                document.getElementById('selName').innerText = item.Manufacturer + " " + item.Model;
+                
+                const type = (item.Category || 'Airliner').toLowerCase();
+                document.querySelectorAll('svg').forEach(s => s.classList.remove('active'));
+                const activeSvg = document.getElementById('img-' + type) || document.getElementById('img-airliner');
+                activeSvg.classList.add('active');
+                
+                const marker = activeSvg.querySelector('.marker-point');
+                if (item.X && item.Y) {
+                    marker.setAttribute('cx', item.X);
+                    marker.setAttribute('cy', item.Y);
+                    marker.classList.add('visible');
+                } else {
+                    marker.classList.remove('visible');
+                }
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            };
+            card.innerHTML = `<div class="mfr-badge">${item.Manufacturer}</div><strong>${item.Model}</strong><br><small>📍 ${item.Plate_Location}</small>`;
+            grid.appendChild(card);
+        });
+    }
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = aircraftData.filter(item => Object.values(item).join(' ').toLowerCase().includes(term));
+        displayResults(filtered);
+    });
 </script>
+</body>
+</html>
