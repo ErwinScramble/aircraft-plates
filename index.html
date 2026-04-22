@@ -3,101 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aircraft MSN Locator - Editor Dashboard</title>
+    <title>MSN Locator - Debug Edition</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root { --blue: #2563eb; --dark: #0f172a; --gray: #f1f5f9; --green: #10b981; }
         body { font-family: 'Inter', sans-serif; background: var(--gray); margin: 0; padding: 20px; color: var(--dark); }
-        .container { max-width: 1200px; margin: 0 auto; }
-        
-        /* Editor Panel */
-        .editor-ui { 
-            background: var(--dark); color: white; padding: 25px; border-radius: 20px; 
-            margin-bottom: 20px; text-align: left; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .editor-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 20px; }
-        
+        .container { max-width: 1200px; margin: 0 auto; text-align: center; }
+        .editor-ui { background: var(--dark); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: left; display: none; }
         .display-box { 
             background: white; border-radius: 24px; padding: 20px; margin: 20px auto;
             height: 450px; box-shadow: 0 15px 40px rgba(0,0,0,0.05);
             position: relative; border: 1px solid #e2e8f0;
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-            cursor: crosshair;
+            display: flex; align-items: center; justify-content: center;
         }
-        
-        #aircraft-img { max-width: 100%; max-height: 100%; object-fit: contain; pointer-events: none; }
-        
-        .marker-dot { 
-            position: absolute; width: 28px; height: 28px; background: #ef4444; 
-            border-radius: 50%; border: 3px solid white; display: none;
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); z-index: 100;
-            transform: translate(-50%, -50%);
-        }
-
-        label { display: block; font-size: 11px; text-transform: uppercase; color: #94a3b8; margin-bottom: 5px; font-weight: bold; }
-        input.edit-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 14px; box-sizing: border-box; }
-        .btn { padding: 12px 24px; border-radius: 12px; border: none; cursor: pointer; font-weight: bold; transition: 0.2; }
-        .btn-download { background: var(--green); color: white; width: 100%; margin-top: 20px; font-size: 16px; }
-        .btn-toggle { background: white; border: 1px solid #cbd5e0; margin-bottom: 20px; }
-        
-        .search-box { width: 100%; padding: 15px 25px; border-radius: 50px; border: 2px solid #e2e8f0; font-size: 18px; margin-bottom: 30px; outline: none; box-sizing: border-box; }
+        #aircraft-img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .marker-dot { position: absolute; width: 24px; height: 24px; background: #ef4444; border-radius: 50%; border: 3px solid white; display: none; transform: translate(-50%, -50%); z-index: 100; }
+        .debug-log { font-family: monospace; font-size: 11px; color: #718096; margin-top: 5px; }
+        .search-box { width: 100%; max-width: 600px; padding: 15px 25px; border-radius: 50px; border: 2px solid #e2e8f0; font-size: 18px; margin-bottom: 30px; outline: none; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
         .card { background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; cursor: pointer; text-align: left; }
         .card.selected { border: 2px solid var(--blue); background: #eff6ff; }
-        .bubble { background: var(--dark); color: white; padding: 12px 25px; border-radius: 50px; font-size: 14px; margin-top: 15px; display: none; font-weight: 600; text-align: center; }
+        .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header style="text-align: center;">
-        <h1>✈️ MSN Locator <span id="modeLabel" style="color:var(--blue)">User View</span></h1>
-        
-        <div id="editorPanel" class="editor-ui">
-            <div class="editor-grid">
-                <div>
-                    <label>Description (Plate Location)</label>
-                    <input type="text" id="editLoc" class="edit-input" oninput="liveUpdate()">
-                </div>
-                <div>
-                    <label>PNG Filename (Category)</label>
-                    <input type="text" id="editCat" class="edit-input" oninput="liveUpdate()">
-                </div>
-                <div>
-                    <label>Notes</label>
-                    <input type="text" id="editNotes" class="edit-input" oninput="liveUpdate()">
-                </div>
-            </div>
-            <button class="btn btn-download" onclick="downloadCSV()">💾 Download Update for CSV</button>
-        </div>
+    <h1>✈️ Aircraft MSN Locator</h1>
 
-        <button onclick="toggleEditor()" id="editBtn" class="btn btn-toggle">⚙️ Toggle Editor Mode</button>
+    <div id="editorPanel" class="editor-ui">
+        <strong>Editor Mode</strong> | PNG Name: <input type="text" id="editCat" oninput="liveUpdate()" style="padding:5px; border-radius:4px; border:none;">
+        <button onclick="downloadCSV()" style="background:var(--green); color:white; padding:5px 10px; border-radius:4px; border:none; margin-left:10px; cursor:pointer;">Save CSV</button>
+    </div>
 
-        <div class="display-box" id="map" onclick="handlePoint(event)">
-            <img id="aircraft-img" src="" alt="Select aircraft">
-            <div id="marker" class="marker-dot"></div>
-        </div>
+    <button onclick="toggleEditor()" class="btn" style="background:white; border:1px solid #ccc; margin-bottom:20px;">⚙️ Toggle Editor</button>
 
-        <div id="infoBubble" class="bubble"></div>
-        <input type="text" id="search" class="search-box" placeholder="Start typing (MiG, Cessna, C-130)...">
-    </header>
+    <div class="display-box" id="map" onclick="handlePoint(event)">
+        <img id="aircraft-img" src="" alt="Silhouette">
+        <div id="marker" class="marker-dot"></div>
+    </div>
+    <div id="debugInfo" class="debug-log">Status: Waiting for selection...</div>
 
+    <input type="text" id="search" class="search-box" placeholder="Search aircraft...">
     <div id="results" class="grid"></div>
 </div>
 
 <script>
     let db = []; let selected = null; let isEdit = false;
 
-    // Verbeterde CSV Reader
-    fetch('aircraft_plates_db.csv?v=' + Math.random()).then(r => r.text()).then(t => {
+    fetch('aircraft_plates_db.csv?nocache=' + Date.now()).then(r => r.text()).then(t => {
         const rows = t.split(/\r?\n/).slice(1);
         db = rows.filter(r => r.trim()).map(r => {
             const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            return { 
-                mfr: c[0] || "", model: c[1] || "", loc: (c[2]||"").replace(/"/g,""), 
-                note: (c[3]||"").replace(/"/g,""), cat: (c[4]||"").trim(), 
-                x: c[5] || 50, y: c[6] || 50 
-            };
+            return { mfr: c[0]||"", model: c[1]||"", loc: (c[2]||"").replace(/"/g,""), cat: (c[4]||"").trim(), x: c[5]||50, y: c[6]||50 };
         });
         render();
     });
@@ -114,21 +72,23 @@
     function selectAircraft(item) {
         selected = item; render(document.getElementById('search').value);
         const img = document.getElementById('aircraft-img');
-        img.src = `silhouettes/${item.cat}.png`;
+        const debug = document.getElementById('debugInfo');
+        
+        // DE FIX: We gebruiken de volledige URL om fouten te voorkomen
+        const fullPath = window.location.href.split('index.html')[0] + 'silhouettes/' + item.cat + '.png';
+        debug.innerText = "Attempting to load: " + fullPath;
+        
+        img.src = fullPath;
         img.style.display = 'block';
         
-        if(isEdit) {
-            document.getElementById('editLoc').value = item.loc;
-            document.getElementById('editCat').value = item.cat;
-            document.getElementById('editNotes').value = item.note;
-        }
+        img.onerror = () => { debug.innerText = "❌ FAILED to load: silhouettes/" + item.cat + ".png (Check case-sensitivity!)"; };
+        img.onload = () => { debug.innerText = "✅ Successfully loaded silhouettes/" + item.cat + ".png"; };
+
+        if(isEdit) document.getElementById('editCat').value = item.cat;
 
         const dot = document.getElementById('marker');
         dot.style.left = item.x + '%'; dot.style.top = item.y + '%';
         dot.style.display = 'block';
-        
-        const b = document.getElementById('infoBubble');
-        b.style.display = 'inline-block'; b.innerText = "📍 " + item.loc;
     }
 
     function handlePoint(e) {
@@ -136,38 +96,19 @@
         const rect = document.getElementById('map').getBoundingClientRect();
         selected.x = Math.round(((e.clientX - rect.left) / rect.width) * 100);
         selected.y = Math.round(((e.clientY - rect.top) / rect.height) * 100);
-        
         document.getElementById('marker').style.left = selected.x + '%';
         document.getElementById('marker').style.top = selected.y + '%';
-        liveUpdate();
     }
 
-    function liveUpdate() {
-        if(!selected || !isEdit) return;
-        selected.loc = document.getElementById('editLoc').value;
-        selected.cat = document.getElementById('editCat').value;
-        selected.note = document.getElementById('editNotes').value;
-        document.getElementById('infoBubble').innerText = "📍 " + selected.loc;
-    }
-
-    function toggleEditor() {
-        isEdit = !isEdit;
-        document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none';
-        document.getElementById('modeLabel').innerText = isEdit ? "Editor Mode" : "User View";
-    }
-
+    function liveUpdate() { if(selected) selected.cat = document.getElementById('editCat').value; }
+    function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; }
+    
     function downloadCSV() {
-        let csvContent = "Manufacturer,Model,Plate_Location,Notes,Category,X,Y\n";
-        db.forEach(i => {
-            csvContent += `${i.mfr},${i.model},"${i.loc}","${i.note}",${i.cat},${i.x},${i.y}\n`;
-        });
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.setAttribute("download", "aircraft_plates_db.csv");
-        link.click();
+        let csv = "Manufacturer,Model,Plate_Location,Notes,Category,X,Y\n";
+        db.forEach(i => { csv += `${i.mfr},${i.model},"${i.loc}","",${i.cat},${i.x},${i.y}\n`; });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'aircraft_plates_db.csv'; a.click();
     }
-
     document.getElementById('search').oninput = (e) => render(e.target.value);
 </script>
 </body>
