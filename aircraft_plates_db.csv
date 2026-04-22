@@ -1,6 +1,6 @@
 Manufacturer,Model,Plate_Location,Notes,Category,Points
-Antonov,An-2,"", ""Check engine bulkhead for Russian builds."",An-2,"85|undefined|Cabin: On the second joist behind the cockpit or on the rear wall.;41|48|Engine: On the bulkhead behind the engine (requires cowlings to be open).;27|49|Cockpit: On a plate below the pilot’s window.;38|46|Agricultural variants: Painted on the hopper inside the cabin.;45|53|Nanchang/Shijiazhuang Y5 (Chinese build) The construction number plate is typically located on both sides at the top of the horizontal stabilizer support strut;70|65|Painted on the fuselage under the left-hand tailplane;68|59|New Location"
-Lockheed,C-130 Hercules,"", ""C-130J Hercules: Right side of the rear cockpit bench (near the entry stairs). Not visible from the exterior."",C-130,"31"
-Mikoyan Gurevich (MiG),MiG-21,"", ""Wing plates unreliable."",MiG-21,"15"
-Bell,204 / 205 / UH-1,"", """",UH-1,"27"
-Cessna,General (Single Engine),"", ""Most also have a plate below LH/RH stabilizer."",Cessna,"32"
+Antonov,An-2,"", "",An-2,"42|43|Cabin: On the second joist behind the cockpit or on the rear wall.;23|47|Engine: On the bulkhead behind the engine (requires cowlings to be open).;36|48|Cockpit: On a plate below the pilot’s window.;77|58|Nanchang/Shijiazhuang Y5 (Chinese build) The construction number plate is typically located on both sides at the top of the horizontal stabilizer support strut;73|58|Painted on the fuselage under the left-hand tailplane"
+Lockheed,C-130 Hercules,"", " ""C-130J Hercules: Right side of the rear cockpit bench (near the entry stairs). Not visible from the exterior.""",C-130,"31"
+Mikoyan Gurevich (MiG),MiG-21,"", " ""Wing plates unreliable.""",MiG-21,"15"
+Bell,204 / 205 / UH-1,"", " """"",UH-1,"27"
+Cessna,General (Single Engine),"", " ""Most also have a plate below LH/RH stabilizer.""",Cessna,"32"
