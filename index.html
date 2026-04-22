@@ -9,79 +9,55 @@
         :root { --blue: #2563eb; --dark: #0f172a; --gray: #f1f5f9; --green: #10b981; --red: #ef4444; }
         body { font-family: 'Inter', sans-serif; background: var(--gray); margin: 0; padding: 20px; color: var(--dark); }
         .container { max-width: 1200px; margin: 0 auto; text-align: center; }
-        
-        /* Editor Panel */
         .editor-panel { background: var(--dark); color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; text-align: left; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .edit-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-        .edit-grid div { display: flex; flex-direction: column; }
         label { font-size: 11px; text-transform: uppercase; color: #94a3b8; margin-bottom: 5px; font-weight: bold; }
-        input { padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; }
-
-        /* Display Area */
-        .display-box { 
-            background: white; border-radius: 24px; padding: 40px; margin: 20px auto;
-            height: 450px; box-shadow: 0 15px 40px rgba(0,0,0,0.05);
-            position: relative; border: 1px solid #e2e8f0;
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-        }
+        input { padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; width: 100%; box-sizing: border-box; }
+        .display-box { background: white; border-radius: 24px; padding: 40px; margin: 20px auto; height: 450px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); position: relative; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         #aircraft-img { max-width: 100%; max-height: 100%; object-fit: contain; pointer-events: none; }
-        
-        /* Markers */
-        .marker { position: absolute; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; transform: translate(-50%, -50%); z-index: 100; cursor: move; display: none; }
-        #marker1 { background: var(--red); box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); }
-        #marker2 { background: #f59e0b; box-shadow: 0 0 15px rgba(245, 158, 11, 0.6); }
+        .marker { position: absolute; width: 26px; height: 26px; border-radius: 50%; border: 3px solid white; transform: translate(-50%, -50%); z-index: 100; display: none; pointer-events: none; }
+        #marker1 { background: var(--red); box-shadow: 0 0 15px rgba(239, 68, 68, 0.8); }
+        #marker2 { background: #f59e0b; box-shadow: 0 0 15px rgba(245, 158, 11, 0.8); }
         .marker.active { display: block; animation: pulse 1.5s infinite; }
-
         .search-box { width: 100%; max-width: 600px; padding: 15px 25px; border-radius: 50px; border: 2px solid #e2e8f0; font-size: 18px; margin-bottom: 30px; outline: none; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-        .card { background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; cursor: pointer; text-align: left; transition: 0.2s; }
+        .card { background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; cursor: pointer; text-align: left; }
         .card.selected { border: 2px solid var(--blue); background: #eff6ff; }
         .btn { padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; }
         .save-btn { background: var(--green); color: white; width: 100%; font-size: 16px; margin-top: 10px; }
-
         @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.2); } 100% { transform: translate(-50%, -50%) scale(1); } }
     </style>
 </head>
 <body>
-
 <div class="container">
     <h1>✈️ MSN Locator & Pro Editor</h1>
-
     <div id="editorPanel" class="editor-panel">
         <div class="edit-grid">
-            <div><label>Primary Location Text</label><input type="text" id="inLoc" oninput="sync()"></div>
-            <div><label>Secondary Location (Optional)</label><input type="text" id="inNote" oninput="sync()"></div>
+            <div><label>Primary Location</label><input type="text" id="inLoc" oninput="sync()"></div>
+            <div><label>Secondary Location</label><input type="text" id="inNote" oninput="sync()"></div>
             <div><label>PNG Filename (e.g. UH-1)</label><input type="text" id="inCat" oninput="sync(); loadImg();"></div>
         </div>
-        <p style="font-size: 12px; color: #94a3b8;">Click on image: <b>Left Click</b> = Red Point | <b>Right Click</b> = Orange Point</p>
+        <p style="font-size: 12px; color: #94a3b8;"><b>Left Click</b> = Red Point | <b>Right Click</b> = Orange Point</p>
         <button class="btn save-btn" onclick="downloadCSV()">💾 Download Updated CSV for GitHub</button>
     </div>
-
     <button onclick="toggleEdit()" class="btn" style="background:white; border:1px solid #ccc; margin-bottom:20px;">⚙️ Toggle Editor Mode</button>
-
     <div class="display-box" id="canvas" onclick="setPos(event, 1)" oncontextmenu="setPos(event, 2); return false;">
-        <img id="aircraft-img" src="" alt="Silhouette">
+        <img id="aircraft-img" src="" alt="">
         <div id="marker1" class="marker"></div>
         <div id="marker2" class="marker"></div>
     </div>
-
-    <input type="text" id="search" class="search-box" placeholder="Search aircraft...">
+    <input type="text" id="search" class="search-box" placeholder="Search (An-2, C-130, MiG-21, UH-1, Cessna)...">
     <div id="results" class="grid"></div>
 </div>
 
 <script>
     let db = []; let selected = null; let isEdit = false;
-
-    // Verbeterde Data Inlader
-    fetch('aircraft_plates_db.csv?v=' + Math.random()).then(r => r.text()).then(t => {
+    // Laad CSV met cache-buster
+    fetch('aircraft_plates_db.csv?v=' + Date.now()).then(r => r.text()).then(t => {
         const lines = t.split(/\r?\n/).filter(l => l.trim());
         db = lines.slice(1).map(line => {
             const c = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            return { 
-                mfr: c[0]||"", model: c[1]||"", loc: (c[2]||"").replace(/"/g,""), 
-                note: (c[3]||"").replace(/"/g,""), cat: (c[4]||"").trim(), 
-                x1: c[5]||null, y1: c[6]||null, x2: c[7]||null, y2: c[8]||null 
-            };
+            return { mfr: c[0]||"", model: c[1]||"", loc: (c[2]||"").replace(/"/g,""), note: (c[3]||"").replace(/"/g,""), cat: (c[4]||"").trim(), x1: c[5]||null, y1: c[6]||null, x2: c[7]||null, y2: c[8]||null };
         });
         render();
     });
@@ -89,11 +65,9 @@
     function render(f = '') {
         const g = document.getElementById('results'); g.innerHTML = '';
         db.filter(i => (i.mfr+i.model).toLowerCase().includes(f.toLowerCase())).forEach(item => {
-            const d = document.createElement('div');
-            d.className = `card ${selected === item ? 'selected' : ''}`;
-            d.innerHTML = `<strong>${item.mfr}</strong><br>${item.model}<br><small>${item.loc}</small>`;
-            d.onclick = () => select(item);
-            g.appendChild(d);
+            const d = document.createElement('div'); d.className = `card ${selected === item ? 'selected' : ''}`;
+            d.innerHTML = `<strong>${item.mfr}</strong><br>${item.model}`;
+            d.onclick = () => select(item); g.appendChild(d);
         });
     }
 
@@ -111,13 +85,13 @@
     function loadImg() {
         const img = document.getElementById('aircraft-img');
         if(!selected || !selected.cat) { img.style.display = 'none'; return; }
-        img.src = `silhouettes/${selected.cat}.png`;
+        // Force refresh afbeelding
+        img.src = `silhouettes/${selected.cat}.png?v=${Date.now()}`;
         img.style.display = 'block';
     }
 
     function updateMarkers() {
-        const m1 = document.getElementById('marker1');
-        const m2 = document.getElementById('marker2');
+        const m1 = document.getElementById('marker1'); const m2 = document.getElementById('marker2');
         if(selected.x1 && selected.y1) { m1.style.left = selected.x1+'%'; m1.style.top = selected.y1+'%'; m1.classList.add('active'); } else { m1.classList.remove('active'); }
         if(selected.x2 && selected.y2) { m2.style.left = selected.x2+'%'; m2.style.top = selected.y2+'%'; m2.classList.add('active'); } else { m2.classList.remove('active'); }
     }
@@ -131,20 +105,12 @@
         updateMarkers();
     }
 
-    function sync() {
-        if(!selected) return;
-        selected.loc = document.getElementById('inLoc').value;
-        selected.note = document.getElementById('inNote').value;
-        selected.cat = document.getElementById('inCat').value;
-    }
-
+    function sync() { if(selected) { selected.loc = document.getElementById('inLoc').value; selected.note = document.getElementById('inNote').value; selected.cat = document.getElementById('inCat').value; } }
     function toggleEdit() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; }
-    
     function downloadCSV() {
         let csv = "Manufacturer,Model,Plate_Location,Notes,Category,X1,Y1,X2,Y2\n";
         db.forEach(i => { csv += `${i.mfr},${i.model},"${i.loc}","${i.note}",${i.cat},${i.x1||""},${i.y1||""},${i.x2||""},${i.y2||""}\n`; });
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'aircraft_plates_db.csv'; a.click();
+        const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'aircraft_plates_db.csv'; a.click();
     }
     document.getElementById('search').oninput = (e) => render(e.target.value);
 </script>
