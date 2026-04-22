@@ -3,93 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aircraft MSN Locator - Visual Guide</title>
+    <title>Aircraft MSN Locator</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background: #f0f4f8; margin: 0; padding: 20px; color: #1a202c; }
         .container { max-width: 1100px; margin: 0 auto; text-align: center; }
-        
-        /* Visual Guide Area */
         .visual-guide { 
             background: white; border-radius: 24px; padding: 40px; margin: 20px auto 40px;
-            max-width: 900px; min-height: 350px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); position: relative;
+            max-width: 900px; min-height: 300px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative;
             border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center;
         }
-        
-        .aircraft-img { width: 80%; height: auto; transition: all 0.4s ease; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1)); display: none; }
-        .aircraft-img.active { display: block; animation: fadeIn 0.5s; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* The Animated Marker */
+        svg { width: 80%; height: auto; fill: #cbd5e0; position: absolute; transition: opacity 0.3s; display: none; }
+        svg.active { display: block; }
         .marker {
-            position: absolute; width: 35px; height: 35px; background: #e53e3e;
+            position: absolute; width: 30px; height: 30px; background: #e53e3e;
             border-radius: 50%; border: 4px solid white; display: none;
             box-shadow: 0 0 20px rgba(229, 62, 62, 0.6); z-index: 100; transform: translate(-50%, -50%);
         }
         .marker.visible { display: block; animation: pulse 1.5s infinite; }
-        
-        /* The Speech Bubble */
         .speech-bubble {
             position: absolute; background: #2d3748; color: white; padding: 12px 18px;
-            border-radius: 12px; font-size: 14px; font-weight: 700; white-space: nowrap;
-            bottom: 50px; left: 50%; transform: translateX(-50%);
-            box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+            border-radius: 12px; font-size: 14px; font-weight: 600; width: 200px;
+            bottom: 45px; left: 50%; transform: translateX(-50%); box-shadow: 0 10px 15px rgba(0,0,0,0.2);
         }
-        .speech-bubble::after {
-            content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
-            border-width: 8px 8px 0; border-style: solid; border-color: #2d3748 transparent transparent;
-        }
-
-        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 0 rgba(229, 62, 62, 0.7); } 70% { transform: translate(-50%, -50%) scale(1.2); box-shadow: 0 0 0 15px rgba(229, 62, 62, 0); } 100% { transform: translate(-50%, -50%) scale(1); } }
-
-        /* Interface Styles */
-        .search-box { width: 100%; max-width: 600px; padding: 20px 30px; border-radius: 50px; border: 2px solid #3182ce; font-size: 18px; margin-bottom: 25px; outline: none; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.2); } 100% { transform: translate(-50%, -50%) scale(1); } }
+        .search-box { width: 100%; max-width: 600px; padding: 18px 25px; border-radius: 50px; border: 2px solid #3182ce; font-size: 18px; margin-bottom: 25px; outline: none; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; text-align: left; }
-        .card { background: white; padding: 25px; border-radius: 16px; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.3s; }
-        .card:hover { border-color: #3182ce; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .mfr-badge { display: inline-block; background: #ebf8ff; color: #3182ce; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; }
+        .card { background: white; padding: 20px; border-radius: 16px; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.3s; }
+        .card:hover { border-color: #3182ce; transform: translateY(-3px); }
+        .mfr-badge { color: #3182ce; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <header>
         <h1>✈️ Aircraft MSN Locator</h1>
-        <p style="color: #718096; margin-bottom: 30px;">Professional spotting database for plate locations</p>
-        
         <div class="visual-guide">
-            <!-- Herkenbare SVG Illustraties -->
-            <!-- Airliner -->
-            <svg id="img-airliner" class="aircraft-img active" viewBox="0 0 512 512"><path fill="#cbd5e0" d="M495 186l-78-43c-15-8-33-8-47 2l-137 93-162-42c-15-4-31 2-38 16L18 244c-6 13-2 29 10 36l166 84c13 7 29 4 38-8l39-51 106 55c14 7 31 6 44-3l68-46c14-9 19-27 10-41-1-2-2-4-4-5z"/></svg>
-            <!-- Fighter -->
-            <svg id="img-fighter" class="aircraft-img" viewBox="0 0 512 512"><path fill="#cbd5e0" d="M492 236L308 152V64c0-18-14-32-32-32s-32 14-32 32v88L60 236c-11 5-18 16-18 28v40c0 11 9 20 20 20h100l30 80c5 13 18 22 32 22h64c14 0 27-9 32-22l30-80h100c11 0 20-9 20-20v-40c0-12-7-23-18-28z"/></svg>
-            <!-- Helicopter -->
-            <svg id="img-heli" class="aircraft-img" viewBox="0 0 512 512"><path fill="#cbd5e0" d="M448 224h-48.4c-11.4-44.4-48.4-78.6-93.9-85.1L405.3 64H448c17.7 0 32-14.3 32-32s-14.3-32-32-32H128c-17.7 0-32 14.3-32 32s14.3 32 32 32h110.1l-63 60.1c-60 1.2-111 41.5-132.8 95.8H48c-26.5 0-48 21.5-48 48s21.5 48 48 48h22.6c23.9 66.7 87.2 114.3 161.4 114.3 62.4 0 117.5-33.6 148-84.3L448 320c26.5 0 48-21.5 48-48s-21.5-48-48-48z"/></svg>
-            
-            <div id="marker" class="marker">
-                <div id="bubble" class="speech-bubble">Location Info</div>
-            </div>
+            <svg id="img-airliner" class="active" viewBox="0 0 512 512"><path d="M495 186l-78-43c-15-8-33-8-47 2l-137 93-162-42c-15-4-31 2-38 16L18 244c-6 13-2 29 10 36l166 84c13 7 29 4 38-8l39-51 106 55c14 7 31 6 44-3l68-46c14-9 19-27 10-41-1-2-2-4-4-5z"/></svg>
+            <svg id="img-fighter" viewBox="0 0 512 512"><path d="M492 236L308 152V64c0-18-14-32-32-32s-32 14-32 32v88L60 236c-11 5-18 16-18 28v40c0 11 9 20 20 20h100l30 80c5 13 18 22 32 22h64c14 0 27-9 32-22l30-80h100c11 0 20-9 20-20v-40c0-12-7-23-18-28z"/></svg>
+            <svg id="img-heli" viewBox="0 0 512 512"><path d="M448 224h-48.4c-11.4-44.4-48.4-78.6-93.9-85.1L405.3 64H448c17.7 0 32-14.3 32-32s-14.3-32-32-32H128c-17.7 0-32 14.3-32 32s14.3 32 32 32h110.1l-63 60.1c-60 1.2-111 41.5-132.8 95.8H48c-26.5 0-48 21.5-48 48s21.5 48 48 48h22.6c23.9 66.7 87.2 114.3 161.4 114.3 62.4 0 117.5-33.6 148-84.3L448 320c26.5 0 48-21.5 48-48s-21.5-48-48-48z"/></svg>
+            <div id="marker" class="marker"><div id="bubble" class="speech-bubble">Location</div></div>
         </div>
-
         <input type="text" id="searchInput" class="search-box" placeholder="Search a model (e.g. F-16, Boeing, Mi-8)...">
     </header>
     <div id="resultsGrid" class="grid"></div>
 </div>
-
 <script>
     let aircraftData = [];
     const csvUrl = 'aircraft_plates_db.csv';
-
-    const typeKeywords = {
-        fighter: ['f-16', 'f-15', 'f-35', 'mig', 'sukhoi', 'mirage', 'rafale', 'fighter', 'saab', 'stearman'],
-        heli: ['bell', 'agusta', 'eurocopter', 'mil', 'sikorsky', 'kamov', 'lynx', 'heli', 'rotor', 'pumas'],
-        airliner: ['boeing', 'airbus', 'douglas', 'tupolev', 'atr', 'embraer', 'fokker', 'cessna', 'piper']
+    const categories = {
+        fighter: ['f-16','f-15','mig','sukhoi','mirage','rafale','fighter','saab','stearman','a-10','tomcat'],
+        heli: ['bell','agusta','eurocopter','mil','sikorsky','kamov','lynx','heli','rotor','pumas','bo105','gazelle']
     };
-
     function parseCSV(text) {
         const lines = text.split(/\r?\n/);
-        const headers = lines.split(',');
+        const headers = lines[0].split(',');
         return lines.slice(1).filter(l => l.trim() !== "").map(line => {
             const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
             let obj = {};
@@ -97,53 +65,46 @@
             return obj;
         });
     }
-
     fetch(csvUrl).then(res => res.text()).then(text => {
         aircraftData = parseCSV(text);
         displayResults(aircraftData);
     });
-
     function updateMarker(item) {
-        const fullText = (item.Manufacturer + " " + item.Model).toLowerCase();
+        const full = (item.Manufacturer + " " + item.Model).toLowerCase();
         const loc = item.Plate_Location.toLowerCase();
-        
-        let activeType = 'airliner';
-        if (typeKeywords.fighter.some(k => fullText.includes(k))) activeType = 'fighter';
-        if (typeKeywords.heli.some(k => fullText.includes(k))) activeType = 'heli';
-
-        document.querySelectorAll('.aircraft-img').forEach(img => img.classList.remove('active'));
-        document.getElementById('img-' + activeType).classList.add('active');
-
+        let type = 'airliner';
+        if (categories.fighter.some(k => full.includes(k))) type = 'fighter';
+        if (categories.heli.some(k => full.includes(k))) type = 'heli';
+        document.querySelectorAll('svg').forEach(s => s.classList.remove('active'));
+        document.getElementById('img-' + type).classList.add('active');
         const marker = document.getElementById('marker');
         const bubble = document.getElementById('bubble');
         marker.classList.add('visible');
-
-        // Dynamische posities per type
-        const positions = {
-            airliner: { nose: [15, 60], cockpit: [25, 45], gear: [45, 65], tail: [85, 40] },
-            fighter: { nose: [10, 55], cockpit: [45, 35], gear: [55, 65], tail: [90, 45] },
-            heli: { nose: [15, 65], cockpit: [35, 50], gear: [45, 35], tail: [85, 45] }
-        };
-
-        const p = positions[activeType];
-        let coords = p.cockpit; // default
         bubble.innerText = item.Plate_Location;
-
-        if (loc.includes('nose') || loc.includes('forward')) coords = p.nose;
-        else if (loc.includes('tail') || loc.includes('rear') || loc.includes('stabilizer') || loc.includes('boom')) coords = p.tail;
-        else if (loc.includes('wheel') || loc.includes('gear') || loc.includes('bay')) coords = p.gear;
-        else coords = p.cockpit;
-
-        marker.style.left = coords[0] + "%";
-        marker.style.top = coords[1] + "%";
+        let x = 50, y = 50;
+        if (type === 'airliner') {
+            if (loc.includes('nose')) { x = 15; y = 60; }
+            else if (loc.includes('tail') || loc.includes('rear')) { x = 85; y = 40; }
+            else if (loc.includes('cockpit') || loc.includes('door')) { x = 30; y = 45; }
+            else if (loc.includes('wheel') || loc.includes('gear')) { x = 55; y = 70; }
+        } else if (type === 'fighter') {
+            if (loc.includes('nose')) { x = 15; y = 55; }
+            else if (loc.includes('tail') || loc.includes('rear')) { x = 85; y = 35; }
+            else if (loc.includes('cockpit')) { x = 35; y = 40; }
+            else if (loc.includes('wheel') || loc.includes('gear')) { x = 50; y = 75; }
+        } else if (type === 'heli') {
+            if (loc.includes('nose')) { x = 20; y = 65; }
+            else if (loc.includes('boom') || loc.includes('tail')) { x = 80; y = 40; }
+            else if (loc.includes('cockpit') || loc.includes('console')) { x = 40; y = 50; }
+            else { x = 50; y = 30; }
+        }
+        marker.style.left = x + "%"; marker.style.top = y + "%";
     }
-
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
         const filtered = aircraftData.filter(item => Object.values(item).join(' ').toLowerCase().includes(term));
         displayResults(filtered);
     });
-
     function displayResults(data) {
         const grid = document.getElementById('resultsGrid');
         grid.innerHTML = '';
@@ -151,11 +112,7 @@
             const card = document.createElement('div');
             card.className = 'card';
             card.onclick = () => { updateMarker(item); window.scrollTo({top: 0, behavior: 'smooth'}); };
-            card.innerHTML = `
-                <div class="mfr-badge">${item.Manufacturer}</div>
-                <div style="font-size:18px; font-weight:700; margin-bottom:10px;">${item.Model}</div>
-                <div style="font-size:13px; color:#4a5568; line-height:1.4;">📍 ${item.Plate_Location}</div>
-            `;
+            card.innerHTML = `<div class="mfr-badge">${item.Manufacturer}</div><div style="font-size:18px; font-weight:700; margin-bottom:5px;">${item.Model}</div><div style="font-size:13px; color:#4a5568;">📍 ${item.Plate_Location}</div>`;
             grid.appendChild(card);
         });
     }
