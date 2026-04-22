@@ -3,48 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aircraft MSN Locator - Fix Edition</title>
+    <title>Aircraft MSN Locator - Dashboard</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root { --blue: #2563eb; --dark: #0f172a; --gray: #f1f5f9; --green: #10b981; --red: #ef4444; }
         body { font-family: 'Inter', sans-serif; background: var(--gray); margin: 0; padding: 10px; color: var(--dark); overflow-x: hidden; }
         .container { max-width: 1000px; margin: 0 auto; }
-        
-        .selection-area { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; }
+        .selection-area { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; text-align: left; }
         @media (max-width: 600px) { .selection-area { grid-template-columns: 1fr; } }
-        
         select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e0; font-size: 16px; background: white; }
-
-        /* De Display Box is gefixeerd */
-        .display-box { 
-            background: white; border-radius: 20px; margin: 10px auto; 
-            height: 400px; position: relative; border: 1px solid #e2e8f0; 
-            display: flex; align-items: center; justify-content: center; overflow: hidden; 
-        }
-        
-        /* De Wrapper MOET exact over de afbeelding vallen */
+        .display-box { background: white; border-radius: 20px; margin: 10px auto; height: 400px; position: relative; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .img-container { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
-        
-        #aircraft-img { 
-            max-width: 100%; max-height: 100%; 
-            object-fit: contain; /* Houdt verhouding vast */
-            user-select: none; -webkit-user-drag: none;
-        }
-        
-        /* De marker container krijgt exact de afmetingen van de zichtbare image */
+        #aircraft-img { max-width: 100%; max-height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none; }
         #markerArea { position: absolute; pointer-events: none; }
-
-        .marker-dot { 
-            position: absolute; width: 22px; height: 22px; background: var(--red); 
-            border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.4);
-            z-index: 100; transform: translate(-50%, -50%); cursor: grab; pointer-events: auto;
-        }
-        .marker-dot::after { 
-            content: attr(data-label); position: absolute; bottom: 28px; left: 50%; 
-            transform: translateX(-50%); background: black; color: white; 
-            padding: 4px 10px; border-radius: 6px; font-size: 11px; white-space: nowrap; 
-        }
-
+        .marker-dot { position: absolute; width: 22px; height: 22px; background: var(--red); border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.4); z-index: 100; transform: translate(-50%, -50%); cursor: grab; pointer-events: auto; }
+        .marker-dot::after { content: attr(data-label); position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); background: black; color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; white-space: nowrap; }
         .editor-ui { background: var(--dark); color: white; padding: 15px; border-radius: 20px; margin-bottom: 15px; display: none; text-align: left; }
         input { padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 14px; margin-bottom: 10px; width: 100%; box-sizing: border-box; }
         .btn { padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px; }
@@ -60,6 +33,7 @@
 <div class="container">
     <h1 style="font-size: 1.5rem; text-align: center;">✈️ Aircraft MSN Locator</h1>
 
+    <!-- Editor Mode -->
     <div id="editorPanel" class="editor-ui">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <div><span class="label-small">Manufacturer</span><input type="text" id="editMfr" oninput="applyChanges()"></div>
@@ -67,19 +41,21 @@
         </div>
         <div id="markerControls"></div>
         <button class="btn btn-blue" onclick="addNewPoint()">+ Add Location Point</button>
-        <button class="btn btn-green" onclick="downloadCSV()">⬇️ Download CSV & Save to GitHub</button>
+        <button class="btn btn-green" onclick="downloadCSV()">⬇️ Download Updated CSV</button>
     </div>
 
     <button onclick="toggleEditor()" id="editBtn" class="btn btn-toggle">⚙️ Toggle Editor Mode</button>
 
+    <!-- Dropdowns -->
     <div class="selection-area">
-        <div><label class="label-small">Manufacturer</label><select id="mfrSelect" onchange="updateModelList()"></select></div>
-        <div><label class="label-small">Model</label><select id="modelSelect" onchange="loadAircraft()" disabled></select></div>
+        <div><label class="label-small">1. Manufacturer</label><select id="mfrSelect" onchange="updateModelList()"><option>Loading...</option></select></div>
+        <div><label class="label-small">2. Model</label><select id="modelSelect" onchange="loadAircraft()" disabled><option>-- Select Manufacturer First --</option></select></div>
     </div>
 
+    <!-- Visualizer -->
     <div class="display-box">
         <div class="img-container">
-            <img id="aircraft-img" src="" alt="">
+            <img id="aircraft-img" src="" alt="" style="display:none;">
             <div id="markerArea"></div>
         </div>
     </div>
@@ -88,30 +64,41 @@
 <script>
     let db = []; let selected = null; let isEdit = false; let draggingIdx = -1;
 
+    // Verbeterde CSV Loader
     fetch('aircraft_plates_db.csv?v=' + Date.now()).then(r => r.text()).then(t => {
         const rows = t.split(/\r?\n/);
         db = rows.slice(1).filter(r => r.trim()).map(r => {
             const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            return { mfr: (c||"").trim(), model: (c||"").trim(), notes: (c||"").replace(/"/g,""), cat: (c||"airliner").trim(), points: (c||"").replace(/"/g,"") };
+            // We pakken de kolommen op volgorde (0=Mfr, 1=Model, 3=Notes, 4=Cat, 5=Points)
+            return {
+                mfr: (c[0] || "Unknown").trim(),
+                model: (c[1] || "Unknown").trim(),
+                notes: (c[3] || "").replace(/"/g,"").trim(),
+                cat: (c[4] || "airliner").trim(),
+                points: (c[5] || "").replace(/"/g,"").trim()
+            };
         });
         refreshMfrDropdown();
     });
 
     function refreshMfrDropdown() {
         const select = document.getElementById('mfrSelect');
-        select.innerHTML = '<option value="">-- Choose Manufacturer --</option>';
-        [...new Set(db.map(i => i.mfr))].sort().forEach(m => {
-            const opt = document.createElement('option'); opt.value = opt.innerText = m; select.appendChild(opt);
+        select.innerHTML = '<option value="">-- Select Manufacturer --</option>';
+        const mfrs = [...new Set(db.map(i => i.mfr))].sort();
+        mfrs.forEach(m => {
+            const opt = document.createElement('option'); opt.value = opt.innerText = m;
+            select.appendChild(opt);
         });
     }
 
     function updateModelList() {
         const mfr = document.getElementById('mfrSelect').value;
         const select = document.getElementById('modelSelect');
-        select.innerHTML = '<option value="">-- Select Model --</option>';
+        select.innerHTML = '<option value="">-- Choose Type --</option>';
         select.disabled = !mfr;
         if (mfr) db.filter(i => i.mfr === mfr).forEach(item => {
-            const opt = document.createElement('option'); opt.value = item.model; opt.innerText = item.model; select.appendChild(opt);
+            const opt = document.createElement('option'); opt.value = item.model; opt.innerText = item.model;
+            select.appendChild(opt);
         });
     }
 
@@ -120,38 +107,25 @@
         const model = document.getElementById('modelSelect').value;
         selected = db.find(i => i.mfr === mfr && i.model === model);
         if(!selected) return;
-        
         const img = document.getElementById('aircraft-img');
         img.src = 'silhouettes/' + selected.cat + '.png';
-        
         if(isEdit) {
             document.getElementById('editMfr').value = selected.mfr;
             document.getElementById('editModel').value = selected.model;
         }
-
         img.onload = syncMarkerArea;
     }
 
-    // Cruciaal: Zorg dat de markerArea PRECIES zo groot is als de getoonde afbeelding
     function syncMarkerArea() {
         const img = document.getElementById('aircraft-img');
         const area = document.getElementById('markerArea');
-        
-        // De browser berekent de werkelijke afmetingen van de 'contain' afbeelding
+        img.style.display = 'block';
         const imgRatio = img.naturalWidth / img.naturalHeight;
         const containerRatio = img.parentNode.offsetWidth / img.parentNode.offsetHeight;
-        
         let w, h;
-        if (imgRatio > containerRatio) {
-            w = img.parentNode.offsetWidth;
-            h = w / imgRatio;
-        } else {
-            h = img.parentNode.offsetHeight;
-            w = h * imgRatio;
-        }
-        
-        area.style.width = w + 'px';
-        area.style.height = h + 'px';
+        if (imgRatio > containerRatio) { w = img.parentNode.offsetWidth; h = w / imgRatio; }
+        else { h = img.parentNode.offsetHeight; w = h * imgRatio; }
+        area.style.width = w + 'px'; area.style.height = h + 'px';
         drawMarkers();
     }
 
@@ -160,30 +134,18 @@
         const controls = document.getElementById('markerControls');
         container.innerHTML = ''; controls.innerHTML = '';
         if(!selected || !selected.points) return;
-
         selected.points.split(';').forEach((p, idx) => {
             if(!p.includes('|')) return;
             const pts = p.split('|');
             const dot = document.createElement('div');
-            dot.className = 'marker-dot';
-            dot.style.left = pts[0] + '%'; 
-            dot.style.top = pts[1] + '%';
-            dot.setAttribute('data-label', pts[2] || 'Point');
-            
-            const startDrag = (e) => { 
-                if(isEdit) { 
-                    e.preventDefault();
-                    draggingIdx = idx; 
-                } 
-            };
-            dot.onmousedown = startDrag;
-            dot.ontouchstart = startDrag;
-            
+            dot.className = 'marker-dot'; dot.style.left = pts[0] + '%'; dot.style.top = pts[1] + '%';
+            dot.setAttribute('data-label', pts[2] || 'Plate');
+            dot.onmousedown = (e) => { if(isEdit) { e.preventDefault(); draggingIdx = idx; } };
+            dot.ontouchstart = (e) => { if(isEdit) { e.preventDefault(); draggingIdx = idx; } };
             container.appendChild(dot);
             if(isEdit) {
-                const div = document.createElement('div');
-                div.className = 'marker-item';
-                div.innerHTML = `<input type="text" value="${pts[2] || ''}" oninput="updateLabel(${idx}, this.value)" style="flex:1; margin:0;"><button onclick="removeMarker(${idx})" style="color:var(--red); background:none; border:none; width:30px; cursor:pointer;">X</button>`;
+                const div = document.createElement('div'); div.className = 'marker-item';
+                div.innerHTML = `<input type="text" value="${pts[2] || ''}" oninput="updateLabel(${idx}, this.value)" style="flex:1; margin:0;"><button onclick="removeMarker(${idx})" style="color:var(--red); border:none; background:none; width:30px;">X</button>`;
                 controls.appendChild(div);
             }
         });
@@ -193,32 +155,25 @@
         if (draggingIdx === -1) return;
         const area = document.getElementById('markerArea');
         const rect = area.getBoundingClientRect();
-        const clientX = e.touches ? e.touches.clientX : e.clientX;
-        const clientY = e.touches ? e.touches.clientY : e.clientY;
-        
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
         const x = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100)).toFixed(2);
         const y = Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100)).toFixed(2);
-        
         let ptsArr = selected.points.split(';');
         let parts = ptsArr[draggingIdx].split('|');
         ptsArr[draggingIdx] = `${x}|${y}|${parts[2] || "Point"}`;
         selected.points = ptsArr.join(';');
-        
         const dots = document.querySelectorAll('.marker-dot');
-        if(dots[draggingIdx]) {
-            dots[draggingIdx].style.left = x + '%';
-            dots[draggingIdx].style.top = y + '%';
-        }
+        if(dots[draggingIdx]) { dots[draggingIdx].style.left = x + '%'; dots[draggingIdx].style.top = y + '%'; }
     }
 
     window.addEventListener('mousemove', handleMove);
     window.addEventListener('touchmove', handleMove, { passive: false });
     window.addEventListener('mouseup', () => draggingIdx = -1);
     window.addEventListener('touchend', () => draggingIdx = -1);
-    window.addEventListener('resize', syncMarkerArea);
 
     function applyChanges() { if(!selected) return; selected.mfr = document.getElementById('editMfr').value; selected.model = document.getElementById('editModel').value; refreshMfrDropdown(); }
-    function addNewPoint() { if(!selected) return; selected.points = (selected.points ? selected.points + ';' : '') + '50|50|New Point'; drawMarkers(); }
+    function addNewPoint() { if(!selected) return; selected.points = (selected.points ? selected.points + ';' : '') + '50|50|New Location'; drawMarkers(); }
     function removeMarker(idx) { let pts = selected.points.split(';'); pts.splice(idx,1); selected.points = pts.join(';'); drawMarkers(); }
     function updateLabel(idx, val) { let pts = selected.points.split(';'); let p = pts[idx].split('|'); pts[idx] = `${p[0]}|${p[1]}|${val}`; selected.points = pts.join(';'); }
     function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; if(selected) loadAircraft(); }
