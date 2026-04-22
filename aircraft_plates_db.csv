@@ -1,5 +1,6 @@
 Manufacturer,Model,Plate_Location,Notes,Category,X,Y
-Antonov,An-2,Below tail (LH side) or 2nd joist behind cockpit,Check engine bulkhead for Russian builds.,Dubbeldekker,85,45
-Lockheed,C-130 Hercules,Cockpit ceiling or RH bench (J model),Behind flight engineer panel.,C-130 Hercules,25,40
-Cessna,General (Single Engine),Forward edge of LH door frame,Most also have a plate below LH/RH stabilizer.,Sport Hoogdekker,32,55
-Mikoyan Gurevich (MiG),MiG-21,Nose wheel bay (strut or bulkhead),Wing plates unreliable.,Straaljager,15,65
+Antonov,An-2,Below tail (LH side) or 2nd joist behind cockpit,Check engine bulkhead for Russian builds.,An-2,85,45
+Lockheed,C-130 Hercules,Cockpit ceiling or RH bench (J model),Behind flight engineer panel.,C-130,25,40
+Mikoyan Gurevich (MiG),MiG-21,Nose wheel bay (strut or bulkhead),Wing plates unreliable.,MiG-21,15,65
+Bell,204 / 205 / UH-1,LH side of central control panel,Visible through glass near pilot feet.,UH-1,35,50
+Cessna,General (Single Engine),Forward edge of LH door frame,Most also have a plate below LH/RH stabilizer.,Cessna,32,55
