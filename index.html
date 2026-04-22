@@ -2,74 +2,81 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aircraft MSN Locator - Professional Editor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aircraft MSN Locator</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root { --blue: #2563eb; --dark: #0f172a; --gray: #f1f5f9; --green: #10b981; --red: #ef4444; }
-        body { font-family: 'Inter', sans-serif; background: var(--gray); margin: 0; padding: 20px; color: var(--dark); }
-        .container { max-width: 1000px; margin: 0 auto; text-align: center; }
-        .selection-area { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; background: white; padding: 20px; border-radius: 15px; text-align: left; border: 1px solid #e2e8f0; }
-        select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e0; font-size: 16px; background: white; outline: none; }
-        .display-box { background: white; border-radius: 24px; padding: 40px; margin: 20px auto; height: 400px; position: relative; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        #aircraft-img { max-width: 100%; max-height: 100%; object-fit: contain; pointer-events: none; user-select: none; }
-        .marker-dot { position: absolute; width: 24px; height: 24px; background: var(--red); border-radius: 50%; border: 3px solid white; box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); z-index: 100; transform: translate(-50%, -50%); cursor: grab; }
-        .marker-dot:hover::after { content: attr(data-label); position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: black; color: white; padding: 5px 12px; border-radius: 6px; font-size: 12px; white-space: nowrap; }
-        .editor-ui { background: var(--dark); color: white; padding: 25px; border-radius: 20px; margin-bottom: 20px; display: none; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .marker-item { display: flex; gap: 10px; margin-bottom: 8px; align-items: center; background: #334155; padding: 8px; border-radius: 6px; }
-        input { padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 14px; }
-        .btn { padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        body { font-family: 'Inter', sans-serif; background: var(--gray); margin: 0; padding: 10px; color: var(--dark); overflow-x: hidden; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        
+        /* Dropdowns responsief */
+        .selection-area { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; }
+        @media (max-width: 600px) { .selection-area { grid-template-columns: 1fr; } }
+        
+        select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e0; font-size: 16px; background: white; }
+
+        /* Canvas responsief & Schaalbaar */
+        .display-box { 
+            background: white; border-radius: 20px; margin: 10px auto; 
+            height: 60vh; max-height: 450px; 
+            position: relative; border: 1px solid #e2e8f0; 
+            display: flex; align-items: center; justify-content: center; overflow: hidden; 
+            touch-action: none; /* Voorkomt scrollen tijdens slepen */
+        }
+        
+        /* De container die de afbeelding exact omvat */
+        .img-wrapper { position: relative; display: inline-block; max-width: 100%; max-height: 100%; }
+        #aircraft-img { max-width: 100%; max-height: 100%; display: block; user-select: none; pointer-events: auto; }
+        
+        .marker-dot { 
+            position: absolute; width: 22px; height: 22px; background: var(--red); 
+            border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            z-index: 100; transform: translate(-50%, -50%); cursor: grab; 
+        }
+        .marker-dot::after { content: attr(data-label); position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); background: black; color: white; padding: 4px 8px; border-radius: 5px; font-size: 11px; white-space: nowrap; pointer-events: none; }
+
+        /* Editor UI responsief */
+        .editor-ui { background: var(--dark); color: white; padding: 15px; border-radius: 20px; margin-bottom: 15px; display: none; text-align: left; }
+        .editor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 15px; }
+        input { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 14px; }
+        
+        .btn { padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px; }
         .btn-blue { background: var(--blue); color: white; }
-        .btn-green { background: var(--green); color: white; width: 100%; font-size: 16px; margin-top: 10px; }
-        .btn-toggle { background: white; border: 1px solid #ccc; margin-bottom: 20px; }
-        .label-small { font-size: 11px; color: #94a3b8; text-transform: uppercase; font-weight: bold; display: block; margin-bottom: 4px; }
-        #saveNotice { display: none; background: #fef3c7; color: #92400e; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; font-weight: 600; border: 1px solid #fde68a; }
+        .btn-green { background: var(--green); color: white; }
+        .btn-toggle { background: white; border: 1px solid #ccc; margin-bottom: 10px; }
+        
+        .label-small { font-size: 11px; color: #94a3b8; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; display: block; }
     </style>
 </head>
 <body>
+
 <div class="container">
-    <h1>✈️ Aircraft MSN Locator</h1>
-    <div id="saveNotice">⚠️ Session has unsaved changes. Download CSV to keep them!</div>
+    <h1 style="font-size: 1.5rem; text-align: center;">✈️ Aircraft MSN Locator</h1>
 
     <div id="editorPanel" class="editor-ui">
-        <div id="editFields" style="display:none; border-bottom: 1px solid #444; padding-bottom: 20px; margin-bottom: 20px;">
-            <strong>Modify Selected Aircraft:</strong>
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top:10px;">
-                <div><span class="label-small">Manufacturer</span><input type="text" id="editMfr" oninput="applyChanges()" style="width:90%"></div>
-                <div><span class="label-small">Model Name</span><input type="text" id="editModel" oninput="applyChanges()" style="width:90%"></div>
-                <div><span class="label-small">PNG Filename</span><input type="text" id="editCat" oninput="applyChanges()" style="width:90%"></div>
-            </div>
-            <div id="markerControls" style="margin-top: 15px;"></div>
-            <button class="btn btn-blue" onclick="addNewPoint()">+ Add Point</button>
-            <button class="btn" style="background:var(--red); color:white; float:right;" onclick="deleteAircraft()">Delete Aircraft</button>
+        <div class="editor-grid" id="editFields" style="display:none;">
+            <div><span class="label-small">Manufacturer</span><input type="text" id="editMfr" oninput="applyChanges()"></div>
+            <div><span class="label-small">Model</span><input type="text" id="editModel" oninput="applyChanges()"></div>
+            <div><span class="label-small">PNG Name</span><input type="text" id="editCat" oninput="applyChanges()"></div>
         </div>
-
-        <div style="border-bottom: 1px solid #444; padding-bottom: 20px; margin-bottom: 20px;">
-            <strong>Add New Aircraft:</strong><br>
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; margin-top:10px;">
-                <input type="text" id="newMfr" placeholder="Manufacturer">
-                <input type="text" id="newModel" placeholder="Model">
-                <input type="text" id="newCat" placeholder="PNG Name">
-                <button class="btn btn-blue" onclick="addNewAircraft()">+ Add</button>
-            </div>
-        </div>
-
-        <div>
-            <strong>Export Session:</strong>
-            <button class="btn btn-green" onclick="downloadCSV()">⬇️ Download Updated aircraft_plates_db.csv</button>
-        </div>
+        <div id="markerControls"></div>
+        <button class="btn btn-blue" onclick="addNewPoint()">+ Add Point</button>
+        <button class="btn btn-green" onclick="downloadCSV()">⬇️ Download CSV</button>
     </div>
 
-    <button onclick="toggleEditor()" id="editBtn" class="btn btn-toggle">⚙️ Toggle Editor Mode</button>
+    <button onclick="toggleEditor()" id="editBtn" class="btn btn-toggle">⚙️ Editor Mode</button>
 
     <div class="selection-area">
-        <div><label class="label-small">1. Manufacturer</label><select id="mfrSelect" onchange="updateModelList()"><option value="">Loading...</option></select></div>
-        <div><label class="label-small">2. Model</label><select id="modelSelect" onchange="loadAircraft()" disabled><option value="">-- Select --</option></select></div>
+        <div><label class="label-small">Manufacturer</label><select id="mfrSelect" onchange="updateModelList()"></select></div>
+        <div><label class="label-small">Model</label><select id="modelSelect" onchange="loadAircraft()" disabled></select></div>
     </div>
 
-    <div class="display-box" id="map" onmousemove="onMouseMove(event)" onmouseup="onMouseUp(event)">
-        <img id="aircraft-img" src="" alt="" style="display:none;">
-        <div id="markerContainer"></div>
+    <div class="display-box" id="canvas">
+        <div class="img-wrapper" id="imgWrapper">
+            <img id="aircraft-img" src="" alt="" style="display:none;" onmousedown="onStart(event)" ontouchstart="onStart(event)">
+            <div id="markerContainer"></div>
+        </div>
     </div>
 </div>
 
@@ -87,24 +94,22 @@
 
     function refreshMfrDropdown() {
         const select = document.getElementById('mfrSelect');
-        const currentMfr = select.value;
-        select.innerHTML = '<option value="">-- Select Manufacturer --</option>';
+        const current = select.value;
+        select.innerHTML = '<option value="">-- Choose Manufacturer --</option>';
         [...new Set(db.map(i => i.mfr))].sort().forEach(m => {
             const opt = document.createElement('option'); opt.value = opt.innerText = m; select.appendChild(opt);
         });
-        if (currentMfr) select.value = currentMfr;
+        if (current) select.value = current;
     }
 
     function updateModelList() {
         const mfr = document.getElementById('mfrSelect').value;
         const select = document.getElementById('modelSelect');
-        select.innerHTML = '<option value="">-- Choose Model --</option>';
+        select.innerHTML = '<option value="">-- Select Model --</option>';
         select.disabled = !mfr;
-        if (mfr) {
-            db.filter(i => i.mfr === mfr).forEach(item => {
-                const opt = document.createElement('option'); opt.value = item.model; opt.innerText = item.model; select.appendChild(opt);
-            });
-        }
+        if (mfr) db.filter(i => i.mfr === mfr).forEach(item => {
+            const opt = document.createElement('option'); opt.value = item.model; opt.innerText = item.model; select.appendChild(opt);
+        });
     }
 
     function loadAircraft() {
@@ -112,37 +117,16 @@
         const model = document.getElementById('modelSelect').value;
         selected = db.find(i => i.mfr === mfr && i.model === model);
         if(!selected) return;
-        document.getElementById('aircraft-img').src = 'silhouettes/' + selected.cat + '.png';
-        document.getElementById('aircraft-img').style.display = 'block';
+        const img = document.getElementById('aircraft-img');
+        img.src = 'silhouettes/' + selected.cat + '.png';
+        img.style.display = 'block';
         if(isEdit) {
-            document.getElementById('editFields').style.display = 'block';
+            document.getElementById('editFields').style.display = 'grid';
             document.getElementById('editMfr').value = selected.mfr;
             document.getElementById('editModel').value = selected.model;
             document.getElementById('editCat').value = selected.cat;
         }
-        drawMarkers();
-    }
-
-    function addNewAircraft() {
-        const mfr = document.getElementById('newMfr').value.trim();
-        const model = document.getElementById('newModel').value.trim();
-        const cat = document.getElementById('newCat').value.trim() || "airliner";
-        if(!mfr || !model) return alert("Fill in Mfr and Model!");
-
-        const newItem = { mfr, model, notes: "", cat, points: "50|50|Main Plate" };
-        db.push(newItem);
-        
-        refreshMfrDropdown();
-        document.getElementById('mfrSelect').value = mfr;
-        updateModelList();
-        document.getElementById('modelSelect').value = model;
-        
-        document.getElementById('newMfr').value = '';
-        document.getElementById('newModel').value = '';
-        document.getElementById('newCat').value = '';
-        
-        loadAircraft();
-        document.getElementById('saveNotice').style.display = 'block';
+        img.onload = drawMarkers;
     }
 
     function drawMarkers() {
@@ -150,54 +134,65 @@
         const controls = document.getElementById('markerControls');
         container.innerHTML = ''; controls.innerHTML = '';
         if(!selected || !selected.points) return;
+
         selected.points.split(';').forEach((p, idx) => {
-            if(!p || !p.includes('|')) return;
-            const pts = p.split('|');
+            if(!p.includes('|')) return;
+            const [x, y, label] = p.split('|');
             const dot = document.createElement('div');
-            dot.className = 'marker-dot'; dot.style.left = pts[0] + '%'; dot.style.top = pts[1] + '%';
-            dot.setAttribute('data-label', pts[2] || 'Plate');
-            dot.onmousedown = (e) => { if(isEdit) { e.stopPropagation(); draggingIdx = idx; } };
+            dot.className = 'marker-dot';
+            dot.style.left = x + '%'; dot.style.top = y + '%';
+            dot.setAttribute('data-label', label || 'Point');
+            
+            // Touch & Mouse events voor mobiel
+            const startDrag = (e) => { if(isEdit) { e.stopPropagation(); draggingIdx = idx; } };
+            dot.onmousedown = startDrag;
+            dot.ontouchstart = startDrag;
+            
             container.appendChild(dot);
             if(isEdit) {
-                const item = document.createElement('div');
-                item.className = 'marker-item';
-                item.innerHTML = `<input type="text" value="${pts[2] || ''}" oninput="updateLabel(${idx}, this.value)" style="flex:1"><button onclick="removeMarker(${idx})" style="color:var(--red); border:none; background:none;">DEL</button>`;
-                controls.appendChild(item);
+                const div = document.createElement('div');
+                div.className = 'marker-item';
+                div.innerHTML = `<input type="text" value="${label}" oninput="updateLabel(${idx}, this.value)" style="flex:1"><button onclick="removeMarker(${idx})" style="color:var(--red); background:none; border:none; width:40px;">DEL</button>`;
+                controls.appendChild(div);
             }
         });
     }
 
-    function onMouseMove(e) {
+    // Universele Move handler (Muis & Touch)
+    function handleMove(e) {
         if (draggingIdx === -1) return;
-        const rect = document.getElementById('map').getBoundingClientRect();
-        const x = Math.max(0, Math.min(100, Math.round(((e.clientX - rect.left) / rect.width) * 100)));
-        const y = Math.max(0, Math.min(100, Math.round(((e.clientY - rect.top) / rect.height) * 100)));
-        let ptsArr = selected.points.split(';');
-        let parts = ptsArr[draggingIdx].split('|');
-        ptsArr[draggingIdx] = x + '|' + y + '|' + (parts[2] || "Point");
-        selected.points = ptsArr.join(';');
-        document.getElementById('saveNotice').style.display = 'block';
+        const wrapper = document.getElementById('imgWrapper');
+        const rect = wrapper.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        
+        const x = Math.max(0, Math.min(100, Math.round(((clientX - rect.left) / rect.width) * 100)));
+        const y = Math.max(0, Math.min(100, Math.round(((clientY - rect.top) / rect.height) * 100)));
+        
+        let pts = selected.points.split(';');
+        let parts = pts[draggingIdx].split('|');
+        pts[draggingIdx] = `${x}|${y}|${parts[2] || "Point"}`;
+        selected.points = pts.join(';');
         drawMarkers();
     }
 
-    function onMouseUp() { draggingIdx = -1; }
-    function applyChanges() { if(!selected) return; selected.mfr = document.getElementById('editMfr').value; selected.model = document.getElementById('editModel').value; selected.cat = document.getElementById('editCat').value; document.getElementById('saveNotice').style.display = 'block'; refreshMfrDropdown(); updateModelList(); }
-    function deleteAircraft() { if(!selected || !confirm("Delete?")) return; db = db.filter(i => i !== selected); selected = null; refreshMfrDropdown(); updateModelList(); loadAircraft(); document.getElementById('saveNotice').style.display = 'block'; }
-    function addNewPoint() { if(!selected) return; selected.points = selected.points ? selected.points + ';50|50|New Point' : '50|50|Main Plate'; drawMarkers(); document.getElementById('saveNotice').style.display = 'block'; }
-    function removeMarker(idx) { let pts = selected.points.split(';'); pts.splice(idx, 1); selected.points = pts.join(';'); drawMarkers(); document.getElementById('saveNotice').style.display = 'block'; }
-    function updateLabel(idx, val) { let pts = selected.points.split(';'); let p = pts[idx].split('|'); pts[idx] = p[0] + '|' + p[1] + '|' + val; selected.points = pts.join(';'); document.getElementById('saveNotice').style.display = 'block'; }
-    function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; if(selected) loadAircraft(); }
+    function onEnd() { draggingIdx = -1; }
+    window.onmousemove = handleMove; window.ontouchmove = handleMove;
+    window.onmouseup = onEnd; window.ontouchend = onEnd;
 
+    function onStart(e) { if(!isEdit || !selected) return; /* Voor toekomstige click-to-add */ }
+    function applyChanges() { if(!selected) return; selected.mfr = document.getElementById('editMfr').value; selected.model = document.getElementById('editModel').value; selected.cat = document.getElementById('editCat').value; refreshMfrDropdown(); updateModelList(); }
+    function addNewPoint() { if(!selected) return; selected.points = (selected.points ? selected.points + ';' : '') + '50|50|New Location'; drawMarkers(); }
+    function removeMarker(idx) { let pts = selected.points.split(';'); pts.splice(idx,1); selected.points = pts.join(';'); drawMarkers(); }
+    function updateLabel(idx, val) { let pts = selected.points.split(';'); let p = pts[idx].split('|'); pts[idx] = `${p[0]}|${p[1]}|${val}`; selected.points = pts.join(';'); }
+    function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; if(selected) loadAircraft(); }
+    
     function downloadCSV() {
         let csv = "Manufacturer,Model,Plate_Location,Notes,Category,Points\n";
-        db.forEach(i => { csv += `${i.mfr},${i.model},"", "${i.notes}",${i.cat},"${i.points}"\n`; });
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        db.forEach(i => csv += `${i.mfr},${i.model},"", "${i.notes}",${i.cat},"${i.points}"\n`);
         const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.setAttribute("download", "aircraft_plates_db.csv");
-        link.click();
-        document.getElementById('saveNotice').style.display = 'none';
-        alert("Downloaded! Upload to GitHub to finish.");
+        link.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+        link.download = "aircraft_plates_db.csv"; link.click();
     }
 </script>
 </body>
