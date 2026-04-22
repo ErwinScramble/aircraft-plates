@@ -50,7 +50,7 @@
         </div>
 
         <div>
-            <strong>Add New:</strong><br>
+            <strong>Quick Add:</strong><br>
             <input type="text" id="newMfr" placeholder="Manufacturer">
             <input type="text" id="newModel" placeholder="Model">
             <input type="text" id="newCat" placeholder="PNG Name">
@@ -74,33 +74,36 @@
 <script>
     let db = []; let selected = null; let isEdit = false; let draggingIdx = -1;
 
-    // DATA LADEN - Gebruik relatief pad voor GitHub Pages stabiliteit
-    fetch('aircraft_plates_db.csv?nocache=' + Date.now())
-        .then(response => response.text())
+    // DATA LADEN
+    function loadDB() {
+        fetch('aircraft_plates_db.csv?nocache=' + Date.now())
+        .then(res => res.text())
         .then(data => {
             const rows = data.split(/\r?\n/);
             db = rows.slice(1).filter(r => r.trim()).map(r => {
                 const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 return {
-                    mfr: (c[0] || "Unknown").trim(),
-                    model: (c[1] || "Unknown").trim(),
+                    mfr: (c[0] || "").trim(),
+                    model: (c[1] || "").trim(),
                     notes: (c[3] || "").replace(/"/g, "").trim(),
-                    cat: (c[4] || "Airliner").trim(),
+                    cat: (c[4] || "airliner").trim(),
                     points: (c[5] || "").replace(/"/g, "").trim()
                 };
             });
             refreshMfrDropdown();
         });
+    }
+    loadDB();
 
     function refreshMfrDropdown() {
         const select = document.getElementById('mfrSelect');
+        const prev = select.value;
         select.innerHTML = '<option value="">-- Choose Manufacturer --</option>';
-        const mfrs = [...new Set(db.map(i => i.mfr))].sort();
-        mfrs.forEach(m => {
-            const opt = document.createElement('option');
-            opt.value = opt.innerText = m;
+        [...new Set(db.map(i => i.mfr))].sort().forEach(m => {
+            const opt = document.createElement('option'); opt.value = opt.innerText = m;
             select.appendChild(opt);
         });
+        if (prev) select.value = prev;
     }
 
     function updateModelList() {
@@ -168,38 +171,39 @@
     function onMouseUp() { draggingIdx = -1; }
     function applyChanges() { if(!selected) return; selected.mfr = document.getElementById('editMfr').value; selected.model = document.getElementById('editModel').value; selected.cat = document.getElementById('editCat').value; refreshMfrDropdown(); updateModelList(); }
     function deleteAircraft() { if(!selected || !confirm("Delete?")) return; db = db.filter(i => i !== selected); selected = null; refreshMfrDropdown(); updateModelList(); loadAircraft(); }
-    function addNewAircraft() { const m = document.getElementById('newMfr').value; const mod = document.getElementById('newModel').value; db.push({ mfr: m, model: mod, cat: document.getElementById('newCat').value, points: "50|50|New" }); refreshMfrDropdown(); }
+    function addNewAircraft() { const m = document.getElementById('newMfr').value; const mod = document.getElementById('newModel').value; const cat = document.getElementById('newCat').value; db.push({ mfr: m, model: mod, cat: cat, points: "50|50|New" }); refreshMfrDropdown(); alert("Added locally. Press Sync to save."); }
     function addNewPoint() { if(!selected) return; selected.points = selected.points ? selected.points + ';50|50|New' : '50|50|New'; drawMarkers(); }
     function removeMarker(idx) { let pts = selected.points.split(';'); pts.splice(idx, 1); selected.points = pts.join(';'); drawMarkers(); }
     function updateLabel(idx, val) { let pts = selected.points.split(';'); let p = pts[idx].split('|'); pts[idx] = p[0] + '|' + p[1] + '|' + val; selected.points = pts.join(';'); }
     function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; if(selected) loadAircraft(); }
 
+    // GITHUB SYNC
     async function pushToGitHub() {
         const token = document.getElementById('ghToken').value.trim();
         const status = document.getElementById('statusMsg');
         if (!token) return alert("Enter Token!");
-        
         status.innerText = "⏳ Saving...";
-        status.style.color = "var(--blue)";
 
-        // DE API LINK IS NU VOLLEDIG HARDCODED
         const apiUrl = "https://github.com";
-        
         let csv = "Manufacturer,Model,Plate_Location,Notes,Category,Points\n";
-        db.forEach(i => { csv += i.mfr + "," + i.model + ",\"\", \"" + i.notes + "\"," + i.cat + ",\"" + i.points + "\"\n"; });
+        db.forEach(i => { csv += `${i.mfr},${i.model},"", "${i.notes}",${i.cat},"${i.points}"\n`; });
 
         try {
-            const res = await fetch(apiUrl, { 
+            // Stap 1: Haal SHA op
+            const getRes = await fetch(apiUrl, {
                 method: 'GET',
-                headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github.v3+json' } 
+                headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }
             });
-            
-            if (!res.ok) throw new Error("GitHub Connection Error. Check token.");
-            const fileData = await res.json();
+            if (!getRes.ok) throw new Error("Connection failed. Check token.");
+            const fileData = await getRes.json();
 
+            // Stap 2: Push update
             const putRes = await fetch(apiUrl, {
                 method: 'PUT',
-                headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+                headers: { 
+                    'Authorization': 'token ' + token, 
+                    'Content-Type': 'application/json' 
+                },
                 body: JSON.stringify({
                     message: "Database update",
                     content: btoa(unescape(encodeURIComponent(csv))),
@@ -211,7 +215,7 @@
                 status.innerText = "✅ Saved Successfully!";
                 status.style.color = "var(--green)";
             } else {
-                throw new Error("Failed to save. Check Token rights.");
+                throw new Error("Push failed.");
             }
         } catch (e) {
             status.innerText = "❌ " + e.message;
