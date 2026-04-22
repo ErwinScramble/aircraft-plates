@@ -1,53 +1,13 @@
-Manufacturer,Model,Plate_Location,Notes
-ATR,ATR-42 / ATR-72,Forward frame of rear pressure bulkhead access,
-Aermacchi,MB326 / EMB326,Cockpit bulkhead behind rear seat & fuselage below LH stabilizer,Brazilian examples have a 2nd plate below with maintenance info.
-Aermacchi,MB339,Bulkhead behind rear seat,Above the data acquisition box.
-Aero,Ae-45,LH side of lower fuselage,In front of the wing root.
-Aero,L-159 ALCA,Side of ejection seats,MSN is painted here.
-Aero,L-29 Delfin,LH side main wheel bay,Hard to access/read.
-Aerospatiale,AS332 / AS532 Super Puma,Bulkhead behind/above LH pilot seat,"Visible from outside, large plate."
-Aerospatiale,AS350 / AS550 Ecureuil,Cockpit floor behind RH pilot seat,Seat often needs to be moved forward.
-Aerospatiale,SA341 / SA342 Gazelle,Bottom of central console in cockpit,LH side.
-Agusta,A109,LH side of center cockpit console,USCG MH-68A has extra plate behind main gear.
-Airbus,A318 / A319 / A320 / A321,Forward passenger door frame (RH side),Mounted high up.
-Antonov,An-2,Below tail (LH side) or 2nd joist behind cockpit,Check engine bulkhead for Russian builds.
-Antonov,An-24 / An-26,Front bulkhead behind nose cone,Often stenciled below LH stabilizer.
-BAC,1-11,LH side while entering via forward steps,
-Beechcraft,King Air series,LH fuselage between tail and ventral strake,Mainly on US registered aircraft (FAR 45).
-Beechcraft,Model 18 Twin Beech,Cockpit sub-panel or rear door frame,"Note: components like wings have separate, different plates."
-Bell,204 / 205 / UH-1,LH side of central control panel,Visible through cockpit glass near pilot feet.
-Bell,206 JetRanger,LH side of central control panel,Civil US models often have extra plate near tail boom.
-Beriev,Be-12,Inside tail wheel bay,Also painted on nose and wing floats.
-Boeing,737 / 747 / 757 / 767,Top of LH forward passenger door frame,Look up when boarding.
-Bombardier,Global Express,Underside fuselage between engines,Above luggage compartment.
-Britten Norman,BN2 Islander,Inside pilot door frame (top),US models: LH fuselage below stabilizer.
-CASA,C-212 / CN-235 / C-295,Inside door frame cabin to cockpit,Behind LH pilot seat.
-Cessna,General (Single Engine),Forward edge of LH door frame,Most models also have plate below stabilizer (FAR 45).
-Dassault,Mirage III / 5 / 2000,Ceiling of both main wheel bays,Mirage 2000 requires a torch.
-Dassault,Rafale,LH main wheel bay frame,Near forward door; best photographed through gap.
-De Havilland Canada,DHC-6 Twin Otter,LH fuselage below stabilizer,Also on forward bulkhead in rear luggage locker.
-Douglas,DC-3 / C-47,"Corridor to cockpit, RH wall",Usually two plates: Douglas & USAAF.
-Embraer,General (Tucano / ERJ),LH fuselage below horizontal stabilizer,Standard location for most Embraer types.
-Eurocopter,EC135 / EC145,"RH side outside, behind last window",UH-72: also on LH skid and behind pilot seat.
-Fokker,F-27 / F50,Corridor to cockpit (F27: LH wall / F50: RH wall),
-General Dynamics,F-16,Behind radar bulkhead (LH side),"Shows WWSN. Local build codes (L-, B-, TK-) vary."
-Grumman,F-14 Tomcat,"Front cockpit, RH side frame",Below canopy frame.
-Gulfstream,G-IV / G-V / G650,Underside fuselage between engines,Earlier models: LH side below engine.
-Hughes,Model 369 / 500,Cockpit floor in front of LH seat,Visible through windscreen near pedals.
-Ilyushin,Il-76,Rear cargo-hold pressure bulkhead,Also small plates on cockpit doors (last 5 digits).
-Kamov,Ka-32,Cockpit bulkhead behind/above pilot,Tail plate often blocked by rudder.
-Lockheed,C-130 Hercules,Cockpit ceiling (A-H models) / RH bench (J model),Behind flight engineer panel.
-McDonnell Douglas,F/A-18 Hornet,LH side under canopy glass,Behind ejection seat; readable when closed.
-MiG,MiG-21,Nose wheel bay (poot or bulkhead),Wing plates unreliable due to interchangeability.
-Mil,Mi-24 / Mi-35,Inside radio hatch below tail,On bulkhead closest to cockpit.
-Mil,Mi-8 / Mi-17,Inside radio compartment (ceiling) or pneumatic lid,Radio hatch in cargo bay ceiling (under cloth).
-North American,F-86 Sabre,Bulkhead behind ejection seat,Visible from outside.
-PZL,PZL-104 Wilga,Top of RH instrument panel,Painted external numbers often incorrect.
-Pilatus,PC-6 Porter,Firewall behind engine (LH side),
-Piper,PA-28 / 32 / 34 / 44,LH fuselage below stabilizer,Standard FAR 45 location.
-SAAB,35 Draken / 37 Viggen,Bulkhead behind pilot/ejection seat,Draken: just below canopy hinge.
-Sikorsky,S-70 / H-60 Black Hawk,Central column next to RH seat,Visible through window; SH-60 is on LH side.
-Sukhoi,Su-24,Canopy center beam (inside),Also on nose-wheel door.
-Tupolev,Tu-154,Every panel in cargo bay,Also 1x2cm plates on main gear doors.
-Westland,Lynx,Inside cockpit on beam between doors,Present on both LH and RH sides.
-Yakovlev,Yak-52,Fixed part of the rudder,Between fixed and moving sections.
+Manufacturer,Model,Plate_Location,Notes,Category,X,Y
+Aermacchi,MB326 / EMB326,Cockpit bulkhead behind rear seat & fuselage below LH stabilizer,Brazilian examples have a 2nd plate below.,Fighter,160,95
+Aerospatiale,AS332 / AS532 Super Puma,Bulkhead behind/above LH pilot seat,"Large plate, visible from outside.",Heli,190,125
+Antonov,An-2,Below tail (LH side) or 2nd joist behind cockpit,Check engine bulkhead for Russian builds.,Biplane,430,130
+Beechcraft,Model 18 Twin Beech,Cockpit sub-panel or rear door frame,Components like wings have separate plates.,Prop,180,145
+Bell,204 / 205 / UH-1,LH side of central control panel,Visible through glass near pilot feet.,Heli,190,125
+Boeing,737 / 747 / 757 / 767,Top of LH forward passenger door frame,Look up when boarding.,Airliner,140,105
+Cessna,General (Single Engine),Forward edge of LH door frame,Standard FAR 45 location.,Prop,180,145
+General Dynamics,F-16,Behind radar bulkhead (LH side),Shows WWSN.,Fighter,50,110
+Lockheed,C-130 Hercules,Cockpit ceiling or RH bench (J model),Behind flight engineer panel.,Airliner,140,105
+MiG,MiG-21,Nose wheel bay (strut or bulkhead),Wing plates unreliable.,Fighter,50,110
+Mil,Mi-8 / Mi-17,Inside radio compartment (ceiling) or pneumatic lid,Radio hatch in cargo ceiling.,Heli,230,85
+Piper,PA-28 / 32 / 34,LH fuselage below stabilizer,Standard location.,Prop,430,130
