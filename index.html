@@ -10,24 +10,20 @@
         body { font-family: 'Inter', sans-serif; background: var(--gray); margin: 0; padding: 20px; color: var(--dark); }
         .container { max-width: 1000px; margin: 0 auto; text-align: center; }
         
-        /* Selectie Sectie */
         .selection-box { background: white; padding: 20px; border-radius: 15px; display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         select { padding: 12px; border-radius: 8px; border: 1px solid #cbd5e0; font-size: 15px; min-width: 200px; outline: none; }
 
-        /* Display Area */
         .display-box { 
             background: white; border-radius: 24px; padding: 40px; margin: 20px auto;
             height: 450px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); position: relative; border: 1px solid #e2e8f0;
             display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
-        #aircraft-img { max-width: 100%; max-height: 100%; object-fit: contain; pointer-events: none; }
+        #aircraft-img { max-width: 100%; max-height: 100%; object-fit: contain; pointer-events: none; display: none; }
         
-        /* Markers */
         .marker { position: absolute; width: 26px; height: 26px; border-radius: 50%; border: 3px solid white; transform: translate(-50%, -50%); cursor: pointer; z-index: 100; display: none; }
         #marker1 { background: #ef4444; }
         #marker2 { background: #3b82f6; }
 
-        /* Editor UI */
         .editor-ui { background: var(--dark); color: white; padding: 25px; border-radius: 20px; margin-bottom: 20px; display: none; text-align: left; }
         .editor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         label { display: block; font-size: 10px; font-weight: bold; color: #94a3b8; margin-bottom: 5px; text-transform: uppercase; }
@@ -38,6 +34,7 @@
         .btn-save { background: var(--green); color: white; width: 100%; margin-top: 10px; }
 
         .info-text { margin-top: 15px; padding: 15px; background: var(--dark); color: white; border-radius: 10px; display: none; }
+        .error-msg { color: #ef4444; font-size: 12px; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
@@ -45,7 +42,6 @@
 <div class="container">
     <h1>✈️ Aircraft MSN Locator</h1>
 
-    <!-- GEBRUIKER SELECTIE -->
     <div class="selection-box">
         <select id="userMfr" onchange="updateModelDropdown()">
             <option value="">-- Kies Fabriek --</option>
@@ -55,20 +51,19 @@
         </select>
     </div>
 
-    <!-- EDITOR PANEL -->
     <div id="editorPanel" class="editor-ui">
         <div class="editor-grid">
             <div>
                 <label>Primary Location Text</label>
                 <input type="text" id="editLoc" oninput="syncData()">
-                <label>Silhouette (Bestandsnaam)</label>
+                <label>Silhouette (Bestandsnaam zonder .png)</label>
                 <input type="text" id="editCat" oninput="syncData()">
             </div>
             <div>
                 <label>Secondary Location Text</label>
                 <input type="text" id="editLoc2" oninput="syncData()">
                 <label>Marker om te verplaatsen</label>
-                <select id="targetMarker"><option value="1">Rood</option><option value="2">Blauw</option></select>
+                <select id="targetMarker"><option value="1">Rood (Primary)</option><option value="2">Blauw (Secondary)</option></select>
             </div>
             <div>
                 <label>Notes</label>
@@ -80,11 +75,11 @@
 
     <button onclick="toggleEditor()" class="btn btn-toggle">⚙️ Toggle Editor Mode</button>
 
-    <!-- HET BEELD -->
     <div class="display-box" id="map" onclick="editorClick(event)">
         <img id="aircraft-img" src="" alt="">
         <div id="marker1" class="marker" onclick="showText(1)"></div>
         <div id="marker2" class="marker" onclick="showText(2)"></div>
+        <div id="errorLabel" class="error-msg"></div>
     </div>
 
     <div id="infoBox" class="info-text"></div>
@@ -93,16 +88,19 @@
 <script>
     let db = []; let selected = null; let isEdit = false;
 
-    // 1. Data laden
     fetch('aircraft_plates_db.csv').then(r => r.text()).then(t => {
         const rows = t.split(/\r?\n/).slice(1);
         db = rows.filter(r => r.trim()).map(r => {
             const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
             return { 
-                mfr: c[0].replace(/"/g,""), model: c[1].replace(/"/g,""), 
-                loc: c[2].replace(/"/g,""), loc2: (c[3]||"").replace(/"/g,""),
-                note: (c[4]||"").replace(/"/g,""), cat: (c[5]||"Airliner").trim(),
-                x: parseInt(c[6])||0, y: parseInt(c[7])||0, x2: parseInt(c[8])||0, y2: parseInt(c[9])||0 
+                mfr: c[0].replace(/"/g,"").trim(), 
+                model: c[1].replace(/"/g,"").trim(), 
+                loc: c[2].replace(/"/g,"").trim(), 
+                loc2: (c[3]||"").replace(/"/g,"").trim(),
+                note: (c[4]||"").replace(/"/g,"").trim(), 
+                cat: (c[5]||"Airliner").replace(/"/g,"").trim(),
+                x: parseInt(c[6])||0, y: parseInt(c[7])||0, 
+                x2: parseInt(c[8])||0, y2: parseInt(c[9])||0 
             };
         });
         fillMfrDropdown();
@@ -127,8 +125,19 @@
         selected = db.find(i => i.mfr === mfr && i.model === model);
         if(!selected) return;
 
-        document.getElementById('aircraft-img').src = `silhouettes/${selected.cat}.png`;
-        document.getElementById('aircraft-img').style.display = 'block';
+        const img = document.getElementById('aircraft-img');
+        const err = document.getElementById('errorLabel');
+        
+        // Fix: Maak het pad exact en haal spaties weg
+        const imgPath = `silhouettes/${selected.cat}.png`;
+        img.src = imgPath;
+        
+        img.onload = () => { img.style.display = 'block'; err.style.display = 'none'; };
+        img.onerror = () => { 
+            img.style.display = 'none'; 
+            err.style.display = 'block'; 
+            err.innerText = `Fout: Kan "${imgPath}" niet laden. Check of de naam exact klopt op GitHub (ook hoofdletters).`;
+        };
         
         if(isEdit) {
             document.getElementById('editLoc').value = selected.loc;
@@ -140,6 +149,7 @@
     }
 
     function updateMarkers() {
+        if(!selected) return;
         const m1 = document.getElementById('marker1'), m2 = document.getElementById('marker2');
         m1.style.display = selected.x > 0 ? 'block' : 'none';
         m1.style.left = selected.x + '%'; m1.style.top = selected.y + '%';
@@ -167,6 +177,7 @@
     }
 
     function syncData() {
+        if(!selected) return;
         selected.loc = document.getElementById('editLoc').value;
         selected.loc2 = document.getElementById('editLoc2').value;
         selected.cat = document.getElementById('editCat').value;
@@ -181,11 +192,13 @@
     function downloadCSV() {
         let csv = "Manufacturer,Model,Plate_Location,Secondary_Location,Notes,Category,X,Y,X2,Y2\n";
         db.forEach(i => {
-            csv += `"${i.mfr}","${i.model}","${i.loc}","${i.loc2}","${i.note}",${i.cat},${i.x},${i.y},${i.x2},${i.y2}\n`;
+            csv += `"${i.mfr}","${i.model}","${i.loc}","${i.loc2}","${i.note}","${i.cat}",${i.x},${i.y},${i.x2},${i.y2}\n`;
         });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
-        link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-        link.download = "aircraft_plates_db.csv"; link.click();
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute("download", "aircraft_plates_db.csv");
+        link.click();
     }
 </script>
 </body>
