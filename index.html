@@ -9,39 +9,21 @@
         :root { --blue: #2563eb; --dark: #0f172a; --gray: #f1f5f9; --green: #10b981; }
         body { font-family: 'Inter', sans-serif; background: var(--gray); margin: 0; padding: 20px; color: var(--dark); }
         .container { max-width: 1000px; margin: 0 auto; text-align: center; }
-        
-        /* Selection Area */
         .selection-box { background: white; padding: 20px; border-radius: 15px; display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         select { padding: 12px; border-radius: 8px; border: 1px solid #cbd5e0; font-size: 15px; min-width: 220px; outline: none; background: white; cursor: pointer; }
-
-        /* Display Area */
-        .display-box { 
-            background: white; border-radius: 24px; padding: 40px; margin: 20px auto;
-            height: 480px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); position: relative; border: 1px solid #e2e8f0;
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-        }
+        .display-box { background: white; border-radius: 24px; padding: 40px; margin: 20px auto; height: 480px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); position: relative; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         #aircraft-img { max-width: 100%; max-height: 100%; object-fit: contain; pointer-events: none; display: none; }
-        
-        /* Markers */
-        .marker { position: absolute; width: 30px; height: 30px; border-radius: 50%; border: 4px solid white; transform: translate(-50%, -50%); cursor: pointer; z-index: 100; display: none; transition: transform 0.2s; }
-        .marker:hover { transform: translate(-50%, -50%) scale(1.2); }
-        #marker1 { background: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
-        #marker2 { background: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
-
-        /* Editor UI */
+        .marker { position: absolute; width: 30px; height: 30px; border-radius: 50%; border: 4px solid white; transform: translate(-50%, -50%); cursor: pointer; z-index: 100; display: none; }
+        #marker1 { background: #ef4444; } #marker2 { background: #3b82f6; }
         .editor-ui { background: var(--dark); color: white; padding: 25px; border-radius: 20px; margin-bottom: 20px; display: none; text-align: left; }
         .editor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         label { display: block; font-size: 10px; font-weight: bold; color: #94a3b8; margin-bottom: 5px; text-transform: uppercase; }
-        .editor-ui input, .editor-ui select { width: 100%; background: #1e293b; border: 1px solid #334155; color: white; margin-bottom: 10px; padding: 10px; border-radius: 6px; box-sizing: border-box; }
-        
-        .btn { padding: 12px 24px; border-radius: 12px; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .btn-toggle { background: white; border: 1px solid #ccc; margin-bottom: 20px; color: #64748b; }
-        .btn-toggle:hover { background: #f8fafc; }
-        .btn-save { background: var(--green); color: white; width: 100%; margin-top: 10px; font-size: 16px; }
-
-        /* Info & Feedback */
-        .info-text { margin-top: 15px; padding: 20px; background: var(--dark); color: white; border-radius: 15px; display: none; font-weight: 600; font-size: 16px; line-height: 1.5; }
-        .error-msg { color: #ef4444; font-weight: bold; padding: 20px; background: #fee2e2; border-radius: 10px; border: 1px solid #fecaca; }
+        .editor-ui input, .editor-ui select { width: 100%; background: #1e293b; border: 1px solid #334155; color: white; margin-bottom: 10px; padding: 10px; border-radius: 6px; }
+        .btn { padding: 12px 24px; border-radius: 12px; border: none; cursor: pointer; font-weight: bold; }
+        .btn-toggle { background: white; border: 1px solid #ccc; margin-bottom: 20px; }
+        .btn-save { background: var(--green); color: white; width: 100%; margin-top: 10px; }
+        .info-text { margin-top: 15px; padding: 20px; background: var(--dark); color: white; border-radius: 15px; display: none; font-size: 16px; }
+        .error-msg { color: #ef4444; font-weight: bold; padding: 10px; background: #fee2e2; border-radius: 8px; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -49,42 +31,35 @@
 <div class="container">
     <h1>✈️ Aircraft MSN Locator</h1>
 
-    <!-- USER SELECTION (ENGLISH) -->
     <div class="selection-box">
-        <select id="userMfr" onchange="updateModelDropdown()">
-            <option value="">-- 1. Select Manufacturer --</option>
-        </select>
-        <select id="userModel" onchange="loadAircraft()">
-            <option value="">-- 2. Select Aircraft Model --</option>
-        </select>
+        <select id="userMfr" onchange="updateModelDropdown()"><option value="">-- 1. Select Manufacturer --</option></select>
+        <select id="userModel" onchange="loadAircraft()"><option value="">-- 2. Select Aircraft Model --</option></select>
     </div>
 
-    <!-- EDITOR PANEL (FOR YOU) -->
     <div id="editorPanel" class="editor-ui">
         <div class="editor-grid">
             <div>
-                <label>Primary Location Text (Red)</label>
+                <label>Primary Text (Red)</label>
                 <input type="text" id="editLoc" oninput="syncData()">
-                <label>Silhouette Filename (No .png)</label>
+                <label>PNG Filename (e.g. MiG-21)</label>
                 <input type="text" id="editCat" oninput="syncData()">
             </div>
             <div>
-                <label>Secondary Location Text (Blue)</label>
+                <label>Secondary Text (Blue)</label>
                 <input type="text" id="editLoc2" oninput="syncData()">
-                <label>Active Marker for clicking</label>
+                <label>Move which dot?</label>
                 <select id="targetMarker"><option value="1">Red Dot</option><option value="2">Blue Dot</option></select>
             </div>
             <div>
-                <label>Internal Notes</label>
+                <label>Notes</label>
                 <input type="text" id="editNotes" oninput="syncData()">
-                <button class="btn btn-save" onclick="downloadCSV()">💾 Update & Download CSV</button>
+                <button class="btn btn-save" onclick="downloadCSV()">💾 Save & Download CSV</button>
             </div>
         </div>
     </div>
 
-    <button onclick="toggleEditor()" class="btn btn-toggle">⚙️ Toggle Editor Mode</button>
+    <button onclick="toggleEditor()" class="btn btn-toggle">⚙️ Editor Mode</button>
 
-    <!-- DISPLAY BOX -->
     <div class="display-box" id="map" onclick="editorClick(event)">
         <img id="aircraft-img" src="" alt="">
         <div id="marker1" class="marker" onclick="showText(1)"></div>
@@ -92,32 +67,30 @@
         <div id="errorLabel" style="display:none;"></div>
     </div>
 
-    <!-- INFORMATION BOX (ENGLISH) -->
     <div id="infoBox" class="info-text"></div>
 </div>
 
 <script>
     let db = []; let selected = null; let isEdit = false;
 
-    // Advanced CSV Parser to handle quotes and multiple commas
+    // Verbeterde Parser: vindt de juiste kolommen, ook als ze verschoven zijn
     function parseCSV(text) {
         const lines = text.split(/\r?\n/);
         const result = [];
         for (let i = 1; i < lines.length; i++) {
             if (!lines[i].trim()) continue;
-            // Matches commas that are NOT inside double quotes
-            const parts = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            const p = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(x => x.replace(/"/g, "").trim());
+            
+            // We zoeken specifiek welke kolom de categorie is (geen nummer, maar tekst zoals An-2)
+            let catIndex = 5; 
+            if (p[catIndex] && !isNaN(p[catIndex])) catIndex = 4; // Failsafe: als 5 een nummer is, probeer 4
+
             result.push({
-                mfr: (parts[0] || "").replace(/"/g, "").trim(),
-                model: (parts[1] || "").replace(/"/g, "").trim(),
-                loc: (parts[2] || "").replace(/"/g, "").trim(),
-                loc2: (parts[3] || "").replace(/"/g, "").trim(),
-                note: (parts[4] || "").replace(/"/g, "").trim(),
-                cat: (parts[5] || "Airliner").replace(/"/g, "").trim(),
-                x: parseInt(parts[6]) || 0,
-                y: parseInt(parts[7]) || 0,
-                x2: parseInt(parts[8]) || 0,
-                y2: parseInt(parts[9]) || 0
+                mfr: p[0] || "", model: p[1] || "", 
+                loc: p[2] || "", loc2: p[3] || "",
+                note: p[4] || "", cat: p[catIndex] || "Airliner",
+                x: parseFloat(p[p.length-4]) || 0, y: parseFloat(p[p.length-3]) || 0,
+                x2: parseFloat(p[p.length-2]) || 0, y2: parseFloat(p[p.length-1]) || 0
             });
         }
         return result;
@@ -149,23 +122,19 @@
 
         const img = document.getElementById('aircraft-img');
         const err = document.getElementById('errorLabel');
+        const imgPath = `silhouettes/${selected.cat}.png`;
         
-        // Use only the first part of Category to prevent errors with messy CSV data
-        const cleanCat = selected.cat.split(/[|;]/)[0].trim();
-        const imgPath = `silhouettes/${cleanCat}.png`;
         img.src = imgPath;
-        
         img.onload = () => { img.style.display = 'block'; err.style.display = 'none'; };
         img.onerror = () => { 
-            img.style.display = 'none'; 
-            err.style.display = 'block'; 
-            err.innerHTML = `<div class="error-msg">Image "<b>${imgPath}</b>" not found. Please check filenames on GitHub.</div>`;
+            img.style.display = 'none'; err.style.display = 'block';
+            err.innerHTML = `<div class="error-msg">Image "${imgPath}" not found. <br>Go to Editor Mode and type the correct PNG name.</div>`;
         };
         
         if(isEdit) {
             document.getElementById('editLoc').value = selected.loc;
             document.getElementById('editLoc2').value = selected.loc2;
-            document.getElementById('editCat').value = cleanCat;
+            document.getElementById('editCat').value = selected.cat;
             document.getElementById('editNotes').value = selected.note;
         }
         updateMarkers();
@@ -175,10 +144,8 @@
         const m1 = document.getElementById('marker1'), m2 = document.getElementById('marker2');
         m1.style.display = (selected && selected.x > 0) ? 'block' : 'none';
         if(selected) { m1.style.left = selected.x + '%'; m1.style.top = selected.y + '%'; }
-        
         m2.style.display = (selected && selected.x2 > 0) ? 'block' : 'none';
         if(selected) { m2.style.left = selected.x2 + '%'; m2.style.top = selected.y2 + '%'; }
-        
         document.getElementById('infoBox').style.display = 'none';
     }
 
@@ -186,16 +153,14 @@
         if(isEdit) return;
         const box = document.getElementById('infoBox');
         box.style.display = 'block';
-        box.innerHTML = num === 1 ? `<b>Primary Location:</b><br>${selected.loc}` : `<b>Secondary Location:</b><br>${selected.loc2}`;
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        box.innerHTML = num === 1 ? `<b>Primary:</b> ${selected.loc}` : `<b>Secondary:</b> ${selected.loc2}`;
     }
 
     function editorClick(e) {
         if(!isEdit || !selected) return;
         const rect = document.getElementById('map').getBoundingClientRect();
-        const x = Math.round(((e.clientX - rect.left) / rect.width) * 100);
-        const y = Math.round(((e.clientY - rect.top) / rect.height) * 100);
-        
+        const x = Math.round(((e.clientX - rect.left) / rect.width) * 10000) / 100;
+        const y = Math.round(((e.clientY - rect.top) / rect.height) * 10000) / 100;
         if(document.getElementById('targetMarker').value === "1") { selected.x = x; selected.y = y; }
         else { selected.x2 = x; selected.y2 = y; }
         updateMarkers();
@@ -209,21 +174,14 @@
         selected.note = document.getElementById('editNotes').value;
     }
 
-    function toggleEditor() {
-        isEdit = !isEdit;
-        document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none';
-    }
+    function toggleEditor() { isEdit = !isEdit; document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none'; }
 
     function downloadCSV() {
         let csv = "Manufacturer,Model,Plate_Location,Secondary_Location,Notes,Category,X,Y,X2,Y2\n";
-        db.forEach(i => {
-            csv += `"${i.mfr}","${i.model}","${i.loc}","${i.loc2}","${i.note}","${i.cat}",${i.x},${i.y},${i.x2},${i.y2}\n`;
-        });
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        db.forEach(i => { csv += `"${i.mfr}","${i.model}","${i.loc}","${i.loc2}","${i.note}","${i.cat}",${i.x},${i.y},${i.x2},${i.y2}\n`; });
         const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "aircraft_plates_db.csv";
-        link.click();
+        link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+        link.download = "aircraft_plates_db.csv"; link.click();
     }
 </script>
 </body>
