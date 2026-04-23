@@ -6,7 +6,7 @@ Manufacturer,Model,Plate_Locations,Notes,Internal_Notes,Category,Coordinates
 "Cessna","General (Single Engine)","","","Cessna","Cessna",""
 "Antonov","An-3","Below the left horizontal stabilizer. It contains both the original An-2 construction number and the new An-3T number.","","","An-2","75,58"
 "Nanchang/Shijiazhuang Y5","Y5","Usually located on both sides at the top of the strut supporting the horizontal stabilizer.","","An-2","An-2","75,58"
-"Aermacchi","MB326","","","","MB326",""
+"Aermacchi","MB326","Cockpit: On the bulkhead behind the rear seat.|Fuselage: Below the stabilizer on the left side.","","","MB326","47,41|74,51"
 "Aermacchi","MB339","","","","MB339",""
 "Embraer","EMB326","","","","MB326",""
 "Atlas Aircraft Corporation","Impala Mk.I","","","","MB326",""
