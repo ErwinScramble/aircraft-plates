@@ -4,5 +4,5 @@ Manufacturer,Model,Plate_Location,Secondary_Location,Notes,Category,X,Y,X2,Y2
 "Mikoyan Gurevich (MiG)","MiG-21","","Wing plates unreliable.","MiG-21","MiG-21",0,0,0,0
 "Bell","204 / 205 / UH-1","","","UH-1","UH-1",0,0,0,0
 "Cessna","General (Single Engine)","","Most also have a plate below LH/RH stabilizer.","Cessna","Cessna",0,0,0,0
-"Antonov","An-3","","","An-2","74|57|On both sides at the top of the LH and RH horizontal stabilizer support struts.",0,0,0,0
+"Antonov","An-3","","","","An-2",0,0,0,0
 "Nanchang/Shijiazhuang Y5","Y5","","","An-2","An-2",0,0,0,0
