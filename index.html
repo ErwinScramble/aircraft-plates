@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSN Locator - Professional Dashboard</title>
+    <title>MSN Locator - Editor Dashboard</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root { --blue: #2563eb; --dark: #0f172a; --gray: #f1f5f9; --green: #10b981; }
         body { font-family: 'Inter', sans-serif; background: var(--gray); margin: 0; padding: 20px; color: var(--dark); }
         .container { max-width: 1200px; margin: 0 auto; }
         
+        /* Dashboard Layout */
         .editor-ui { 
             background: var(--dark); color: white; padding: 25px; border-radius: 20px; 
             margin-bottom: 20px; text-align: left; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
@@ -33,6 +34,7 @@
             transform: translate(-50%, -50%); cursor: move;
         }
 
+        /* Styling for inputs */
         label { display: block; font-size: 11px; text-transform: uppercase; color: #94a3b8; margin-bottom: 5px; font-weight: bold; }
         input.edit-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 14px; }
         .btn { padding: 12px 24px; border-radius: 12px; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; }
@@ -76,12 +78,12 @@
         <button onclick="toggleEditor()" id="editBtn" class="btn btn-toggle">⚙️ Toggle Editor Mode</button>
 
         <div class="display-box" id="map" onmousedown="handlePoint(event)">
-            <img id="aircraft-img" src="" alt="Selecteer een vliegtuig">
+            <img id="aircraft-img" src="" alt="Select an aircraft below">
             <div id="marker" class="marker-dot"></div>
         </div>
 
         <div id="infoBubble" class="bubble"></div>
-        <input type="text" id="search" class="search-box" placeholder="Typ om te zoeken...">
+        <input type="text" id="search" class="search-box" placeholder="Start typing to find aircraft...">
     </header>
 
     <div id="results" class="grid"></div>
@@ -90,7 +92,7 @@
 <script>
     let db = []; let selected = null; let isEdit = false;
 
-    // Inladen & Alfabetisch Sorteren
+    // Load Database & Alfabetisch Sorteren
     fetch('aircraft_plates_db.csv').then(r => r.text()).then(t => {
         const rows = t.split(/\r?\n/).slice(1);
         db = rows.filter(r => r.trim()).map(r => {
@@ -104,12 +106,14 @@
             };
         });
 
+        // HIER WORDT ALLES OP ALFABET GEZET
         db.sort((a, b) => {
             if (a.mfr.toLowerCase() !== b.mfr.toLowerCase()) {
                 return a.mfr.toLowerCase().localeCompare(b.mfr.toLowerCase());
             }
             return a.model.toLowerCase().localeCompare(b.model.toLowerCase());
         });
+
         render();
     });
 
