@@ -1,8 +1,8 @@
-Manufacturer,Model,Plate_Location,Secondary_Location,Notes,Category,X,Y,X2,Y2
-"Antonov","An-2","","","","An-2",0,0,0,0
-"Lockheed","C-130 Hercules","","C-130J Hercules: Right side of the rear cockpit bench (near the entry stairs). Not visible from the exterior.","C-130","C-130",0,0,0,0
-"Mikoyan Gurevich (MiG)","MiG-21","","Wing plates unreliable.","MiG-21","MiG-21",0,0,0,0
-"Bell","204 / 205 / UH-1","","","UH-1","UH-1",0,0,0,0
-"Cessna","General (Single Engine)","","Most also have a plate below LH/RH stabilizer.","Cessna","Cessna",0,0,0,0
-"Antonov","An-3","","","","An-2",0,0,0,0
-"Nanchang/Shijiazhuang Y5","Y5","","","An-2","An-2",0,0,0,0
+Manufacturer,Model,Plate_Locations,Notes,Internal_Notes,Category,Coordinates
+"Antonov","An-2","Engine bulkhead: Only accessible via stairs when the cowlings are open.|Inside the cabin: On the second joist behind the cockpit.|Rear cabin wall: Sometimes painted or on a plate.|Below the pilot’s window: Check for an external plate.|Often painted on the underside of the horizontal stabilizer.","","","An-2","24,47|43,47|65,59|35,48|71,58"
+"Lockheed","C-130 Hercules","","","C-130","C-130",""
+"Mikoyan Gurevich (MiG)","MiG-21","","","MiG-21","MiG-21",""
+"Bell","204 / 205 / UH-1","","","UH-1","UH-1",""
+"Cessna","General (Single Engine)","","","Cessna","Cessna",""
+"Antonov","An-3","Below the left horizontal stabilizer. It contains both the original An-2 construction number and the new An-3T number.","","","An-2","75,58"
+"Nanchang/Shijiazhuang Y5","Y5","Usually located on both sides at the top of the strut supporting the horizontal stabilizer.","","An-2","An-2","75,58"
