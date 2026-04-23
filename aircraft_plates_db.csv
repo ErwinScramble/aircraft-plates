@@ -1,8 +1,8 @@
-Manufacturer,Model,Plate_Location,Notes,Category,Points
-Antonov,An-2,"", "",An-2,"37.32|50.71|Cabin: On the second joist behind the cockpit or on the rear wall.;17.06|47.96|Engine: On the bulkhead behind the engine (requires cowlings to be open).;30.98|47.71|Cockpit: On a plate below the pilot’s window.;77.15|58.96|Painted on the fuselage under the left-hand tailplane"
-Lockheed,C-130 Hercules,"", "C-130J Hercules: Right side of the rear cockpit bench (near the entry stairs). Not visible from the exterior.",C-130,"31"
-Mikoyan Gurevich (MiG),MiG-21,"", "Wing plates unreliable.",MiG-21,"15"
-Bell,204 / 205 / UH-1,"", "",UH-1,"27;25|62|Cockpit, left side of the center console near the pilot's feet. Visible from the exterior."
-Cessna,General (Single Engine),"", "Most also have a plate below LH/RH stabilizer.",Cessna,"32"
-Antonov,An-3,"", "",An-2,"74|57|On both sides at the top of the LH and RH horizontal stabilizer support struts."
-Nanchang/Shijiazhuang Y5,Y5,"", "",An-2,"81.48|59.52|On both sides at the top of the LH and RH horizontal stabilizer support struts."
+Manufacturer,Model,Plate_Location,Secondary_Location,Notes,Category,X,Y,X2,Y2
+"Antonov","An-2","","","","An-2",0,0,0,0
+"Lockheed","C-130 Hercules","","C-130J Hercules: Right side of the rear cockpit bench (near the entry stairs). Not visible from the exterior.","C-130","31",0,0,0,0
+"Mikoyan Gurevich (MiG)","MiG-21","","Wing plates unreliable.","MiG-21","15",0,0,0,0
+"Bell","204 / 205 / UH-1","","","UH-1","27;25|62|Cockpit, left side of the center console near the pilot's feet. Visible from the exterior.",0,0,0,0
+"Cessna","General (Single Engine)","","Most also have a plate below LH/RH stabilizer.","Cessna","32",0,0,0,0
+"Antonov","An-3","","","An-2","74|57|On both sides at the top of the LH and RH horizontal stabilizer support struts.",0,0,0,0
+"Nanchang/Shijiazhuang Y5","Y5","","","An-2","81.48|59.52|On both sides at the top of the LH and RH horizontal stabilizer support struts.",0,0,0,0
