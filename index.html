@@ -1,75 +1,115 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aircraft Construction Plates</title>
+    <title>Aircraft Construction Plate Locations</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 900px; margin: auto; padding: 20px; background-color: #f4f7f6; }
-        h1 { color: #2c3e50; text-align: center; }
-        #search { width: 100%; padding: 12px; margin-bottom: 30px; border: 1px solid #ccc; border-radius: 25px; font-size: 16px; box-sizing: border-box; }
-        .aircraft-card { background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .aircraft-card h3 { margin-top: 0; color: #2980b9; }
-        .location-box { background: #eef2f3; padding: 10px; border-left: 5px solid #2980b9; margin: 10px 0; }
-        .img-container { text-align: center; margin-top: 15px; }
-        img { max-width: 100%; height: auto; border-radius: 5px; border: 1px solid #ddd; }
-        .no-image { font-style: italic; color: #999; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px; background-color: #f0f2f5; color: #333; }
+        header { text-align: center; margin-bottom: 30px; }
+        .selector-group { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
+        select { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; background-color: #fff; cursor: pointer; }
+        #display-area { display: none; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); animation: fadeIn 0.3s; }
+        h2 { margin-top: 0; color: #0056b3; }
+        .location-text { background: #f8f9fa; border-left: 5px solid #0056b3; padding: 15px; font-size: 1.1em; line-height: 1.5; margin: 15px 0; }
+        .img-container { text-align: center; margin-top: 20px; }
+        img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #ddd; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <h1>Vliegtuig Plaatjes Locaties</h1>
-    <input type="text" id="search" placeholder="Zoek op merk of type (bijv. Cessna)...">
-    
-    <div id="list">
-        <!-- Hier komen de vliegtuigen te staan -->
+<header>
+    <h1>Aircraft Data Plates</h1>
+    <p>Find the location of the manufacturer's construction plate.</p>
+</header>
+
+<div class="selector-group">
+    <label for="brandSelect">1. Select Manufacturer</label>
+    <select id="brandSelect">
+        <option value="">-- Choose Manufacturer --</option>
+    </select>
+
+    <label for="modelSelect">2. Select Model</label>
+    <select id="modelSelect" disabled>
+        <option value="">-- Choose Model --</option>
+    </select>
+</div>
+
+<div id="display-area">
+    <h2 id="view-title"></h2>
+    <div class="location-text">
+        <strong>Plate Location:</strong><br>
+        <span id="view-location"></span>
     </div>
+    <div class="img-container" id="view-image-container">
+        <!-- Image will be loaded here -->
+    </div>
+</div>
 
-    <script>
-        // We halen de data op uit je aircrafts.json
-        fetch('aircrafts.json')
-            .then(response => response.json())
-            .then(data => {
-                const listDiv = document.getElementById('list');
-                const searchInput = document.getElementById('search');
+<script>
+    let aircraftData = [];
+    const brandSelect = document.getElementById('brandSelect');
+    const modelSelect = document.getElementById('modelSelect');
+    const displayArea = document.getElementById('display-area');
 
-                function display(filter = "") {
-                    listDiv.innerHTML = "";
-                    const filteredData = data.filter(a => 
-                        a.type.toLowerCase().includes(filter.toLowerCase()) || 
-                        a.brand.toLowerCase().includes(filter.toLowerCase())
-                    );
-
-                    filteredData.forEach(a => {
-                        listDiv.innerHTML += `
-                            <div class="aircraft-card">
-                                <h3>${a.brand} ${a.type}</h3>
-                                <div class="location-box">
-                                    <strong>Locatie constructienummer:</strong><br>
-                                    ${a.location}
-                                </div>
-                                <div class="img-container">
-                                    <!-- Let op de hoofdletter I in de mapnaam Images -->
-                                    <img src="Images/${a.image}" alt="Plaatje van ${a.type}" 
-                                         onerror="this.parentElement.innerHTML='<span class=\"no-image\">Geen afbeelding beschikbaar</span>'">
-                                </div>
-                            </div>
-                        `;
-                    });
-
-                    if(filteredData.length === 0) {
-                        listDiv.innerHTML = "<p style='text-align:center;'>Geen vliegtuigen gevonden.</p>";
-                    }
-                }
-
-                searchInput.addEventListener('input', (e) => display(e.target.value));
-                display(); // Toon alles bij het laden
-            })
-            .catch(err => {
-                console.error("Fout bij laden data:", err);
-                document.getElementById('list').innerHTML = "De lijst kon niet worden geladen. Controleer of aircrafts.json bestaat.";
+    // Fetch the data from your aircrafts.json
+    fetch('aircrafts.json')
+        .then(res => res.json())
+        .then(data => {
+            aircraftData = data;
+            
+            // Get unique brands and sort them
+            const brands = [...new Set(data.map(item => item.brand))].sort();
+            brands.forEach(brand => {
+                const opt = document.createElement('option');
+                opt.value = brand;
+                opt.textContent = brand;
+                brandSelect.appendChild(opt);
             });
-    </script>
+        });
+
+    // When a brand is selected
+    brandSelect.onchange = () => {
+        modelSelect.innerHTML = '<option value="">-- Choose Model --</option>';
+        displayArea.style.display = 'none';
+        
+        if (brandSelect.value) {
+            const models = aircraftData
+                .filter(a => a.brand === brandSelect.value)
+                .sort((a, b) => a.type.localeCompare(b.type));
+            
+            models.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m.id;
+                opt.textContent = m.type;
+                modelSelect.appendChild(opt);
+            });
+            modelSelect.disabled = false;
+        } else {
+            modelSelect.disabled = true;
+        }
+    };
+
+    // When a model is selected
+    modelSelect.onchange = () => {
+        const selectedId = parseInt(modelSelect.value);
+        const aircraft = aircraftData.find(a => a.id === selectedId);
+        
+        if (aircraft) {
+            document.getElementById('view-title').textContent = `${aircraft.brand} ${aircraft.type}`;
+            document.getElementById('view-location').textContent = aircraft.location;
+            
+            const imgCont = document.getElementById('view-image-container');
+            // Using your "Images" folder with capital I
+            imgCont.innerHTML = `<img src="Images/${aircraft.image}" alt="${aircraft.type}" 
+                                 onerror="this.style.display='none'; this.parentElement.innerHTML='<p><em>No image available for this model.</em></p>'">`;
+            
+            displayArea.style.display = 'block';
+        }
+    };
+</script>
 
 </body>
 </html>
