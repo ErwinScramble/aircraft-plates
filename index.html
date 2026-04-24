@@ -5,49 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aircraft Plate Locator</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; background: #f0f2f5; color: #333; }
-        h1 { text-align: center; color: #1a2a3a; }
+        /* Basisstijl en Layout */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background: #f4f7f6; color: #333; }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; }
         
+        /* Bediening bovenin */
         .controls { 
-            display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; flex-wrap: wrap; 
-            background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex; gap: 15px; margin-bottom: 20px; justify-content: center; flex-wrap: wrap; 
+            background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         
-        select, input { padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; }
-        input { margin: 5px; }
+        select, input { padding: 12px; border-radius: 6px; border: 1px solid #d1d1d1; font-size: 16px; min-width: 180px; }
+        input { flex: 1; min-width: 200px; }
 
-        .image-outer-container { text-align: center; margin-top: 10px; }
+        /* Afbeelding display */
+        .image-outer-container { text-align: center; margin-top: 20px; }
         .image-container { 
             position: relative; display: inline-block; max-width: 100%; 
-            background: #fff; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            background: #fff; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            line-height: 0; /* Voorkomt witruimte onder afbeelding */
         }
-        #aircraft-img { max-width: 100%; height: auto; display: block; border-radius: 8px; }
+        #aircraft-img { max-width: 100%; height: auto; display: block; border-radius: 12px; }
 
+        /* De interactieve stippen */
         .dot {
-            position: absolute; width: 22px; height: 22px; background: #e74c3c;
+            position: absolute; width: 26px; height: 26px; background: #e74c3c;
             border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer;
-            border: 3px solid white; box-shadow: 0 0 8px rgba(0,0,0,0.4);
+            border: 3px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
         }
+        .dot:hover { transform: translate(-50%, -50%) scale(1.2); z-index: 100; }
 
+        /* Tooltip styling */
         .dot::after {
-            content: attr(data-info); position: absolute; bottom: 28px; left: 50%;
-            transform: translateX(-50%); background: rgba(0,0,0,0.85); color: white;
-            padding: 5px 10px; border-radius: 4px; font-size: 13px;
+            content: attr(data-info); position: absolute; bottom: 35px; left: 50%;
+            transform: translateX(-50%); background: rgba(44, 62, 80, 0.95); color: white;
+            padding: 8px 12px; border-radius: 6px; font-size: 14px; line-height: 1.4;
             white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         .dot:hover::after { opacity: 1; }
 
+        /* Editor paneel stijl */
         .editor-panel { 
-            margin-top: 20px; padding: 20px; background: #fff3cd; border: 1px solid #ffeeba; 
-            border-radius: 10px; display: none; text-align: center;
+            margin: 30px auto; max-width: 800px; padding: 25px; background: #fff3cd; 
+            border: 1px solid #ffeeba; border-radius: 12px; display: none; text-align: center;
         }
         
-        .btn { padding: 10px 15px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; margin: 5px; }
+        .btn { padding: 12px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; margin: 5px; transition: 0.2s; }
         .btn-editor { background: #34495e; color: white; }
         .btn-save { background: #27ae60; color: white; }
         .btn-add { background: #2980b9; color: white; }
+        .btn:hover { opacity: 0.9; }
         
-        .add-form { border-bottom: 1px solid #ddd; margin-bottom: 15px; padding-bottom: 15px; }
+        .add-form { border-bottom: 2px solid #f1c40f; margin-bottom: 20px; padding-bottom: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+        .add-form h4 { width: 100%; margin-top: 0; }
     </style>
 </head>
 <body>
@@ -62,24 +74,23 @@
 
     <div class="image-outer-container">
         <div class="image-container" id="container">
-            <img id="aircraft-img" src="" alt="Select an aircraft to start">
+            <img id="aircraft-img" src="" alt="Please select a manufacturer and type above.">
         </div>
     </div>
 
     <div id="editorPanel" class="editor-panel">
-        <h3>🛠 Editor Tools</h3>
-        
         <div class="add-form">
-            <h4>Add New Aircraft</h4>
+            <h4>➕ Add New Aircraft to Database</h4>
             <input type="text" id="newMfr" placeholder="Manufacturer (e.g. Boeing)">
             <input type="text" id="newType" placeholder="Type (e.g. 737-800)">
-            <input type="text" id="newImg" placeholder="Image Path (e.g. Images/737.jpg)">
+            <input type="text" id="newImg" placeholder="Image URL (e.g. Images/737.jpg)">
             <button onclick="addNewAircraft()" class="btn btn-add">Add Aircraft</button>
         </div>
 
-        <p><strong>Instructions:</strong> Select an aircraft, then click on the image to place dots.<br>Click an existing dot to delete it.</p>
-        <button onclick="saveChanges()" class="btn btn-save">Download Updated JSON File</button>
-        <p><small>Important: After downloading, upload the file to GitHub to save permanently.</small></p>
+        <h3>🛠 Editor: Dot Placement</h3>
+        <p><strong>How to use:</strong> Select an aircraft from the dropdowns above. Click anywhere on the image to add a dot. Click on an existing dot to delete it.</p>
+        <button onclick="saveChanges()" class="btn btn-save">💾 Step 2: Download Updated JSON</button>
+        <p><small>Note: To save permanently, upload the downloaded 'aircraft_data.json' file to your GitHub repository.</small></p>
     </div>
 
     <script>
@@ -91,27 +102,29 @@
         const editorPanel = document.getElementById('editorPanel');
         let isEditor = false;
 
-        // 1. DATA LADEN
-        fetch('aircraft_data.json')
-            .then(res => res.json())
-            .then(data => {
-                aircraftData = data;
-                populateManufacturers();
-            })
-            .catch(err => {
-                console.error("No data found or JSON error.");
-                aircraftData = {}; 
-            });
+        // LAAD DATA (Met cache-buster)
+        function loadDatabase() {
+            fetch('aircraft_data.json?t=' + new Date().getTime())
+                .then(res => res.json())
+                .then(data => {
+                    aircraftData = data;
+                    populateManufacturers();
+                })
+                .catch(err => {
+                    console.error("Database could not be loaded. Starting fresh.");
+                    aircraftData = {};
+                });
+        }
 
         function populateManufacturers() {
-            const currentM = mSelect.value;
+            const currentVal = mSelect.value;
             mSelect.innerHTML = '<option value="">Select Manufacturer</option>';
             Object.keys(aircraftData).sort().forEach(m => {
                 const opt = document.createElement('option');
                 opt.value = m; opt.textContent = m;
                 mSelect.appendChild(opt);
             });
-            mSelect.value = currentM;
+            mSelect.value = currentVal;
         }
 
         mSelect.onchange = () => {
@@ -124,6 +137,7 @@
                     tSelect.appendChild(opt);
                 });
             }
+            loadAircraft(); // Reset image if manufacturer changes
         };
 
         tSelect.onchange = loadAircraft;
@@ -131,12 +145,19 @@
         function loadAircraft() {
             const m = mSelect.value;
             const t = tSelect.value;
-            if(!m || !t || !aircraftData[m][t]) return;
+            
+            // Verwijder alle huidige stippen
+            document.querySelectorAll('.dot').forEach(d => d.remove());
+
+            if(!m || !t || !aircraftData[m][t]) {
+                img.src = "";
+                img.alt = "Please select a manufacturer and type above.";
+                return;
+            }
 
             const data = aircraftData[m][t];
             img.src = data.img;
-            
-            document.querySelectorAll('.dot').forEach(d => d.remove());
+            img.alt = m + " " + t;
 
             if(data.dots) {
                 data.dots.forEach((dot, index) => {
@@ -155,7 +176,7 @@
             dot.onclick = (e) => {
                 if(isEditor) {
                     e.stopPropagation();
-                    if(confirm("Delete this dot?")) {
+                    if(confirm("Delete this location dot?")) {
                         aircraftData[mSelect.value][tSelect.value].dots.splice(index, 1);
                         loadAircraft();
                     }
@@ -164,11 +185,11 @@
             container.appendChild(dot);
         }
 
-        // 2. EDITOR FUNCTIES
+        // EDITOR LOGICA
         document.getElementById('toggleEditor').onclick = () => {
             if(!isEditor) {
                 const pw = prompt("Enter Editor Password:");
-                if(pw !== "admin123") return alert("Wrong password");
+                if(pw !== "admin123") return alert("Access denied.");
             }
             isEditor = !isEditor;
             editorPanel.style.display = isEditor ? 'block' : 'none';
@@ -183,19 +204,20 @@
                 if(!aircraftData[m]) aircraftData[m] = {};
                 aircraftData[m][t] = { img: i, dots: [] };
                 populateManufacturers();
-                alert("Aircraft added to list! Select it above to add dots.");
+                alert("Success! " + t + " added. Select it from the dropdown to place dots.");
             } else {
-                alert("Please fill in all fields.");
+                alert("Please fill in all 3 fields (Manufacturer, Type, and Image Path).");
             }
         }
 
         img.onclick = (e) => {
-            if(!isEditor || !tSelect.value) return;
+            if(!isEditor) return;
+            if(!mSelect.value || !tSelect.value) return alert("Select an aircraft first!");
             
             const rect = img.getBoundingClientRect();
             const x = ((e.clientX - rect.left) / rect.width) * 100;
             const y = ((e.clientY - rect.top) / rect.height) * 100;
-            const info = prompt("Description (e.g. 'Nose landing gear door'):");
+            const info = prompt("Description for this location:");
             
             if(info) {
                 if(!aircraftData[mSelect.value][tSelect.value].dots) {
@@ -213,6 +235,9 @@
             dlAnchor.setAttribute("download", "aircraft_data.json");
             dlAnchor.click();
         }
+
+        // Start applicatie
+        loadDatabase();
     </script>
 </body>
 </html>
