@@ -17,8 +17,8 @@
         }
         #aircraft-img { max-width: 100%; max-height: 100%; object-fit: contain; pointer-events: none; }
         .marker-dot { 
-            position: absolute; width: 24px; height: 24px; background: #ef4444; 
-            border-radius: 50%; border: 3px solid white; display: none;
+            position: absolute; width: 28px; height: 28px; background: #ef4444; 
+            border-radius: 50%; border: 4px solid white; display: none;
             box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); z-index: 100;
             transform: translate(-50%, -50%); cursor: move;
         }
@@ -80,6 +80,7 @@
             const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
             return { mfr: c[0]||"", model: c[1]||"", loc: (c[2]||"").replace(/"/g,""), note: (c[3]||"").replace(/"/g,""), cat: (c[4]||"").trim(), x: parseFloat(c[5])||50, y: parseFloat(c[6])||50 };
         });
+        db.sort((a, b) => a.mfr.localeCompare(b.mfr) || a.model.localeCompare(b.model));
         render();
     });
 
@@ -94,8 +95,12 @@
 
     function selectAircraft(item) {
         selected = item; render(document.getElementById('search').value);
-        document.getElementById('aircraft-img').src = `silhouettes/${item.cat}.png`;
-        document.getElementById('aircraft-img').style.display = 'block';
+        const img = document.getElementById('aircraft-img');
+        
+        // We proberen de afbeelding te laden (zoals in je CSV staat)
+        img.src = `silhouettes/${item.cat}.png`;
+        img.style.display = 'block';
+
         if(isEdit) {
             document.getElementById('editLoc').value = item.loc;
             document.getElementById('editCat').value = item.cat;
@@ -133,6 +138,7 @@
     function toggleEditor() {
         isEdit = !isEdit;
         document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none';
+        if(isEdit && selected) selectAircraft(selected);
     }
 
     function downloadCSV() {
