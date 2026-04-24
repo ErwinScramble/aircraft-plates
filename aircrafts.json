@@ -1,16 +1,6 @@
-[
-  {
-    "id": 1,
-    "brand": "Cessna",
-    "type": "172 Skyhawk",
-    "location": "Op de linker deurpost of bij het staartvlak.",
-    "image": "cessna_172.jpg"
-  },
-  {
-    "id": 2,
-    "brand": "Boeing",
-    "type": "737-800",
-    "location": "Aan de binnenzijde van de voorste toegangsdeur (L1).",
-    "image": "b737_800.jpg"
-  }
-]
+{
+  "brand": "Piper",
+  "type": "PA-28 Cherokee",
+  "location": "Located on the left side of the fuselage, near the tail leading edge.",
+  "image": "piper_pa28.jpg"
+}
