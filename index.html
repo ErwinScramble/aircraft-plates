@@ -66,7 +66,7 @@
         <button onclick="toggleEditor()" id="editBtn" class="btn btn-toggle">⚙️ Toggle Editor Mode</button>
         <div class="display-box" id="map" onmousedown="startDrag(event)" onmousemove="drag(event)" onmouseup="stopDrag()" ontouchstart="startDrag(event)" ontouchmove="drag(event)" ontouchend="stopDrag()">
             <img id="aircraft-img" src="" alt="">
-            <div id="img-error" class="error-msg" style="display:none;"></div>
+            <div id="img-error" class="error-msg" style="display:none;">Select an aircraft to see the silhouette.</div>
             <div id="marker" class="marker-dot"></div>
         </div>
         <div id="infoBubble" class="bubble"></div>
@@ -80,7 +80,7 @@
         const rows = t.split(/\r?\n/).slice(1);
         db = rows.filter(r => r.trim()).map(r => {
             const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            return { mfr: c[0]||"", model: c[1]||"", loc: (c[2]||"").replace(/"/g,""), note: (c[3]||"").replace(/"/g,""), cat: (c[4]||"").trim(), x: parseFloat(c[5])||50, y: parseFloat(c[6])||50 };
+            return { mfr: (c[0]||"").trim(), model: (c[1]||"").trim(), loc: (c[2]||"").replace(/"/g,"").trim(), note: (c[3]||"").replace(/"/g,"").trim(), cat: (c[4]||"").trim(), x: parseFloat(c[5])||50, y: parseFloat(c[6])||50 };
         });
         db.sort((a, b) => a.mfr.localeCompare(b.mfr) || a.model.localeCompare(b.model));
         updateDatalists(); render();
@@ -108,15 +108,15 @@
         selected = item; render(document.getElementById('search').value);
         const img = document.getElementById('aircraft-img');
         const err = document.getElementById('img-error');
-        
-        // Reset view
-        img.style.display = 'none';
-        err.style.display = 'none';
+        img.style.display = 'none'; err.style.display = 'none';
 
-        // Probeer afbeelding te laden
-        const imgPath = `./silhouettes/${item.cat}.png`;
-        img.src = imgPath;
+        if (!item.cat) {
+            err.style.display = 'block';
+            err.innerHTML = `No Category defined for <b>${item.model}</b> in CSV.`;
+            return;
+        }
 
+        img.src = `silhouettes/${item.cat}.png`;
         img.onload = () => { img.style.display = 'block'; };
         img.onerror = () => {
             err.style.display = 'block';
@@ -142,8 +142,8 @@
     function drag(e) { if(dragging) moveMarker(e); }
     function moveMarker(e) {
         const rect = document.getElementById('map').getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const clientX = e.touches ? e.touches.clientX : e.clientX;
+        const clientY = e.touches ? e.touches.clientY : e.clientY;
         selected.x = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
         selected.y = Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100));
         document.getElementById('marker').style.left = selected.x + '%';
