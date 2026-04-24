@@ -32,5 +32,22 @@ const permanentData = {
         }
       ]
     }
+  },
+  "Atlas Aircraft Corporation": {
+    "Impale Mk.I & II": {
+      "img": "MB326.png",
+      "dots": [
+        {
+          "x": 45.375,
+          "y": 39.48900024609684,
+          "info": "Cockpit bulkhead, behind the rear seat."
+        },
+        {
+          "x": 81.75,
+          "y": 50.8277255640919,
+          "info": "Fuselage, left side below the stabilizer."
+        }
+      ]
+    }
   }
 };
