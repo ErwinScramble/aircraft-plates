@@ -1,16 +1,8 @@
 [
-  {
-    "id": 1,
-    "brand": "Cessna",
-    "type": "172 Skyhawk",
-    "location": "Op de linker deurpost of bij het staartvlak.",
-    "image": "cessna_172.jpg"
-  },
-  {
-    "id": 2,
-    "brand": "Boeing",
-    "type": "737-800",
-    "location": "Aan de binnenzijde van de voorste toegangsdeur (L1).",
-    "image": "b737_800.jpg"
+  "id": 1777024935413,
+  "brand": "Aero",
+  "type": "Ae-45",
+  "location": "The data plate is on the left side of the lower fuselage, just in front of the wing",
+  "image": "Ae-45.png"
   }
 ]
