@@ -12,7 +12,7 @@
         .editor-ui { background: var(--dark); color: white; padding: 25px; border-radius: 20px; margin-bottom: 20px; text-align: left; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .editor-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .display-box { background: white; border-radius: 24px; padding: 20px; margin: 20px auto; height: 450px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); position: relative; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: crosshair; touch-action: none; }
-        #aircraft-img { max-width: 100%; max-height: 100%; object-fit: contain; pointer-events: none; }
+        #aircraft-img { max-width: 100%; max-height: 100%; object-fit: contain; pointer-events: none; display: none; }
         .marker-dot { position: absolute; width: 28px; height: 28px; background: #ef4444; border-radius: 50%; border: 4px solid white; display: none; box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); z-index: 100; transform: translate(-50%, -50%); cursor: move; }
         label { display: block; font-size: 11px; text-transform: uppercase; color: #94a3b8; margin-bottom: 5px; font-weight: bold; }
         input.edit-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 14px; box-sizing: border-box; }
@@ -24,6 +24,7 @@
         .card { background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; cursor: pointer; text-align: left; }
         .card.selected { border: 2px solid var(--blue); background: #eff6ff; }
         .bubble { background: var(--dark); color: white; padding: 12px 25px; border-radius: 50px; font-size: 14px; margin-top: 15px; display: none; font-weight: 600; text-align: center; }
+        .error-msg { color: #ef4444; font-weight: bold; padding: 20px; }
     </style>
 </head>
 <body>
@@ -64,7 +65,8 @@
         </div>
         <button onclick="toggleEditor()" id="editBtn" class="btn btn-toggle">⚙️ Toggle Editor Mode</button>
         <div class="display-box" id="map" onmousedown="startDrag(event)" onmousemove="drag(event)" onmouseup="stopDrag()" ontouchstart="startDrag(event)" ontouchmove="drag(event)" ontouchend="stopDrag()">
-            <img id="aircraft-img" src="" alt="Select an aircraft below">
+            <img id="aircraft-img" src="" alt="">
+            <div id="img-error" class="error-msg" style="display:none;"></div>
             <div id="marker" class="marker-dot"></div>
         </div>
         <div id="infoBubble" class="bubble"></div>
@@ -83,6 +85,7 @@
         db.sort((a, b) => a.mfr.localeCompare(b.mfr) || a.model.localeCompare(b.model));
         updateDatalists(); render();
     });
+
     function updateDatalists() {
         const mfrs = [...new Set(db.map(i => i.mfr))].sort();
         const models = [...new Set(db.map(i => i.model))].sort();
@@ -91,6 +94,7 @@
         document.getElementById('model-list').innerHTML = models.map(m => `<option value="${m}">`).join('');
         document.getElementById('cat-list').innerHTML = cats.map(c => `<option value="${c}">`).join('');
     }
+
     function render(f = '') {
         const g = document.getElementById('results'); g.innerHTML = '';
         db.filter(i => (i.mfr+i.model).toLowerCase().includes(f.toLowerCase())).forEach(item => {
@@ -99,10 +103,26 @@
             d.onclick = () => selectAircraft(item); g.appendChild(d);
         });
     }
+
     function selectAircraft(item) {
         selected = item; render(document.getElementById('search').value);
         const img = document.getElementById('aircraft-img');
-        img.src = `silhouettes/${item.cat}.png`; img.style.display = 'block';
+        const err = document.getElementById('img-error');
+        
+        // Reset view
+        img.style.display = 'none';
+        err.style.display = 'none';
+
+        // Probeer afbeelding te laden
+        const imgPath = `./silhouettes/${item.cat}.png`;
+        img.src = imgPath;
+
+        img.onload = () => { img.style.display = 'block'; };
+        img.onerror = () => {
+            err.style.display = 'block';
+            err.innerHTML = `Missing image: <b>${item.cat}.png</b> in /silhouettes folder.<br><small>(Check capital letters!)</small>`;
+        };
+
         if(isEdit) {
             document.getElementById('editMfr').value = item.mfr;
             document.getElementById('editModel').value = item.model;
@@ -116,6 +136,7 @@
         document.getElementById('infoBubble').style.display = 'inline-block';
         document.getElementById('infoBubble').innerText = "📍 " + item.loc;
     }
+
     function startDrag(e) { if(!isEdit || !selected) return; dragging = true; moveMarker(e); }
     function stopDrag() { dragging = false; }
     function drag(e) { if(dragging) moveMarker(e); }
