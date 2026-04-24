@@ -3,110 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aircraft MSN Locator - Professional Editor</title>
+    <title>Aircraft MSN Locator - Editor v2</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         :root { --blue: #2563eb; --dark: #0f172a; --gray: #f1f5f9; --green: #10b981; }
         body { font-family: 'Inter', sans-serif; background: var(--gray); margin: 0; padding: 20px; color: var(--dark); }
-        .container { max-width: 1200px; margin: 0 auto; }
-        
-        /* Dashboard Layout */
-        .editor-ui { 
-            background: var(--dark); color: white; padding: 25px; border-radius: 20px; 
-            margin-bottom: 20px; text-align: left; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .editor-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 20px; align-items: end; }
-        
+        .container { max-width: 1200px; margin: 0 auto; text-align: center; }
         .display-box { 
             background: white; border-radius: 24px; padding: 40px; margin: 20px auto;
-            height: 450px; box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+            max-width: 900px; height: 450px; box-shadow: 0 15px 40px rgba(0,0,0,0.05);
             position: relative; border: 1px solid #e2e8f0;
             display: flex; align-items: center; justify-content: center; overflow: hidden;
-            cursor: crosshair; touch-action: none;
         }
-        
         #aircraft-img { max-width: 100%; max-height: 100%; object-fit: contain; pointer-events: none; }
-        
         .marker-dot { 
-            position: absolute; width: 28px; height: 28px; background: #ef4444; 
-            border-radius: 50%; border: 4px solid white; display: none;
+            position: absolute; width: 24px; height: 24px; background: #ef4444; 
+            border-radius: 50%; border: 3px solid white; display: none;
             box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); z-index: 100;
             transform: translate(-50%, -50%); cursor: move;
         }
-
-        /* Styling for inputs */
-        label { display: block; font-size: 11px; text-transform: uppercase; color: #94a3b8; margin-bottom: 5px; font-weight: bold; }
-        input.edit-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; font-size: 14px; box-sizing: border-box; }
+        .marker-dot.active { display: block; }
+        .editor-ui { background: var(--dark); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: left; display: none; }
+        .editor-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 15px; margin-top: 10px; }
+        input.edit-input { width: 100%; padding: 10px; border-radius: 8px; border: none; font-size: 14px; background: #1e293b; color: white; box-sizing: border-box; }
         .btn { padding: 12px 24px; border-radius: 12px; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .btn-download { background: var(--green); color: white; width: 100%; margin-top: 20px; font-size: 16px; }
-        .btn-toggle { background: white; border: 1px solid #cbd5e0; margin-bottom: 20px; }
-        
-        .search-box { width: 100%; padding: 15px 25px; border-radius: 50px; border: 2px solid #e2e8f0; font-size: 18px; margin-bottom: 30px; outline: none; box-sizing: border-box; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-        .card { background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; cursor: pointer; transition: 0.2s; text-align: left; }
+        .btn-save { background: var(--green); color: white; margin-top: 15px; width: 100%; font-size: 16px; }
+        .card { background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; cursor: pointer; text-align: left; }
         .card.selected { border: 2px solid var(--blue); background: #eff6ff; }
-        .bubble { background: var(--dark); color: white; padding: 12px 25px; border-radius: 50px; font-size: 14px; margin-top: 15px; display: none; font-weight: 600; text-align: center; }
+        .search-box { width: 100%; max-width: 600px; padding: 15px; border-radius: 50px; border: 2px solid #e2e8f0; margin-bottom: 20px; outline: none; }
+        .bubble { background: var(--dark); color: white; padding: 12px 25px; border-radius: 50px; font-size: 14px; margin-top: 15px; display: none; font-weight: 600; }
+        label { display: block; font-size: 11px; text-transform: uppercase; color: #94a3b8; margin-bottom: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header style="text-align: center;">
-        <h1>✈️ Aircraft MSN Locator <span id="modeLabel" style="color:var(--blue)">User View</span></h1>
-        
-        <div id="editorPanel" class="editor-ui">
-            <div class="editor-grid">
-                <div>
-                    <label>Plate Location Description</label>
-                    <input type="text" id="editLoc" class="edit-input" oninput="updateData()" placeholder="e.g. Inside nose wheel bay">
-                </div>
-                <div>
-                    <label>PNG Filename (Category)</label>
-                    <input type="text" id="editCat" class="edit-input" oninput="updateData()" placeholder="e.g. MiG-21">
-                </div>
-                <div>
-                    <label>Internal Notes</label>
-                    <input type="text" id="editNotes" class="edit-input" oninput="updateData()" placeholder="Internal use only">
-                </div>
+    <h1>✈️ Aircraft MSN Locator</h1>
+
+    <div id="editorPanel" class="editor-ui">
+        <strong>🛠 Editor: Drag the red dot & edit text</strong>
+        <div class="editor-grid">
+            <div>
+                <label>Plate Location Description</label>
+                <input type="text" id="editLoc" class="edit-input" oninput="updateData()">
             </div>
-            <p style="font-size: 12px; color: #94a3b8; margin: 15px 0 0 0;">
-                💡 <strong>Editor:</strong> Drag the red dot or click on the image. Adjust text and download the CSV at the end.
-            </p>
-            <button class="btn btn-download" onclick="downloadCSV()">💾 SAVE & DOWNLOAD CSV</button>
+            <div>
+                <label>PNG Filename (Category)</label>
+                <input type="text" id="editCat" class="edit-input" oninput="updateData()">
+            </div>
+            <div>
+                <label>Internal Notes</label>
+                <input type="text" id="editNotes" class="edit-input" oninput="updateData()">
+            </div>
         </div>
+        <button class="btn btn-save" onclick="downloadCSV()">⬇️ Download Updated aircraft_plates_db.csv</button>
+    </div>
 
-        <button onclick="toggleEditor()" id="editBtn" class="btn btn-toggle">⚙️ Toggle Editor Mode</button>
+    <button onclick="toggleEditor()" id="editBtn" class="btn" style="background: white; border: 1px solid #ccc; margin-bottom: 20px;">Toggle Editor Mode</button>
 
-        <div class="display-box" id="map" onmousedown="handlePoint(event)" ontouchstart="handlePoint(event)">
-            <img id="aircraft-img" src="" alt="Select an aircraft below">
-            <div id="marker" class="marker-dot"></div>
-        </div>
+    <div class="display-box" id="map" onmousedown="startDrag(event)" onmousemove="drag(event)" onmouseup="stopDrag()" ontouchstart="startDrag(event)" ontouchmove="drag(event)" ontouchend="stopDrag()">
+        <img id="aircraft-img" src="" alt="Select an aircraft">
+        <div id="marker" class="marker-dot"></div>
+    </div>
 
-        <div id="infoBubble" class="bubble"></div>
-        <input type="text" id="search" class="search-box" placeholder="Start typing to find aircraft...">
-    </header>
-
-    <div id="results" class="grid"></div>
+    <div id="infoBubble" class="bubble"></div>
+    <input type="text" id="search" class="search-box" placeholder="Search aircraft...">
+    <div id="results" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:15px; text-align:left;"></div>
 </div>
 
 <script>
-    let db = []; let selected = null; let isEdit = false;
+    let db = []; let selected = null; let isEdit = false; let dragging = false;
 
-    // Load and Alphabetize List
     fetch('aircraft_plates_db.csv').then(r => r.text()).then(t => {
         const rows = t.split(/\r?\n/).slice(1);
         db = rows.filter(r => r.trim()).map(r => {
             const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            return { 
-                mfr: c || "", model: c || "", 
-                loc: (c||"").replace(/"/g,""), 
-                note: (c||"").replace(/"/g,""), 
-                cat: (c||"").trim(), 
-                x: parseFloat(c) || 50, y: parseFloat(c) || 50 
-            };
+            return { mfr: c||"", model: c||"", loc: (c||"").replace(/"/g,""), note: (c||"").replace(/"/g,""), cat: (c||"").trim(), x: parseFloat(c)||50, y: parseFloat(c)||50 };
         });
 
-        // Alphabetical Sort
+        // Alphabetical sort
         db.sort((a, b) => a.mfr.localeCompare(b.mfr) || a.model.localeCompare(b.model));
         render();
     });
@@ -122,34 +97,32 @@
 
     function selectAircraft(item) {
         selected = item; render(document.getElementById('search').value);
-        const img = document.getElementById('aircraft-img');
-        img.src = `silhouettes/${item.cat}.png`;
-        img.style.display = 'block';
-        
+        document.getElementById('aircraft-img').src = `silhouettes/${item.cat}.png`;
+        document.getElementById('aircraft-img').style.display = 'block';
         if(isEdit) {
             document.getElementById('editLoc').value = item.loc;
             document.getElementById('editCat').value = item.cat;
             document.getElementById('editNotes').value = item.note;
         }
-
         const dot = document.getElementById('marker');
         dot.style.left = item.x + '%'; dot.style.top = item.y + '%';
-        dot.style.display = 'block';
-        
-        const b = document.getElementById('infoBubble');
-        b.style.display = 'inline-block'; b.innerText = "📍 " + item.loc;
+        dot.classList.add('active');
+        document.getElementById('infoBubble').style.display = 'inline-block';
+        document.getElementById('infoBubble').innerText = "📍 " + item.loc;
     }
 
-    function handlePoint(e) {
-        if(!isEdit || !selected) return;
+    function startDrag(e) { if(!isEdit || !selected) return; dragging = true; moveMarker(e); }
+    function stopDrag() { dragging = false; }
+    function drag(e) { if(dragging) moveMarker(e); }
+
+    function moveMarker(e) {
         const rect = document.getElementById('map').getBoundingClientRect();
-        const clientX = e.touches ? e.touches.clientX : e.clientX;
-        const clientY = e.touches ? e.touches.clientY : e.clientY;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
         selected.x = ((clientX - rect.left) / rect.width) * 100;
         selected.y = ((clientY - rect.top) / rect.height) * 100;
         document.getElementById('marker').style.left = selected.x + '%';
         document.getElementById('marker').style.top = selected.y + '%';
-        updateData();
     }
 
     function updateData() {
@@ -163,16 +136,11 @@
     function toggleEditor() {
         isEdit = !isEdit;
         document.getElementById('editorPanel').style.display = isEdit ? 'block' : 'none';
-        document.getElementById('modeLabel').innerText = isEdit ? "Editor Mode" : "User View";
-        document.getElementById('editBtn').style.background = isEdit ? "var(--dark)" : "white";
-        document.getElementById('editBtn').style.color = isEdit ? "white" : "black";
     }
 
     function downloadCSV() {
         let csvContent = "Manufacturer,Model,Plate_Location,Notes,Category,X,Y\n";
-        db.forEach(i => {
-            csvContent += `${i.mfr},${i.model},"${i.loc}","${i.note}",${i.cat},${i.x.toFixed(2)},${i.y.toFixed(2)}\n`;
-        });
+        db.forEach(i => { csvContent += `${i.mfr},${i.model},"${i.loc}","${i.note}",${i.cat},${i.x.toFixed(2)},${i.y.toFixed(2)}\n`; });
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
