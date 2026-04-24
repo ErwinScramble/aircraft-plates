@@ -41,7 +41,8 @@
                 </div>
                 <div>
                     <label>Model / Type</label>
-                    <input type="text" id="editModel" class="edit-input" oninput="updateData()">
+                    <input type="text" id="editModel" class="edit-input" list="model-list" oninput="updateData()">
+                    <datalist id="model-list"></datalist>
                 </div>
                 <div>
                     <label>Plate Location Description</label>
@@ -85,17 +86,19 @@
         const rows = t.split(/\r?\n/).slice(1);
         db = rows.filter(r => r.trim()).map(r => {
             const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            return { mfr: c[0] || "", model: c[1] || "", loc: (c[2]||"").replace(/"/g,""), note: (c[3]||"").replace(/"/g,""), cat: (c[4]||"").trim(), x: parseFloat(c[5]) || 50, y: parseFloat(c[6]) || 50 };
+            return { mfr: c || "", model: c || "", loc: (c||"").replace(/"/g,""), note: (c||"").replace(/"/g,""), cat: (c||"").trim(), x: parseFloat(c) || 50, y: parseFloat(c) || 50 };
         });
         db.sort((a, b) => a.mfr.localeCompare(b.mfr) || a.model.localeCompare(b.model));
-        populateDatalists();
+        updateDatalists();
         render();
     });
 
-    function populateDatalists() {
+    function updateDatalists() {
         const mfrs = [...new Set(db.map(i => i.mfr))].sort();
+        const models = [...new Set(db.map(i => i.model))].sort();
         const cats = [...new Set(db.map(i => i.cat))].sort();
         document.getElementById('mfr-list').innerHTML = mfrs.map(m => `<option value="${m}">`).join('');
+        document.getElementById('model-list').innerHTML = models.map(m => `<option value="${m}">`).join('');
         document.getElementById('cat-list').innerHTML = cats.map(c => `<option value="${c}">`).join('');
     }
 
@@ -130,8 +133,8 @@
     function handlePoint(e) {
         if(!isEdit || !selected) return;
         const rect = document.getElementById('map').getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const clientX = e.touches ? e.touches.clientX : e.clientX;
+        const clientY = e.touches ? e.touches.clientY : e.clientY;
         selected.x = ((clientX - rect.left) / rect.width) * 100;
         selected.y = ((clientY - rect.top) / rect.height) * 100;
         document.getElementById('marker').style.left = selected.x + '%';
@@ -146,6 +149,7 @@
         selected.cat = document.getElementById('editCat').value;
         selected.note = document.getElementById('editNotes').value;
         document.getElementById('infoBubble').innerText = "📍 " + selected.loc;
+        updateDatalists(); // Update lists as you type new values
     }
 
     function toggleEditor() {
