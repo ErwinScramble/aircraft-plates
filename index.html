@@ -1,112 +1,136 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Aircraft Plates Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aircraft Plates Database</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
-        .container { max-width: 600px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        select, input, button { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; }
-        #vliegtuig-beeld { width: 100%; margin-top: 20px; border-radius: 4px; display: none; }
-        .admin-panel { margin-top: 40px; padding-top: 20px; border-top: 2px solid #eee; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background: #f0f2f5; color: #333; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #1a73e8; }
+        label { font-weight: bold; display: block; margin-top: 15px; }
+        select, input, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        button { cursor: pointer; font-weight: bold; transition: 0.3s; }
+        #vliegtuig-beeld { width: 100%; margin-top: 20px; border-radius: 8px; display: none; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        
+        .admin-panel { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; }
+        .admin-btn { background: #6c757d; color: white; border: none; }
+        .save-btn { background: #28a745; color: white; border: none; }
+        .save-btn:hover { background: #218838; }
+        .delete-btn { background: #dc3545; color: white; border: none; margin-top: 5px; }
         .hidden { display: none; }
+        .admin-box { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 10px; border: 1px solid #e9ecef; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Aircraft Viewer</h1>
+    <h1>Aircraft Plates</h1>
     
-    <label>Kies Fabrikant:</label>
+    <label for="select-fabrikant">Manufacturer:</label>
     <select id="select-fabrikant" onchange="updateTypes()">
-        <option value="">-- Kies een fabrikant --</option>
+        <option value="">-- Select Manufacturer --</option>
     </select>
 
-    <label>Kies Type:</label>
-    <select id="select-type" onchange="toonAfbeelding()">
-        <option value="">-- Kies eerst een fabrikant --</option>
+    <label for="select-type">Aircraft Type:</label>
+    <select id="select-type" onchange="showImage()">
+        <option value="">-- Select Type --</option>
     </select>
 
-    <img id="vliegtuig-beeld" src="" alt="Vliegtuig afbeelding">
+    <img id="vliegtuig-beeld" src="" alt="Aircraft Plate">
 
-    <!-- Admin Menu Gedeelte -->
+    <!-- Admin Editor Section -->
     <div class="admin-panel">
-        <button onclick="toggleAdmin()">Open/Sluit Editor</button>
+        <button class="admin-btn" onclick="toggleAdmin()">Toggle Editor Menu</button>
         <div id="admin-controls" class="hidden">
-            <h3>Editor</h3>
-            <input type="text" id="new-fabrikant" placeholder="Naam fabrikant (bijv. Boeing)">
-            <input type="text" id="new-type" placeholder="Type (bijv. 737)">
-            <input type="text" id="new-image" placeholder="Bestandsnaam (bijv. boeing737.jpg)">
-            <button onclick="voegToe()" style="background: #28a745; color: white;">Voeg toe</button>
-            <button onclick="wisData()" style="background: #dc3545; color: white;">Wis alle data</button>
+            <div class="admin-box">
+                <h3>Add New Entry</h3>
+                <input type="text" id="new-fabrikant" placeholder="Manufacturer (e.g. Airbus)">
+                <input type="text" id="new-type" placeholder="Type (e.g. A320)">
+                <input type="text" id="new-image" placeholder="Image Filename (e.g. a320.jpg)">
+                <button class="save-btn" onclick="addEntry()">Save Aircraft</button>
+                <p style="font-size: 0.8em; color: #666;">Note: Images must be uploaded to your "Images" folder on GitHub.</p>
+            </div>
+            <button class="delete-btn" onclick="clearAll()">Reset All Data</button>
         </div>
     </div>
 </div>
 
 <script>
-    let data = JSON.parse(localStorage.getItem('aircraftData')) || {};
+    // Load data from browser storage
+    let aircraftData = JSON.parse(localStorage.getItem('aircraftDB')) || {};
 
     function toggleAdmin() {
         document.getElementById('admin-controls').classList.toggle('hidden');
     }
 
-    function voegToe() {
-        const fab = document.getElementById('new-fabrikant').value;
-        const type = document.getElementById('new-type').value;
-        const img = document.getElementById('new-image').value;
+    function addEntry() {
+        const fab = document.getElementById('new-fabrikant').value.trim();
+        const type = document.getElementById('new-type').value.trim();
+        const img = document.getElementById('new-image').value.trim();
 
-        if(!data[fab]) data[fab] = {};
-        data[fab][type] = img;
+        if(!fab || !type || !img) {
+            alert('Please fill in all fields');
+            return;
+        }
 
-        localStorage.setItem('aircraftData', JSON.stringify(data));
-        alert('Opgeslagen!');
-        location.reload(); // Ververs om de lijstjes bij te werken
+        if(!aircraftData[fab]) aircraftData[fab] = {};
+        aircraftData[fab][type] = img;
+
+        localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
+        alert('Saved successfully!');
+        location.reload(); 
     }
 
-    function laadLijsten() {
+    function loadManufacturers() {
         const fabSelect = document.getElementById('select-fabrikant');
-        for (let fab in data) {
+        const sortedFabs = Object.keys(aircraftData).sort();
+        
+        sortedFabs.forEach(fab => {
             let opt = document.createElement('option');
             opt.value = fab;
             opt.innerHTML = fab;
             fabSelect.appendChild(opt);
-        }
+        });
     }
 
     function updateTypes() {
         const fab = document.getElementById('select-fabrikant').value;
         const typeSelect = document.getElementById('select-type');
-        typeSelect.innerHTML = '<option value="">-- Kies een type --</option>';
+        typeSelect.innerHTML = '<option value="">-- Select Type --</option>';
         
-        if(data[fab]) {
-            for (let type in data[fab]) {
+        if(aircraftData[fab]) {
+            const sortedTypes = Object.keys(aircraftData[fab]).sort();
+            sortedTypes.forEach(type => {
                 let opt = document.createElement('option');
-                opt.value = data[fab][type];
+                opt.value = aircraftData[fab][type];
                 opt.innerHTML = type;
                 typeSelect.appendChild(opt);
-            }
+            });
         }
     }
 
-    function toonAfbeelding() {
-        const imgPath = document.getElementById('select-type').value;
-        const imgTag = document.getElementById('vliegtuig-beeld');
-        if(imgPath) {
-            imgTag.src = "Images/" + imgPath;
-            imgTag.style.display = "block";
+    function showImage() {
+        const fileName = document.getElementById('select-type').value;
+        const imgDisplay = document.getElementById('vliegtuig-beeld');
+        if(fileName) {
+            // Path to your GitHub Images folder
+            imgDisplay.src = "Images/" + fileName;
+            imgDisplay.style.display = "block";
         } else {
-            imgTag.style.display = "none";
+            imgDisplay.style.display = "none";
         }
     }
 
-    function wisData() {
-        if(confirm('Weet je zeker dat je alles wilt wissen?')) {
-            localStorage.clear();
+    function clearAll() {
+        if(confirm('Are you sure you want to delete ALL manufacturers and types?')) {
+            localStorage.removeItem('aircraftDB');
             location.reload();
         }
     }
 
-    laadLijsten();
+    // Initialize the page
+    loadManufacturers();
 </script>
 
 </body>
