@@ -1,243 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aircraft Plate Locator</title>
+    <title>Aircraft Construction Plates</title>
     <style>
-        /* Basisstijl en Layout */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background: #f4f7f6; color: #333; }
-        h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; }
-        
-        /* Bediening bovenin */
-        .controls { 
-            display: flex; gap: 15px; margin-bottom: 20px; justify-content: center; flex-wrap: wrap; 
-            background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        
-        select, input { padding: 12px; border-radius: 6px; border: 1px solid #d1d1d1; font-size: 16px; min-width: 180px; }
-        input { flex: 1; min-width: 200px; }
-
-        /* Afbeelding display */
-        .image-outer-container { text-align: center; margin-top: 20px; }
-        .image-container { 
-            position: relative; display: inline-block; max-width: 100%; 
-            background: #fff; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            line-height: 0; /* Voorkomt witruimte onder afbeelding */
-        }
-        #aircraft-img { max-width: 100%; height: auto; display: block; border-radius: 12px; }
-
-        /* De interactieve stippen */
-        .dot {
-            position: absolute; width: 26px; height: 26px; background: #e74c3c;
-            border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer;
-            border: 3px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.3);
-            transition: transform 0.2s;
-        }
-        .dot:hover { transform: translate(-50%, -50%) scale(1.2); z-index: 100; }
-
-        /* Tooltip styling */
-        .dot::after {
-            content: attr(data-info); position: absolute; bottom: 35px; left: 50%;
-            transform: translateX(-50%); background: rgba(44, 62, 80, 0.95); color: white;
-            padding: 8px 12px; border-radius: 6px; font-size: 14px; line-height: 1.4;
-            white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.2s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        .dot:hover::after { opacity: 1; }
-
-        /* Editor paneel stijl */
-        .editor-panel { 
-            margin: 30px auto; max-width: 800px; padding: 25px; background: #fff3cd; 
-            border: 1px solid #ffeeba; border-radius: 12px; display: none; text-align: center;
-        }
-        
-        .btn { padding: 12px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; margin: 5px; transition: 0.2s; }
-        .btn-editor { background: #34495e; color: white; }
-        .btn-save { background: #27ae60; color: white; }
-        .btn-add { background: #2980b9; color: white; }
-        .btn:hover { opacity: 0.9; }
-        
-        .add-form { border-bottom: 2px solid #f1c40f; margin-bottom: 20px; padding-bottom: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-        .add-form h4 { width: 100%; margin-top: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 900px; margin: auto; padding: 20px; background-color: #f4f7f6; }
+        h1 { color: #2c3e50; text-align: center; }
+        #search { width: 100%; padding: 12px; margin-bottom: 30px; border: 1px solid #ccc; border-radius: 25px; font-size: 16px; box-sizing: border-box; }
+        .aircraft-card { background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .aircraft-card h3 { margin-top: 0; color: #2980b9; }
+        .location-box { background: #eef2f3; padding: 10px; border-left: 5px solid #2980b9; margin: 10px 0; }
+        .img-container { text-align: center; margin-top: 15px; }
+        img { max-width: 100%; height: auto; border-radius: 5px; border: 1px solid #ddd; }
+        .no-image { font-style: italic; color: #999; }
     </style>
 </head>
 <body>
 
-    <h1>Aircraft Construction Number Locator</h1>
-
-    <div class="controls">
-        <select id="manufacturerSelect"><option value="">Select Manufacturer</option></select>
-        <select id="typeSelect"><option value="">Select Type</option></select>
-        <button id="toggleEditor" class="btn btn-editor">Editor Mode</button>
-    </div>
-
-    <div class="image-outer-container">
-        <div class="image-container" id="container">
-            <img id="aircraft-img" src="" alt="Please select a manufacturer and type above.">
-        </div>
-    </div>
-
-    <div id="editorPanel" class="editor-panel">
-        <div class="add-form">
-            <h4>➕ Add New Aircraft to Database</h4>
-            <input type="text" id="newMfr" placeholder="Manufacturer (e.g. Boeing)">
-            <input type="text" id="newType" placeholder="Type (e.g. 737-800)">
-            <input type="text" id="newImg" placeholder="Image URL (e.g. Images/737.jpg)">
-            <button onclick="addNewAircraft()" class="btn btn-add">Add Aircraft</button>
-        </div>
-
-        <h3>🛠 Editor: Dot Placement</h3>
-        <p><strong>How to use:</strong> Select an aircraft from the dropdowns above. Click anywhere on the image to add a dot. Click on an existing dot to delete it.</p>
-        <button onclick="saveChanges()" class="btn btn-save">💾 Step 2: Download Updated JSON</button>
-        <p><small>Note: To save permanently, upload the downloaded 'aircraft_data.json' file to your GitHub repository.</small></p>
+    <h1>Vliegtuig Plaatjes Locaties</h1>
+    <input type="text" id="search" placeholder="Zoek op merk of type (bijv. Cessna)...">
+    
+    <div id="list">
+        <!-- Hier komen de vliegtuigen te staan -->
     </div>
 
     <script>
-        let aircraftData = {};
-        const mSelect = document.getElementById('manufacturerSelect');
-        const tSelect = document.getElementById('typeSelect');
-        const img = document.getElementById('aircraft-img');
-        const container = document.getElementById('container');
-        const editorPanel = document.getElementById('editorPanel');
-        let isEditor = false;
+        // We halen de data op uit je aircrafts.json
+        fetch('aircrafts.json')
+            .then(response => response.json())
+            .then(data => {
+                const listDiv = document.getElementById('list');
+                const searchInput = document.getElementById('search');
 
-        // LAAD DATA (Met cache-buster)
-        function loadDatabase() {
-            fetch('aircraft_data.json?t=' + new Date().getTime())
-                .then(res => res.json())
-                .then(data => {
-                    aircraftData = data;
-                    populateManufacturers();
-                })
-                .catch(err => {
-                    console.error("Database could not be loaded. Starting fresh.");
-                    aircraftData = {};
-                });
-        }
+                function display(filter = "") {
+                    listDiv.innerHTML = "";
+                    const filteredData = data.filter(a => 
+                        a.type.toLowerCase().includes(filter.toLowerCase()) || 
+                        a.brand.toLowerCase().includes(filter.toLowerCase())
+                    );
 
-        function populateManufacturers() {
-            const currentVal = mSelect.value;
-            mSelect.innerHTML = '<option value="">Select Manufacturer</option>';
-            Object.keys(aircraftData).sort().forEach(m => {
-                const opt = document.createElement('option');
-                opt.value = m; opt.textContent = m;
-                mSelect.appendChild(opt);
-            });
-            mSelect.value = currentVal;
-        }
+                    filteredData.forEach(a => {
+                        listDiv.innerHTML += `
+                            <div class="aircraft-card">
+                                <h3>${a.brand} ${a.type}</h3>
+                                <div class="location-box">
+                                    <strong>Locatie constructienummer:</strong><br>
+                                    ${a.location}
+                                </div>
+                                <div class="img-container">
+                                    <!-- Let op de hoofdletter I in de mapnaam Images -->
+                                    <img src="Images/${a.image}" alt="Plaatje van ${a.type}" 
+                                         onerror="this.parentElement.innerHTML='<span class=\"no-image\">Geen afbeelding beschikbaar</span>'">
+                                </div>
+                            </div>
+                        `;
+                    });
 
-        mSelect.onchange = () => {
-            tSelect.innerHTML = '<option value="">Select Type</option>';
-            const m = mSelect.value;
-            if(m && aircraftData[m]) {
-                Object.keys(aircraftData[m]).sort().forEach(t => {
-                    const opt = document.createElement('option');
-                    opt.value = t; opt.textContent = t;
-                    tSelect.appendChild(opt);
-                });
-            }
-            loadAircraft(); // Reset image if manufacturer changes
-        };
-
-        tSelect.onchange = loadAircraft;
-
-        function loadAircraft() {
-            const m = mSelect.value;
-            const t = tSelect.value;
-            
-            // Verwijder alle huidige stippen
-            document.querySelectorAll('.dot').forEach(d => d.remove());
-
-            if(!m || !t || !aircraftData[m][t]) {
-                img.src = "";
-                img.alt = "Please select a manufacturer and type above.";
-                return;
-            }
-
-            const data = aircraftData[m][t];
-            img.src = data.img;
-            img.alt = m + " " + t;
-
-            if(data.dots) {
-                data.dots.forEach((dot, index) => {
-                    createDot(dot.x, dot.y, dot.info, index);
-                });
-            }
-        }
-
-        function createDot(x, y, info, index) {
-            const dot = document.createElement('div');
-            dot.className = 'dot';
-            dot.style.left = x + "%";
-            dot.style.top = y + "%";
-            dot.setAttribute('data-info', info);
-            
-            dot.onclick = (e) => {
-                if(isEditor) {
-                    e.stopPropagation();
-                    if(confirm("Delete this location dot?")) {
-                        aircraftData[mSelect.value][tSelect.value].dots.splice(index, 1);
-                        loadAircraft();
+                    if(filteredData.length === 0) {
+                        listDiv.innerHTML = "<p style='text-align:center;'>Geen vliegtuigen gevonden.</p>";
                     }
                 }
-            };
-            container.appendChild(dot);
-        }
 
-        // EDITOR LOGICA
-        document.getElementById('toggleEditor').onclick = () => {
-            if(!isEditor) {
-                const pw = prompt("Enter Editor Password:");
-                if(pw !== "admin123") return alert("Access denied.");
-            }
-            isEditor = !isEditor;
-            editorPanel.style.display = isEditor ? 'block' : 'none';
-        };
-
-        function addNewAircraft() {
-            const m = document.getElementById('newMfr').value.trim();
-            const t = document.getElementById('newType').value.trim();
-            const i = document.getElementById('newImg').value.trim();
-
-            if(m && t && i) {
-                if(!aircraftData[m]) aircraftData[m] = {};
-                aircraftData[m][t] = { img: i, dots: [] };
-                populateManufacturers();
-                alert("Success! " + t + " added. Select it from the dropdown to place dots.");
-            } else {
-                alert("Please fill in all 3 fields (Manufacturer, Type, and Image Path).");
-            }
-        }
-
-        img.onclick = (e) => {
-            if(!isEditor) return;
-            if(!mSelect.value || !tSelect.value) return alert("Select an aircraft first!");
-            
-            const rect = img.getBoundingClientRect();
-            const x = ((e.clientX - rect.left) / rect.width) * 100;
-            const y = ((e.clientY - rect.top) / rect.height) * 100;
-            const info = prompt("Description for this location:");
-            
-            if(info) {
-                if(!aircraftData[mSelect.value][tSelect.value].dots) {
-                    aircraftData[mSelect.value][tSelect.value].dots = [];
-                }
-                aircraftData[mSelect.value][tSelect.value].dots.push({x, y, info});
-                loadAircraft();
-            }
-        };
-
-        function saveChanges() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(aircraftData, null, 4));
-            const dlAnchor = document.createElement('a');
-            dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", "aircraft_data.json");
-            dlAnchor.click();
-        }
-
-        // Start applicatie
-        loadDatabase();
+                searchInput.addEventListener('input', (e) => display(e.target.value));
+                display(); // Toon alles bij het laden
+            })
+            .catch(err => {
+                console.error("Fout bij laden data:", err);
+                document.getElementById('list').innerHTML = "De lijst kon niet worden geladen. Controleer of aircrafts.json bestaat.";
+            });
     </script>
+
 </body>
 </html>
