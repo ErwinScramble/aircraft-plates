@@ -21,6 +21,7 @@
         .btn-save { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; }
         .btn-export { background: #17a2b8; color: white; border: none; cursor: pointer; margin-top: 10px; font-weight: bold; }
         .hidden { display: none; }
+        .small-btn { padding: 5px 10px; width: auto; font-size: 12px; background: #6c757d; color: white; border: none; cursor: pointer; border-radius: 4px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -51,7 +52,14 @@
                 <h3>Editor Menu</h3>
                 <input type="text" id="new-fabrikant" placeholder="Manufacturer (e.g. Boeing)">
                 <input type="text" id="new-type" placeholder="Type (e.g. 737)">
-                <input type="text" id="new-image" placeholder="Filename (e.g. b737.jpg)">
+                
+                <label>Select Image from Folder:</label>
+                <button type="button" class="small-btn" onclick="fetchImagesFromGitHub()">Refresh Image List</button>
+                <select id="new-image-select">
+                    <option value="">-- Click refresh or type name below --</option>
+                </select>
+                <input type="text" id="new-image-manual" placeholder="Or manually type filename (e.g. b737.jpg)">
+                
                 <button class="btn-save" onclick="addEntry()">Save Aircraft</button>
                 
                 <div id="dot-editor" class="hidden">
@@ -71,14 +79,10 @@
 <script src="data.js"></script>
 
 <script>
-    // --- VERBETERDE DATA LOGICA ---
     let githubData = (typeof permanentData !== 'undefined') ? permanentData : {};
     let localData = JSON.parse(localStorage.getItem('aircraftDB')) || {};
-
-    // Voeg data samen: alles wat lokaal is, overschrijft github data (voor editten)
-    let aircraftData = JSON.parse(JSON.stringify(githubData)); // start met een kopie van github
+    let aircraftData = JSON.parse(JSON.stringify(githubData));
     
-    // Voeg handmatig lokale wijzigingen toe
     for (let fab in localData) {
         if (!aircraftData[fab]) aircraftData[fab] = {};
         for (let type in localData[fab]) {
@@ -87,6 +91,34 @@
     }
 
     let isEditor = false;
+
+    // --- NIEUW: AFBEELDINGEN OPHALEN VAN GITHUB ---
+    async function fetchImagesFromGitHub() {
+        const repoUser = "ErwinScramble";
+        const repoName = "aircraft-plates";
+        const folderPath = "Images";
+        const url = `https://github.com{repoUser}/${repoName}/contents/${folderPath}`;
+
+        try {
+            const response = await fetch(url);
+            const files = await response.json();
+            const select = document.getElementById('new-image-select');
+            select.innerHTML = '<option value="">-- Choose a file --</option>';
+
+            files.forEach(file => {
+                if (file.type === "file") {
+                    let opt = document.createElement('option');
+                    opt.value = file.name;
+                    opt.innerHTML = file.name;
+                    select.appendChild(opt);
+                }
+            });
+            alert("Image list updated!");
+        } catch (error) {
+            console.error(error);
+            alert("Could not fetch images. Make sure the repo is public and folder name 'Images' is correct.");
+        }
+    }
 
     function authenticateEditor() {
         const pass = prompt("Enter Editor Access Key:");
@@ -102,7 +134,12 @@
     function addEntry() {
         const fab = document.getElementById('new-fabrikant').value.trim();
         const type = document.getElementById('new-type').value.trim();
-        const img = document.getElementById('new-image').value.trim();
+        
+        // Check dropdown eerst, anders handmatig veld
+        const imgSelect = document.getElementById('new-image-select').value;
+        const imgManual = document.getElementById('new-image-manual').value.trim();
+        const img = imgSelect || imgManual;
+
         if(!fab || !type || !img) return alert('Fill in all fields');
 
         if(!localData[fab]) localData[fab] = {};
@@ -111,16 +148,16 @@
         localData[fab][type] = { img: img, dots: dots };
         localStorage.setItem('aircraftDB', JSON.stringify(localData));
         
-        alert('Saved to browser. Refreshing list...');
+        alert('Saved to browser!');
         location.reload();
     }
 
+    // --- DE REST VAN DE FUNCTIES BLIJVEN HETZELFDE ---
     function exportData() {
-        // Exporteer ALLES (github + lokale wijzigingen)
         const dataStr = "const permanentData = " + JSON.stringify(aircraftData, null, 2) + ";";
         document.getElementById('export-area').value = dataStr;
         document.getElementById('export-area').select();
-        alert("Backup code generated! Paste this into data.js on GitHub.");
+        alert("Backup code generated!");
     }
 
     function loadManufacturers() {
@@ -172,12 +209,11 @@
         const info = prompt("Location description:");
         if(info) {
             if(!localData[fab]) localData[fab] = {};
-            if(!localData[fab][type]) localData[fab][type] = aircraftData[fab][type];
+            if(!localData[fab][type]) localData[fab][type] = JSON.parse(JSON.stringify(aircraftData[fab][type]));
             
             localData[fab][type].dots.push({ x: x, y: y, info: info });
             localStorage.setItem('aircraftDB', JSON.stringify(localData));
             
-            // Update live view
             aircraftData[fab][type] = localData[fab][type];
             renderDots(); renderDotList();
         }
@@ -186,13 +222,10 @@
     function deleteDot(i) {
         const fab = document.getElementById('select-fabrikant').value;
         const type = document.getElementById('select-type').value;
-        
         if(!localData[fab]) localData[fab] = {};
-        if(!localData[fab][type]) localData[fab][type] = aircraftData[fab][type];
-
+        if(!localData[fab][type]) localData[fab][type] = JSON.parse(JSON.stringify(aircraftData[fab][type]));
         localData[fab][type].dots.splice(i, 1);
         localStorage.setItem('aircraftDB', JSON.stringify(localData));
-        
         aircraftData[fab][type] = localData[fab][type];
         renderDots(); renderDotList();
     }
@@ -200,10 +233,8 @@
     function checkDotEditorVisibility() {
         const type = document.getElementById('select-type').value;
         const dotEditor = document.getElementById('dot-editor');
-        if (type && isEditor) {
-            dotEditor.classList.remove('hidden');
-            renderDotList();
-        } else { dotEditor.classList.add('hidden'); }
+        if (type && isEditor) { dotEditor.classList.remove('hidden'); renderDotList(); }
+        else { dotEditor.classList.add('hidden'); }
     }
 
     function renderDots() {
