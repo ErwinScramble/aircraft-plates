@@ -14,6 +14,16 @@ const permanentData = {
           "info": "Fuselage, left side below the stabilizer."
         }
       ]
+    },
+    "MB339": {
+      "img": "MB339.png",
+      "dots": [
+        {
+          "x": 44.625,
+          "y": 40.20073822551446,
+          "info": "Bulkhead behind rear seat, above the data acquisition box."
+        }
+      ]
     }
   },
   "Embraer": {
