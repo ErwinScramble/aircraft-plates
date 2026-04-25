@@ -65,7 +65,7 @@
                 <h4>Publish to GitHub</h4>
                 <p><small>Copy-paste the code below into your <b>data.js</b> file:</small></p>
                 <button class="btn-export" onclick="exportData()">Generate Full Backup Code</button>
-                <textarea id="export-area" style="width:100%; height:120px; margin-top:10px; font-size:10px; font-family:monospace;"></textarea>
+                <textarea id="export-area" style="width:100%; height:120px; margin-top:10px; font-size:10px; font-family:monospace;" readonly></textarea>
             </div>
         </div>
     </div>
@@ -86,16 +86,25 @@
         }
     }
 
-    let isEditor = false;
+    // --- SESSIE BEHEER ---
+    let isEditor = sessionStorage.getItem('isLoggedIn') === 'true';
 
     function authenticateEditor() {
+        if (isEditor) return; // Al ingelogd
         if(prompt("Enter Access Key:") === "Scr@mble-Pl@tes") {
             isEditor = true;
+            sessionStorage.setItem('isLoggedIn', 'true');
+            checkAuthUI();
+        } else { alert("Wrong key!"); }
+    }
+
+    function checkAuthUI() {
+        if (isEditor) {
             document.getElementById('admin-controls').classList.remove('hidden');
             document.getElementById('auth-btn').innerText = "Editor Mode: ACTIVE";
             document.getElementById('auth-btn').style.background = "#28a745";
             checkDotEditor();
-        } else { alert("Wrong key!"); }
+        }
     }
 
     function addEntry() {
@@ -106,12 +115,11 @@
         if(!fab || !type || !img) return alert("Fill all fields");
 
         if(!aircraftData[fab]) aircraftData[fab] = {};
-        // Behoud stippen als het type al bestaat
         const dots = aircraftData[fab][type] ? aircraftData[fab][type].dots : [];
         aircraftData[fab][type] = { img: img, dots: dots };
 
         localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
-        alert("Saved locally! Use Export to update data.js");
+        alert("Saved locally!");
         location.reload();
     }
 
@@ -119,7 +127,7 @@
         const finalCode = "const permanentData = " + JSON.stringify(aircraftData, null, 2) + ";";
         document.getElementById('export-area').value = finalCode;
         document.getElementById('export-area').select();
-        alert("Full code generated! Replace everything in data.js with this.");
+        alert("Full code generated!");
     }
 
     function loadManufacturers() {
@@ -166,7 +174,7 @@
         const rect = e.target.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
-        const info = prompt("Description (e.g. Serial Number Location):");
+        const info = prompt("Description:");
         if(info) {
             aircraftData[f][t].dots.push({x, y, info});
             localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
@@ -217,7 +225,9 @@
         if(hasType && isEditor) renderDotList();
     }
 
+    // --- INITIALISATIE ---
     loadManufacturers();
+    checkAuthUI(); // Controleer of we nog ingelogd waren van de vorige keer
 </script>
 </body>
 </html>
