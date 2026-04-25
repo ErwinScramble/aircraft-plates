@@ -70,6 +70,31 @@ const permanentData = {
           "info": "Lower fuselage, left side in front of the wing root."
         }
       ]
+    },
+    "L-29 Delfin": {
+      "img": "L-29.png",
+      "dots": [
+        {
+          "x": 51.125,
+          "y": 62.331903998318474,
+          "info": "Main wheel bay, left side."
+        },
+        {
+          "x": 38.375,
+          "y": 63.68416900506371,
+          "info": "Air intake (painted)."
+        },
+        {
+          "x": 21.5,
+          "y": 73.60077905452873,
+          "info": "Nosewheel door (painted)."
+        },
+        {
+          "x": 74.125,
+          "y": 34.15971635779284,
+          "info": "Tail (painted)."
+        }
+      ]
     }
   }
 };
