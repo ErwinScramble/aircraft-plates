@@ -44,17 +44,19 @@
     </div>
 
     <div class="admin-panel">
-        <!-- Knop tekst en functie veranderen dynamisch -->
         <button id="auth-btn" onclick="handleAuthClick()" style="background:#6c757d; color:white; border:none; cursor:pointer;">Editor Login</button>
         
         <div id="admin-controls" class="hidden">
             <div class="admin-box">
                 <h3>Editor Menu</h3>
-                <input type="text" id="new-fabrikant" placeholder="Manufacturer (e.g. Boeing)">
-                <input type="text" id="new-type" placeholder="Type (e.g. 737)">
-                <input type="text" id="new-image" placeholder="Image Filename (e.g. b737.jpg)">
+                <label><small>Manufacturer Name:</small></label>
+                <input type="text" id="new-fabrikant" placeholder="e.g. Boeing">
+                <label><small>Aircraft Type:</small></label>
+                <input type="text" id="new-type" placeholder="e.g. 737">
+                <label><small>Image Filename:</small></label>
+                <input type="text" id="new-image" placeholder="e.g. b737.jpg">
                 
-                <button class="btn-save" onclick="addEntry()">Save to local list</button>
+                <button class="btn-save" onclick="addEntry()">Save / Update Aircraft</button>
                 
                 <div id="dot-editor" class="hidden">
                     <hr>
@@ -84,17 +86,14 @@
 
     let isEditor = sessionStorage.getItem('isLoggedIn') === 'true';
 
-    // Gecombineerde functie voor Login en Logout
     function handleAuthClick() {
         if (isEditor) {
-            // Loguit actie
-            if(confirm("Are you sure you want to log out of Editor Mode?")) {
+            if(confirm("Log out of Editor Mode?")) {
                 isEditor = false;
                 sessionStorage.removeItem('isLoggedIn');
-                location.reload(); // Herlaad om alles netjes te verbergen
+                location.reload();
             }
         } else {
-            // Login actie
             if(prompt("Enter Access Key:") === "Scr@mble-Pl@tes") {
                 isEditor = true;
                 sessionStorage.setItem('isLoggedIn', 'true');
@@ -108,8 +107,22 @@
             document.getElementById('admin-controls').classList.remove('hidden');
             const btn = document.getElementById('auth-btn');
             btn.innerText = "Log Out (Editor Mode Active)";
-            btn.style.background = "#dc3545"; // Maak de knop rood voor uitloggen
+            btn.style.background = "#dc3545";
             checkDotEditor();
+            fillEditorFields(); // Vul velden in als er al iets geselecteerd is
+        }
+    }
+
+    // NIEUW: Functie om de velden in de editor te vullen op basis van de selectie
+    function fillEditorFields() {
+        if (!isEditor) return;
+        const fab = document.getElementById('select-fabrikant').value;
+        const type = document.getElementById('select-type').value;
+
+        if (fab && type && aircraftData[fab][type]) {
+            document.getElementById('new-fabrikant').value = fab;
+            document.getElementById('new-type').value = type;
+            document.getElementById('new-image').value = aircraftData[fab][type].img;
         }
     }
 
@@ -118,11 +131,14 @@
         const type = document.getElementById('new-type').value.trim();
         const img = document.getElementById('new-image').value.trim();
         if(!fab || !type || !img) return alert("Fill all fields");
+        
         if(!aircraftData[fab]) aircraftData[fab] = {};
+        // Behoud stippen bij update
         const dots = aircraftData[fab][type] ? aircraftData[fab][type].dots : [];
         aircraftData[fab][type] = { img: img, dots: dots };
+        
         localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
-        alert("Saved locally!");
+        alert("Updated locally!");
         location.reload();
     }
 
@@ -152,6 +168,7 @@
             });
         }
         showImage();
+        fillEditorFields(); // Update velden bij verandering van fabrikant
     }
 
     function showImage() {
@@ -164,7 +181,10 @@
             img.onload = () => { wrap.style.display = "block"; renderDots(); };
             img.onerror = () => { wrap.style.display = "none"; };
         } else { wrap.style.display = "none"; }
-        if(isEditor) checkDotEditor();
+        if(isEditor) {
+            checkDotEditor();
+            fillEditorFields(); // Update velden bij verandering van type
+        }
     }
 
     function handleImageClick(e) {
