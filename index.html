@@ -50,7 +50,6 @@
         <div id="admin-controls" class="hidden">
             <div class="admin-box">
                 <h3>Editor Menu</h3>
-                <!-- Verborgen velden om oude namen te onthouden bij hernoemen -->
                 <input type="hidden" id="old-fabrikant">
                 <input type="hidden" id="old-type">
 
@@ -87,6 +86,8 @@
 <script>
     let githubData = (typeof permanentData !== 'undefined') ? permanentData : {};
     let localData = JSON.parse(localStorage.getItem('aircraftDB')) || {};
+    
+    // Voeg alles samen tot één werkende dataset
     let aircraftData = JSON.parse(JSON.stringify(githubData));
     for (let f in localData) {
         if (!aircraftData[f]) aircraftData[f] = {};
@@ -131,7 +132,6 @@
             document.getElementById('new-fabrikant').value = fab;
             document.getElementById('new-type').value = type;
             document.getElementById('new-image').value = aircraftData[fab][type].img;
-            // Onthoud oude namen voor hernoemen
             document.getElementById('old-fabrikant').value = fab;
             document.getElementById('old-type').value = type;
             document.getElementById('type-actions').classList.remove('hidden');
@@ -149,7 +149,6 @@
 
         if(!fab || !type || !img) return alert("Fill all fields");
         
-        // Als de naam is veranderd, verwijder dan de oude vermelding
         if ((oldFab && oldFab !== fab) || (oldType && oldType !== type)) {
             if (aircraftData[oldFab] && aircraftData[oldFab][oldType]) {
                 delete aircraftData[oldFab][oldType];
@@ -158,9 +157,10 @@
         }
 
         if(!aircraftData[fab]) aircraftData[fab] = {};
-        const dots = aircraftData[fab][type] ? aircraftData[fab][type].dots : [];
+        const dots = (aircraftData[fab][type] && aircraftData[fab][type].dots) ? aircraftData[fab][type].dots : [];
         aircraftData[fab][type] = { img: img, dots: dots };
         
+        // OPSLAAN: Werk zowel aircraftData als localStorage bij
         localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
         alert("Saved successfully!");
         location.reload();
@@ -171,10 +171,15 @@
         const type = document.getElementById('select-type').value;
         
         if (confirm(`Are you sure you want to delete the ${type} from ${fab}?`)) {
-            delete aircraftData[fab][type];
-            if (Object.keys(aircraftData[fab]).length === 0) delete aircraftData[fab];
+            // Verwijder uit het actieve geheugen
+            if (aircraftData[fab] && aircraftData[fab][type]) {
+                delete aircraftData[fab][type];
+                if (Object.keys(aircraftData[fab]).length === 0) delete aircraftData[fab];
+            }
             
+            // OPSLAAN: Werk de browser-opslag direct bij met de nieuwe (kleinere) lijst
             localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
+            
             alert("Aircraft deleted.");
             location.reload();
         }
@@ -235,6 +240,7 @@
         const y = ((e.clientY - rect.top) / rect.height) * 100;
         const info = prompt("Description:");
         if(info) {
+            if(!aircraftData[f][t].dots) aircraftData[f][t].dots = [];
             aircraftData[f][t].dots.push({x, y, info});
             localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
             renderDots(); renderDotList();
@@ -246,7 +252,7 @@
         const t = document.getElementById('select-type').value;
         const layer = document.getElementById('dots-layer');
         layer.innerHTML = "";
-        if(aircraftData[f] && aircraftData[f][t]) {
+        if(aircraftData[f] && aircraftData[f][t] && aircraftData[f][t].dots) {
             aircraftData[f][t].dots.forEach(d => {
                 const dot = document.createElement('div');
                 dot.className = 'dot'; dot.style.left = d.x + "%"; dot.style.top = d.y + "%";
@@ -260,7 +266,7 @@
         const t = document.getElementById('select-type').value;
         const list = document.getElementById('current-dots');
         list.innerHTML = "";
-        if(aircraftData[f] && aircraftData[f][t]) {
+        if(aircraftData[f] && aircraftData[f][t] && aircraftData[f][t].dots) {
             aircraftData[f][t].dots.forEach((d, i) => {
                 const li = document.createElement('li');
                 li.className = 'dot-item';
