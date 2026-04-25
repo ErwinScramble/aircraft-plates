@@ -95,6 +95,10 @@ const permanentData = {
           "info": "Tail (painted)."
         }
       ]
+    },
+    "Ae-45 & Ae-145": {
+      "img": "Ae-45.png",
+      "dots": []
     }
   }
 };
