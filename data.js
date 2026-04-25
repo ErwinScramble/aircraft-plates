@@ -61,16 +61,6 @@ const permanentData = {
     }
   },
   "Aero": {
-    "Ae-45": {
-      "img": "Ae-45.png",
-      "dots": [
-        {
-          "x": 34.375,
-          "y": 57.74598474906515,
-          "info": "Lower fuselage, left side in front of the wing root."
-        }
-      ]
-    },
     "L-29 Delfin": {
       "img": "L-29.png",
       "dots": [
