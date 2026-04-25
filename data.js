@@ -100,15 +100,11 @@ const permanentData = {
       "img": "Ae-45.png",
       "dots": [
         {
-          "x": 32.875,
-          "y": 58.21248975312688,
+          "x": 34,
+          "y": 57.97923903068496,
           "info": "Lower fuselage, left side in front of the wing root."
         }
       ]
-    },
-    "Ae-145": {
-      "img": "Ae-45.png",
-      "dots": []
     }
   }
 };
