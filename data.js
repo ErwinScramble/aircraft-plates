@@ -108,5 +108,91 @@ const permanentData = {
         }
       ]
     }
+  },
+  "Antonov": {
+    "An-2": {
+      "img": "An-2.png",
+      "dots": [
+        {
+          "x": 40.75,
+          "y": 44.12275609643343,
+          "info": "Cabin, second joist behind the cockpit."
+        },
+        {
+          "x": 16.5,
+          "y": 47.52437369183194,
+          "info": "Engine bulkhead, behind the engine (accessible via cowlings)."
+        },
+        {
+          "x": 68.625,
+          "y": 57.502451971667575,
+          "info": "Cabin, rear wall."
+        },
+        {
+          "x": 31.874999999999996,
+          "y": 46.390501160032436,
+          "info": "Fuselage, below the pilot's window."
+        },
+        {
+          "x": 76.75,
+          "y": 59.089873516186884,
+          "info": "Fuselage, left side below the horizontal stabilizer (painted)."
+        }
+      ]
+    },
+    "An-3": {
+      "img": "An-2.png",
+      "dots": [
+        {
+          "x": 78,
+          "y": 59.316648022546794,
+          "info": "Fuselage, left side below the horizontal stabilizer."
+        }
+      ]
+    }
+  },
+  "Nanchang/Shijiazhuang": {
+    "Y5": {
+      "img": "An-2.png",
+      "dots": [
+        {
+          "x": 81.875,
+          "y": 58.863102470131345,
+          "info": "Horizontal stabilizer struts, top side (both sides)."
+        }
+      ]
+    }
+  },
+  "Aerospatiale": {
+    "AS332 Super Puma": {
+      "img": "AS332.png",
+      "dots": [
+        {
+          "x": 26.625,
+          "y": 55.043749047994574,
+          "info": "Cabin bulkhead, behind and above the left pilot seat."
+        }
+      ]
+    },
+    "AS532 Cougar": {
+      "img": "AS332.png",
+      "dots": [
+        {
+          "x": 26.5,
+          "y": 54.481251887559964,
+          "info": "Cabin bulkhead, behind and above the left pilot seat."
+        }
+      ]
+    },
+    "SA330 Puma": {
+      "img": "AS332.png",
+      "dots": [
+        {
+          "x": 26.5,
+          "y": 54.856251901865086,
+          "info": "Cabin bulkhead, behind and above the left pilot seat."
+        }
+      ]
+    }
   }
 };
