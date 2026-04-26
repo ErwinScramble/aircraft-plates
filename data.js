@@ -96,5 +96,17 @@ const permanentData = {
         }
       ]
     }
+  },
+  "Aero Commander": {
+    "Aero Commander 500 family": {
+      "img": "Aero Commander.png",
+      "dots": [
+        {
+          "x": 80.875,
+          "y": 54.856251901865086,
+          "info": "Fuselage, left side below the stabilizer/tailplane."
+        }
+      ]
+    }
   }
 };
