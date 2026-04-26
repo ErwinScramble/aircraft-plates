@@ -373,5 +373,22 @@ const permanentData = {
         }
       ]
     }
+  },
+  "Yakovlev": {
+    "Yak-52": {
+      "img": "Yak-52.png",
+      "dots": [
+        {
+          "x": 88.25,
+          "y": 41.703877505927586,
+          "info": "Between the fixed stabilizer and the moving rudder."
+        },
+        {
+          "x": 82.5,
+          "y": 48.636827545887016,
+          "info": "Fuselage, below the horizontal stabilizer (stencilled)."
+        }
+      ]
+    }
   }
 };
