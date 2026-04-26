@@ -17,9 +17,10 @@
         .dot:hover::after { display: block; }
         .admin-panel { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; }
         .admin-box { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef; margin-top: 10px; }
-        .dot-item { background: white; margin: 5px 0; padding: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+        .item-list { background: white; margin: 5px 0; padding: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
         .btn-save { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; }
         .btn-export { background: #17a2b8; color: white; border: none; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        .btn-del { background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; width: auto; }
         .hidden { display: none; }
     </style>
 </head>
@@ -48,7 +49,7 @@
         
         <div id="admin-controls" class="hidden">
             <div class="admin-box">
-                <h3>Editor Menu</h3>
+                <h3>Add New Aircraft</h3>
                 <input type="text" id="new-fabrikant" placeholder="Manufacturer (e.g. Boeing)">
                 <input type="text" id="new-type" placeholder="Type (e.g. 737)">
                 <input type="text" id="new-image-manual" placeholder="Filename (e.g. b737.jpg)">
@@ -56,9 +57,16 @@
                 
                 <div id="dot-editor" class="hidden">
                     <hr>
-                    <h4>Manage Dots</h4>
+                    <h4>Manage Dots for selected type</h4>
                     <ul id="current-dots" style="list-style:none; padding:0;"></ul>
                 </div>
+
+                <hr>
+                <h4>Database Management</h4>
+                <div id="db-manager" style="max-height: 200px; overflow-y: auto; background: #fff; padding: 10px; border: 1px solid #ddd;">
+                    <!-- Lijst met fabrikanten/types komt hier -->
+                </div>
+
                 <hr>
                 <h4>Backup & Publish</h4>
                 <button class="btn-export" onclick="exportData()">Generate Full Backup Code</button>
@@ -75,6 +83,7 @@
     let localData = JSON.parse(localStorage.getItem('aircraftDB')) || {};
     let aircraftData = JSON.parse(JSON.stringify(githubData));
     
+    // Voeg alles samen
     for (let f in localData) {
         if (!aircraftData[f]) aircraftData[f] = {};
         for (let t in localData[f]) { aircraftData[f][t] = localData[f][t]; }
@@ -88,6 +97,7 @@
             document.getElementById('admin-controls').classList.remove('hidden');
             document.getElementById('auth-btn').innerText = "Editor Mode: ACTIVE";
             document.getElementById('auth-btn').style.background = "#28a745";
+            renderDBManager();
             checkDotEditorVisibility();
         } else { alert("Wrong key!"); }
     }
@@ -104,21 +114,58 @@
         else aircraftData[fab][type].img = img;
 
         localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
-        
-        // Update de lijsten zonder de pagina te herladen
         loadManufacturers();
-        alert('Vliegtuig opgeslagen! Je kunt direct de volgende invoeren.');
-        
-        // Maak alleen de type en image velden leeg voor de volgende invoer
+        renderDBManager();
+        alert('Saved!');
         document.getElementById('new-type').value = "";
         document.getElementById('new-image-manual').value = "";
+    }
+
+    function renderDBManager() {
+        const div = document.getElementById('db-manager');
+        div.innerHTML = "";
+        Object.keys(aircraftData).sort().forEach(f => {
+            let fabHeader = document.createElement('div');
+            fabHeader.innerHTML = `<strong>${f}</strong> <button class="btn-del" onclick="deleteFab('${f}')" style="font-size:10px;">Del Fab</button>`;
+            fabHeader.style.marginTop = "10px";
+            div.appendChild(fabHeader);
+            
+            Object.keys(aircraftData[f]).sort().forEach(t => {
+                let typeRow = document.createElement('div');
+                typeRow.className = 'item-list';
+                typeRow.innerHTML = `<span> - ${t}</span> <button class="btn-del" onclick="deleteType('${f}', '${t}')">X</button>`;
+                div.appendChild(typeRow);
+            });
+        });
+    }
+
+    function deleteType(f, t) {
+        if(confirm(`Delete ${f} ${t}?`)) {
+            delete aircraftData[f][t];
+            if(Object.keys(aircraftData[f]).length === 0) delete aircraftData[f];
+            saveAndRefresh();
+        }
+    }
+
+    function deleteFab(f) {
+        if(confirm(`Delete ENTIRE manufacturer: ${f}?`)) {
+            delete aircraftData[f];
+            saveAndRefresh();
+        }
+    }
+
+    function saveAndRefresh() {
+        localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
+        loadManufacturers();
+        updateTypes();
+        renderDBManager();
     }
 
     function exportData() {
         const finalCode = "const permanentData = " + JSON.stringify(aircraftData, null, 2) + ";";
         document.getElementById('export-area').value = finalCode;
         document.getElementById('export-area').select();
-        alert("Backup code generated! Copy and paste into data.js");
+        alert("Backup code generated!");
     }
 
     function loadManufacturers() {
@@ -195,8 +242,8 @@
         if(aircraftData[f] && aircraftData[f][t]) {
             aircraftData[f][t].dots.forEach((d, i) => {
                 const li = document.createElement('li');
-                li.className = 'dot-item';
-                li.innerHTML = `${d.info} <button onclick="delDot(${i})" style="width:auto; background:red; color:white;">X</button>`;
+                li.className = 'item-list';
+                li.innerHTML = `${d.info} <button onclick="delDot(${i})" class="btn-del">X</button>`;
                 list.appendChild(li);
             });
         }
