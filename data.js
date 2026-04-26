@@ -95,6 +95,36 @@ const permanentData = {
           "info": "Lower fuselage, left side in front of the wing root."
         }
       ]
+    },
+    "L-39 Albatros": {
+      "img": "L-39.png",
+      "dots": [
+        {
+          "x": 37.625,
+          "y": 51.51378050536888,
+          "info": "Cockpit canopy frame (starboard), front of rear cockpit."
+        },
+        {
+          "x": 37.5,
+          "y": 47.231611422996735,
+          "info": "Ejection seats, sides (painted)."
+        },
+        {
+          "x": 47.25,
+          "y": 54.6690689600955,
+          "info": "Air intakes (painted)."
+        }
+      ]
+    },
+    "L-159 ALCA": {
+      "img": "L-39.png",
+      "dots": [
+        {
+          "x": 40.125,
+          "y": 48.1331179885058,
+          "info": "Ejection seats, sides (painted)."
+        }
+      ]
     }
   },
   "Aero Commander": {
@@ -201,12 +231,62 @@ const permanentData = {
           "x": 28.000000000000004,
           "y": 61.606252159357155,
           "info": "Floor, behind or below the right pilot seat. May require moving the seat forward or lifting the carpet."
+        },
+        {
+          "x": 71.75,
+          "y": 43.41875146555906,
+          "info": "Fuselage (right side), towards the tail boom. External plate, specific to USA exports"
         }
       ]
     },
     "AS355 Écureuil 2 & AS555 Fennec 2": {
       "img": "AS350.png",
-      "dots": []
+      "dots": [
+        {
+          "x": 73.625,
+          "y": 44.16874863314623,
+          "info": "Fuselage (right side), towards the tail boom. External plate, specific to USA exports"
+        },
+        {
+          "x": 33.25,
+          "y": 62.54374933409689,
+          "info": "Cockpit floor, near the left seat."
+        }
+      ]
+    }
+  },
+  "Lockheed": {
+    "C-130A to C-130H Hercules": {
+      "img": "C-130.png",
+      "dots": [
+        {
+          "x": 24.5,
+          "y": 65.19529058980886,
+          "info": "Cockpit ceiling, rear of the flight engineer's overhead panel. Internal location, not visible from the outside."
+        }
+      ]
+    },
+    "C-130J": {
+      "img": "C-130.png",
+      "dots": [
+        {
+          "x": 23.75,
+          "y": 65.50193537405116,
+          "info": "Cockpit, right side of the rear bench. Accessible via cockpit stairs; not visible from the outside."
+        }
+      ]
+    }
+  },
+  "Cessna": {
+    "General: single-engined Cessna's (Cessna 150, 152, 172, 206 etc.)": {
+      "img": "Cessna single engine.png",
+      "dots": [
+        {
+          "x": 40.875,
+          "y": 51.47380374947068,
+          "info": "Door frame (left-hand foremost), forward edge."
+        }
+      ]
     }
   }
 };
