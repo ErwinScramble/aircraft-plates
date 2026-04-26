@@ -196,7 +196,13 @@ const permanentData = {
     },
     "AS350 Écureuil & AS550 Fennec": {
       "img": "AS350.png",
-      "dots": []
+      "dots": [
+        {
+          "x": 28.000000000000004,
+          "y": 61.606252159357155,
+          "info": "Floor, behind or below the right pilot seat. May require moving the seat forward or lifting the carpet."
+        }
+      ]
     },
     "AS355 Écureuil 2 & AS555 Fennec 2": {
       "img": "AS350.png",
