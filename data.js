@@ -344,5 +344,34 @@ const permanentData = {
         }
       ]
     }
+  },
+  "Kamov": {
+    "Ka-26": {
+      "img": "Ka-26.png",
+      "dots": [
+        {
+          "x": 41,
+          "y": 49.587945693854415,
+          "info": "Fuselage, strake above the left-hand door-runner."
+        },
+        {
+          "x": 37.75,
+          "y": 70.1694129549353,
+          "info": "Fuselage, left side below the pilot door."
+        }
+      ]
+    }
+  },
+  "Boeing": {
+    "Boeing 747": {
+      "img": "B747.png",
+      "dots": [
+        {
+          "x": 17.5,
+          "y": 42.31597789445129,
+          "info": "Door frame (left-hand front), top edge."
+        }
+      ]
+    }
   }
 };
