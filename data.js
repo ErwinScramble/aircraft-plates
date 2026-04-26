@@ -193,6 +193,14 @@ const permanentData = {
           "info": "Cabin bulkhead, behind and above the left pilot seat."
         }
       ]
+    },
+    "AS350 Écureuil & AS550 Fennec": {
+      "img": "AS350.png",
+      "dots": []
+    },
+    "AS355 Écureuil 2 & AS555 Fennec 2": {
+      "img": "AS350.png",
+      "dots": []
     }
   }
 };
