@@ -253,6 +253,16 @@ const permanentData = {
           "info": "Cockpit floor, near the left seat."
         }
       ]
+    },
+    "SA341 & SA342 Gazelle": {
+      "img": "SA341.png",
+      "dots": [
+        {
+          "x": 13,
+          "y": 53.4104976871221,
+          "info": "Cockpit, bottom of the center console (left side)."
+        }
+      ]
     }
   },
   "Lockheed": {
@@ -285,6 +295,52 @@ const permanentData = {
           "x": 40.875,
           "y": 51.47380374947068,
           "info": "Door frame (left-hand foremost), forward edge."
+        }
+      ]
+    }
+  },
+  "Mikoyan Gurevich (MiG)": {
+    "MiG-21": {
+      "img": "MiG-21.png",
+      "dots": [
+        {
+          "x": 48.25,
+          "y": 94.35682526314442,
+          "info": "Multiple locations possible; check all combinations. Placement varies by sub-type and factory."
+        },
+        {
+          "x": 57.75,
+          "y": 56.31928855742105,
+          "info": "Main wheel bays (left and right). Plates are part of the wing section. Note: Wings are interchangeable; always cross-check with the nose wheel bay for accuracy."
+        },
+        {
+          "x": 28.125,
+          "y": 58.00568181038415,
+          "info": "Positions to check:      Foremost strut (left): Small plate (4-5 digits).     Top of wheel cavity: Punched 4-digit number.     Forward bulkhead: Small plate (4-digit number).     Side panels (both): Long painted number."
+        }
+      ]
+    }
+  },
+  "Harbin": {
+    "Z9 Haitun": {
+      "img": "SA365.png",
+      "dots": [
+        {
+          "x": 85.875,
+          "y": 18.000000686645535,
+          "info": "Tailplane, top side (painted)."
+        }
+      ]
+    }
+  },
+  "Bell": {
+    "Bell 204 and 205 / H-1 Iroquois": {
+      "img": "UH-1.png",
+      "dots": [
+        {
+          "x": 14.875,
+          "y": 63.74329764058137,
+          "info": "Cockpit, center console (left side, near floor)."
         }
       ]
     }
