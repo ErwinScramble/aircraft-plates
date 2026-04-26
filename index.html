@@ -63,9 +63,7 @@
 
                 <hr>
                 <h4>Database Management</h4>
-                <div id="db-manager" style="max-height: 200px; overflow-y: auto; background: #fff; padding: 10px; border: 1px solid #ddd;">
-                    <!-- Lijst met fabrikanten/types komt hier -->
-                </div>
+                <div id="db-manager" style="max-height: 200px; overflow-y: auto; background: #fff; padding: 10px; border: 1px solid #ddd;"></div>
 
                 <hr>
                 <h4>Backup & Publish</h4>
@@ -83,7 +81,6 @@
     let localData = JSON.parse(localStorage.getItem('aircraftDB')) || {};
     let aircraftData = JSON.parse(JSON.stringify(githubData));
     
-    // Voeg alles samen
     for (let f in localData) {
         if (!aircraftData[f]) aircraftData[f] = {};
         for (let t in localData[f]) { aircraftData[f][t] = localData[f][t]; }
@@ -110,13 +107,20 @@
         if(!fab || !type || !img) return alert('Fill in all fields');
 
         if(!aircraftData[fab]) aircraftData[fab] = {};
-        if(!aircraftData[fab][type]) aircraftData[fab][type] = { img: img, dots: [] };
-        else aircraftData[fab][type].img = img;
+        const existingDots = aircraftData[fab][type] ? aircraftData[fab][type].dots : [];
+        aircraftData[fab][type] = { img: img, dots: existingDots };
 
         localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
+        
         loadManufacturers();
+        document.getElementById('select-fabrikant').value = fab;
+        updateTypes();
+        document.getElementById('select-type').value = type;
+        
+        showImage();
         renderDBManager();
-        alert('Saved!');
+
+        alert('Saved! Image is now active above for dot placement.');
         document.getElementById('new-type').value = "";
         document.getElementById('new-image-manual').value = "";
     }
@@ -126,7 +130,7 @@
         div.innerHTML = "";
         Object.keys(aircraftData).sort().forEach(f => {
             let fabHeader = document.createElement('div');
-            fabHeader.innerHTML = `<strong>${f}</strong> <button class="btn-del" onclick="deleteFab('${f}')" style="font-size:10px;">Del Fab</button>`;
+            fabHeader.innerHTML = `<strong>${f}</strong> <button class="btn-del" onclick="deleteFab('${f}')" style="font-size:10px; margin-left:10px;">Del Fab</button>`;
             fabHeader.style.marginTop = "10px";
             div.appendChild(fabHeader);
             
@@ -174,7 +178,7 @@
         sel.innerHTML = '<option value="">-- Select Manufacturer --</option>';
         Object.keys(aircraftData).sort().forEach(f => {
             let opt = document.createElement('option');
-            opt.value = f; opt.text = f; sel.add(opt);
+            opt.value = f; opt.innerHTML = f; sel.add(opt);
         });
         sel.value = currentVal;
     }
@@ -186,7 +190,7 @@
         if(aircraftData[fab]) {
             Object.keys(aircraftData[fab]).sort().forEach(t => {
                 let opt = document.createElement('option');
-                opt.value = t; opt.text = t; sel.add(opt);
+                opt.value = t; opt.innerHTML = t; sel.add(opt);
             });
         }
         showImage();
@@ -212,7 +216,7 @@
         const rect = e.target.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
-        const info = prompt("Description:");
+        const info = prompt("Description (e.g. Serial Number location):");
         if(info) {
             aircraftData[f][t].dots.push({x, y, info});
             localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
@@ -243,7 +247,7 @@
             aircraftData[f][t].dots.forEach((d, i) => {
                 const li = document.createElement('li');
                 li.className = 'item-list';
-                li.innerHTML = `${d.info} <button onclick="delDot(${i})" class="btn-del">X</button>`;
+                li.innerHTML = `<span>${d.info}</span> <button onclick="delDot(${i})" class="btn-del">X</button>`;
                 list.appendChild(li);
             });
         }
