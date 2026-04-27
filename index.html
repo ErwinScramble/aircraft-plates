@@ -74,30 +74,20 @@
 </div>
 <script src="data.js"></script>
 <script>
-    // Gebruik browser-breed geheugen voor editor status
     let isEditor = sessionStorage.getItem('isEditorActive') === 'true';
     let aircraftData = {};
     
-    // We laden data uit data.js EN overschrijven dit met lokale wijzigingen
     function refreshDataStructure() {
         let githubData = (typeof permanentData !== 'undefined') ? permanentData : {};
         let localChanges = JSON.parse(localStorage.getItem('aircraftDB_Local')) || {};
-        
-        // Begin met data uit GitHub
         aircraftData = JSON.parse(JSON.stringify(githubData));
-        
-        // Pas lokale wijzigingen toe (toevoegen, aanpassen, hernoemen)
         for (let f in localChanges) {
-            if (localChanges[f] === null) {
-                delete aircraftData[f]; // Verwijder fabrikant als hij gemarkeerd is als null
-            } else {
+            if (localChanges[f] === null) { delete aircraftData[f]; } 
+            else {
                 if (!aircraftData[f]) aircraftData[f] = {};
                 for (let t in localChanges[f]) {
-                    if (localChanges[f][t] === null) {
-                        delete aircraftData[f][t]; // Verwijder type
-                    } else {
-                        aircraftData[f][t] = localChanges[f][t];
-                    }
+                    if (localChanges[f][t] === null) { delete aircraftData[f][t]; } 
+                    else { aircraftData[f][t] = localChanges[f][t]; }
                 }
                 if (Object.keys(aircraftData[f]).length === 0) delete aircraftData[f];
             }
@@ -107,10 +97,8 @@
     }
 
     function handleAuthClick() {
-        if(isEditor) {
-            sessionStorage.removeItem('isEditorActive');
-            location.reload();
-        } else {
+        if(isEditor) { sessionStorage.removeItem('isEditorActive'); location.reload(); } 
+        else {
             if(prompt("Access Key:") === "Scr@mble-Pl@tes") { 
                 sessionStorage.setItem('isEditorActive', 'true');
                 isEditor = true;
@@ -136,7 +124,6 @@
         const t = document.getElementById('new-type').value.trim();
         const i = document.getElementById('new-image').value.trim();
         if(!f || !t || !i) return alert('Fill fields');
-        
         let local = getLocal();
         if(!local[f]) local[f] = aircraftData[f] ? JSON.parse(JSON.stringify(aircraftData[f])) : {};
         local[f][t] = { img: i, dots: [] };
@@ -144,41 +131,102 @@
         location.reload();
     }
 
+    function handleImageClick(e) {
+        if(!isEditor) return;
+        const f = document.getElementById('select-fabrikant').value;
+        const t = document.getElementById('select-type').value;
+        if(!f || !t) return alert("Select manufacturer and type first!");
+
+        const rect = e.target.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        
+        const info = prompt("Location description:");
+        if(info) {
+            let local = getLocal();
+            // Zorg dat de structuur bestaat in local storage
+            if(!local[f]) local[f] = aircraftData[f] ? JSON.parse(JSON.stringify(aircraftData[f])) : {};
+            if(!local[f][t]) local[f][t] = aircraftData[f][t] ? JSON.parse(JSON.stringify(aircraftData[f][t])) : { img: "", dots: [] };
+            
+            // Voeg stip toe aan lokale data
+            local[f][t].dots.push({x, y, info});
+            saveLocal(local);
+            
+            // Werk de actieve dataset bij zodat renderDots() hem direct ziet
+            if(!aircraftData[f]) aircraftData[f] = {};
+            if(!aircraftData[f][t]) aircraftData[f][t] = { img: "", dots: [] };
+            aircraftData[f][t].dots.push({x, y, info});
+            
+            // Teken de stippen en de lijst direct opnieuw
+            renderDots();
+            checkDotEditor();
+        }
+    }
+
+    function renderDots() {
+        const f = document.getElementById('select-fabrikant').value;
+        const t = document.getElementById('select-type').value;
+        const layer = document.getElementById('dots-layer');
+        layer.innerHTML = "";
+        if(aircraftData[f] && aircraftData[f][t]) {
+            aircraftData[f][t].dots.forEach(d => {
+                const dot = document.createElement('div');
+                dot.className = 'dot'; dot.style.left = d.x + "%"; dot.style.top = d.y + "%";
+                dot.setAttribute('data-info', d.info); layer.appendChild(dot);
+            });
+        }
+    }
+
+    function checkDotEditor() {
+        const f = document.getElementById('select-fabrikant').value;
+        const t = document.getElementById('select-type').value;
+        const list = document.getElementById('current-dots');
+        if (t && isEditor && aircraftData[f] && aircraftData[f][t]) {
+            document.getElementById('dot-editor').classList.remove('hidden');
+            list.innerHTML = "";
+            aircraftData[f][t].dots.forEach((d, i) => {
+                const item = document.createElement('div');
+                item.className = 'dot-item';
+                item.innerHTML = `<div class="dot-info-text">${d.info}</div>
+                    <div class="dot-actions">
+                        <button class="btn-edit" onclick="editDot(${i})">Edit</button>
+                        <button class="btn-delete" onclick="delDot(${i})">Del</button>
+                    </div>`;
+                list.appendChild(item);
+            });
+        } else { document.getElementById('dot-editor').classList.add('hidden'); }
+    }
+
     function renameManufacturer() {
         const oldF = document.getElementById('select-fabrikant').value;
         if(!oldF) return;
-        const newF = prompt("New name for " + oldF + "?", oldF);
+        const newF = prompt("New name?", oldF);
         if(newF && newF !== oldF) {
             let local = getLocal();
-            // Pak alle data van de fabrikant
             local[newF] = JSON.parse(JSON.stringify(aircraftData[oldF]));
-            local[oldF] = null; // Markeer oude naam als verwijderd voor de merge
-            saveLocal(local);
-            location.reload();
+            local[oldF] = null;
+            saveLocal(local); location.reload();
         }
     }
 
     function deleteManufacturer() {
         const f = document.getElementById('select-fabrikant').value;
         if(f && confirm("Delete " + f + "?")) {
-            let local = getLocal();
-            local[f] = null;
-            saveLocal(local);
-            location.reload();
+            let local = getLocal(); local[f] = null;
+            saveLocal(local); location.reload();
         }
     }
 
     function renameType() {
         const f = document.getElementById('select-fabrikant').value;
         const oldT = document.getElementById('select-type').value;
-        const newT = prompt("New name for " + oldT + "?", oldT);
+        const newT = prompt("New name?", oldT);
         if(newT && newT !== oldT) {
             let local = getLocal();
             if(!local[f]) local[f] = JSON.parse(JSON.stringify(aircraftData[f]));
             local[f][newT] = JSON.parse(JSON.stringify(aircraftData[f][oldT]));
             local[f][oldT] = null;
-            saveLocal(local);
-            location.reload();
+            saveLocal(local); location.reload();
         }
     }
 
@@ -189,8 +237,7 @@
             let local = getLocal();
             if(!local[f]) local[f] = JSON.parse(JSON.stringify(aircraftData[f]));
             local[f][t] = null;
-            saveLocal(local);
-            location.reload();
+            saveLocal(local); location.reload();
         }
     }
 
@@ -246,58 +293,6 @@
         if(isEditor) checkDotEditor();
     }
 
-    function handleImageClick(e) {
-        if(!isEditor) return;
-        const f = document.getElementById('select-fabrikant').value;
-        const t = document.getElementById('select-type').value;
-        const rect = e.target.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        const info = prompt("Location:");
-        if(info) {
-            let local = getLocal();
-            if(!local[f]) local[f] = JSON.parse(JSON.stringify(aircraftData[f]));
-            if(!local[f][t]) local[f][t] = JSON.parse(JSON.stringify(aircraftData[f][t]));
-            local[f][t].dots.push({x, y, info});
-            saveLocal(local);
-            refreshDataStructure();
-        }
-    }
-
-    function renderDots() {
-        const f = document.getElementById('select-fabrikant').value;
-        const t = document.getElementById('select-type').value;
-        const layer = document.getElementById('dots-layer');
-        layer.innerHTML = "";
-        if(aircraftData[f] && aircraftData[f][t]) {
-            aircraftData[f][t].dots.forEach(d => {
-                const dot = document.createElement('div');
-                dot.className = 'dot'; dot.style.left = d.x + "%"; dot.style.top = d.y + "%";
-                dot.setAttribute('data-info', d.info); layer.appendChild(dot);
-            });
-        }
-    }
-
-    function checkDotEditor() {
-        const f = document.getElementById('select-fabrikant').value;
-        const t = document.getElementById('select-type').value;
-        const list = document.getElementById('current-dots');
-        if (t && isEditor && aircraftData[f][t]) {
-            document.getElementById('dot-editor').classList.remove('hidden');
-            list.innerHTML = "";
-            aircraftData[f][t].dots.forEach((d, i) => {
-                const item = document.createElement('div');
-                item.className = 'dot-item';
-                item.innerHTML = `<div class="dot-info-text">${d.info}</div>
-                    <div class="dot-actions">
-                        <button class="btn-edit" onclick="editDot(${i})">Edit</button>
-                        <button class="btn-delete" onclick="delDot(${i})">Del</button>
-                    </div>`;
-                list.appendChild(item);
-            });
-        } else { document.getElementById('dot-editor').classList.add('hidden'); }
-    }
-
     function editDot(i) {
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
@@ -307,7 +302,9 @@
             if(!local[f]) local[f] = JSON.parse(JSON.stringify(aircraftData[f]));
             if(!local[f][t]) local[f][t] = JSON.parse(JSON.stringify(aircraftData[f][t]));
             local[f][t].dots[i].info = newI;
-            saveLocal(local); refreshDataStructure();
+            saveLocal(local);
+            aircraftData[f][t].dots[i].info = newI;
+            renderDots(); checkDotEditor();
         }
     }
 
@@ -319,7 +316,9 @@
             if(!local[f]) local[f] = JSON.parse(JSON.stringify(aircraftData[f]));
             if(!local[f][t]) local[f][t] = JSON.parse(JSON.stringify(aircraftData[f][t]));
             local[f][t].dots.splice(i, 1);
-            saveLocal(local); refreshDataStructure();
+            saveLocal(local);
+            aircraftData[f][t].dots.splice(i, 1);
+            renderDots(); checkDotEditor();
         }
     }
 
