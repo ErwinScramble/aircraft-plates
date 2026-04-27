@@ -263,6 +263,26 @@ const permanentData = {
           "info": "Cockpit, bottom of the center console (left side)."
         }
       ]
+    },
+    "SA365 Dauphin": {
+      "img": "SA365.png",
+      "dots": [
+        {
+          "x": 86.125,
+          "y": 20.35624772477141,
+          "info": "Tail fin (painted)."
+        }
+      ]
+    },
+    "AS565 Panther": {
+      "img": "SA365.png",
+      "dots": [
+        {
+          "x": 86.125,
+          "y": 21.106247753381645,
+          "info": "Tail fin (painted)."
+        }
+      ]
     }
   },
   "Lockheed": {
@@ -348,7 +368,7 @@ const permanentData = {
         {
           "x": 85.875,
           "y": 18.000000686645535,
-          "info": "Tailplane, top side (painted)."
+          "info": "Tail fin (painted)."
         }
       ]
     }
