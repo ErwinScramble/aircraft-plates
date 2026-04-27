@@ -344,11 +344,6 @@ const permanentData = {
       "img": "MiG-21.png",
       "dots": [
         {
-          "x": 48.25,
-          "y": 94.35682526314442,
-          "info": "Multiple locations possible; check all combinations. Placement varies by sub-type and factory."
-        },
-        {
           "x": 57.75,
           "y": 56.31928855742105,
           "info": "Main wheel bays (left and right). Plates are part of the wing section. Note: Wings are interchangeable; always cross-check with the nose wheel bay for accuracy."
@@ -358,7 +353,8 @@ const permanentData = {
           "y": 58.00568181038415,
           "info": "Positions to check:      Foremost strut (left): Small plate (4-5 digits).     Top of wheel cavity: Punched 4-digit number.     Forward bulkhead: Small plate (4-digit number).     Side panels (both): Long painted number."
         }
-      ]
+      ],
+      "warning": "Multiple locations possible; check all combinations. Placement varies by sub-type and factory."
     }
   },
   "Harbin": {
