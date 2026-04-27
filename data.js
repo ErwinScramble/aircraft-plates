@@ -288,13 +288,33 @@ const permanentData = {
     }
   },
   "Cessna": {
-    "General: single-engined Cessna's (Cessna 150, 152, 172, 206 etc.)": {
+    "Single-engined Cessna's (Cessna 150, 152, 172, 206 etc.)": {
       "img": "Cessna single engine.png",
       "dots": [
         {
           "x": 40.875,
           "y": 51.47380374947068,
           "info": "Door frame (left-hand foremost), forward edge."
+        }
+      ]
+    },
+    "T-37 Tweet (Cessna 318)": {
+      "img": "A-37.png",
+      "dots": [
+        {
+          "x": 47.5,
+          "y": 46.575680236709886,
+          "info": "Bulkhead behind ejection seats (visible only with canopy open)."
+        }
+      ]
+    },
+    "A-37 Dragonfly": {
+      "img": "A-37.png",
+      "dots": [
+        {
+          "x": 47,
+          "y": 46.76306012396345,
+          "info": "Bulkhead behind ejection seats (visible only with canopy open)."
         }
       ]
     }
