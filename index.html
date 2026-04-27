@@ -10,43 +10,43 @@
         h1 { text-align: center; color: #1a73e8; margin-top: 0; }
         label { font-weight: bold; display: block; margin-top: 15px; }
         select, input, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        
-        .image-container { position: relative; width: 100%; margin-top: 20px; display: none; border-radius: 8px; background: #eee; border: 1px solid #ddd; overflow: hidden; }
+        .image-container { position: relative; width: 100%; margin-top: 20px; display: none; border-radius: 8px; background: #eee; border: 1px solid #ddd; overflow: hidden; -webkit-tap-highlight-color: transparent; }
         #vliegtuig-beeld { width: 100%; height: auto; display: block; cursor: crosshair; }
         
         /* De Rode Stip */
-        .dot { position: absolute; width: 18px; height: 18px; background: #ff0000; border: 2px solid #fff; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; box-shadow: 0 0 8px rgba(0,0,0,0.5); z-index: 5; }
+        .dot { position: absolute; width: 22px; height: 22px; background: #ff0000; border: 2px solid #fff; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; box-shadow: 0 0 8px rgba(0,0,0,0.5); z-index: 5; }
         
-        /* Tooltip Verbeterd voor lange teksten */
+        /* Tooltip - Aangepast voor iOS */
         .dot::after {
             content: attr(data-info);
             position: absolute;
-            bottom: 25px; 
+            bottom: 30px; 
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.9);
             color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            white-space: normal;       /* Laat tekst afbreken */
-            width: max-content;        /* Breedte op basis van inhoud */
-            max-width: 200px;          /* Limiet voor breedte */
-            text-align: center;        /* Centreren */
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            white-space: normal;
+            width: max-content;
+            max-width: 220px;
+            text-align: center;
             line-height: 1.4;
             display: none;
             z-index: 10;
             pointer-events: none;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
-        .dot:hover::after { display: block; }
         
-        /* Waarschuwingstekst stijl */
-        #warning-box { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(255, 193, 7, 0.9); color: #000; text-align: center; padding: 10px; font-weight: bold; font-size: 14px; display: none; z-index: 10; border-top: 1px solid #d39e00; }
+        /* Zichtbaar op hover (PC) en active/focus (Mobile/iOS) */
+        .dot:hover::after, .dot:active::after, .dot:focus::after { 
+            display: block; 
+        }
         
+        #warning-box { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(255, 193, 7, 0.95); color: #000; text-align: center; padding: 12px; font-weight: bold; font-size: 14px; display: none; z-index: 10; border-top: 1px solid #d39e00; }
         #related-section { margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 8px; display: none; border: 1px solid #e9ecef; }
         .related-link { color: #1a73e8; text-decoration: underline; cursor: pointer; margin-right: 12px; font-weight: bold; }
-        
         .admin-panel { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; }
         .admin-box { background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef; margin-top: 10px; }
         .dot-item { background: white; margin-bottom: 8px; padding: 12px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 6px; }
@@ -57,7 +57,6 @@
         .btn-delete { background: #dc3545; color: white; border: none; }
         .btn-save { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; }
         .hidden { display: none !important; }
-        
         .select-row { display: flex; gap: 10px; align-items: center; }
         .select-row select { flex-grow: 1; }
         .manage-btns { display: flex; gap: 5px; }
@@ -100,11 +99,7 @@
         <div id="admin-controls" class="hidden">
             <div class="admin-box">
                 <h3>Add/Update Aircraft</h3>
-                <input type="text" id="new-fabrikant" placeholder="Manufacturer">
-                <input type="text" id="new-type" placeholder="Type">
-                <input type="text" id="new-image" placeholder="Filename">
-                <input type="text" id="new-warning" placeholder="Optional Warning/Note">
-                <button class="btn-save" onclick="addEntry()">Save Aircraft</button>
+                <input type="text" id="new-fabrikant" placeholder="Manufacturer"><input type="text" id="new-type" placeholder="Type"><input type="text" id="new-image" placeholder="Filename"><input type="text" id="new-warning" placeholder="Optional Warning/Note"><button class="btn-save" onclick="addEntry()">Save Aircraft</button>
                 <div id="dot-editor" class="hidden"><hr><span style="font-weight:bold; color:#555;">C/N Locations</span><div id="current-dots" style="margin-top:10px;"></div></div>
                 <hr>
                 <button onclick="exportData()" style="background:#17a2b8; color:white; border:none; cursor:pointer; font-weight:bold;">Generate Backup Code</button>
@@ -237,8 +232,12 @@
         if(aircraftData[f] && aircraftData[f][t]) {
             aircraftData[f][t].dots.forEach(d => {
                 const dot = document.createElement('div');
-                dot.className = 'dot'; dot.style.left = d.x + "%"; dot.style.top = d.y + "%";
-                dot.setAttribute('data-info', d.info); layer.appendChild(dot);
+                dot.className = 'dot'; 
+                dot.style.left = d.x + "%"; 
+                dot.style.top = d.y + "%";
+                dot.setAttribute('data-info', d.info);
+                dot.setAttribute('tabindex', '0'); // Voor focus op mobile
+                layer.appendChild(dot);
             });
         }
     }
