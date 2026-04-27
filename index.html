@@ -19,6 +19,7 @@
         #related-section { margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 8px; display: none; border: 1px solid #e9ecef; }
         .related-link { color: #1a73e8; text-decoration: underline; cursor: pointer; margin-right: 12px; font-weight: bold; }
         
+        /* Admin Styling */
         .admin-panel { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; }
         .admin-box { background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef; margin-top: 10px; }
         .dot-item { background: white; margin-bottom: 8px; padding: 12px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 6px; }
@@ -27,10 +28,14 @@
         .dot-actions button { width: auto; padding: 6px 12px; font-size: 12px; cursor: pointer; }
         .btn-edit { background: #ffc107; color: #000; border: none; }
         .btn-delete { background: #dc3545; color: white; border: none; }
-        .btn-save { background: #28a745; color: white; border: none; font-weight: bold; }
-        .hidden { display: none; }
-        .manage-controls { display: flex; gap: 10px; margin-top: 5px; }
-        .manage-controls button { font-size: 12px; padding: 5px; background: #6c757d; color: white; border: none; }
+        .btn-save { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; }
+        .hidden { display: none !important; }
+        
+        /* Layout voor dropdown + knoppen */
+        .select-row { display: flex; gap: 10px; align-items: center; }
+        .select-row select { flex-grow: 1; }
+        .manage-btns { display: flex; gap: 5px; }
+        .btn-sm { width: auto !important; margin: 0 !important; padding: 8px 12px !important; font-size: 12px !important; cursor: pointer; border: none; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -39,24 +44,24 @@
     <h1>Aircraft Plates</h1>
     
     <label>1. Manufacturer:</label>
-    <div style="display:flex; gap:10px; align-items:center;">
-        <select id="select-fabrikant" onchange="updateTypes()" style="flex-grow:1;">
+    <div class="select-row">
+        <select id="select-fabrikant" onchange="updateTypes()">
             <option value="">-- Select Manufacturer --</option>
         </select>
-        <div id="m-fab-btns" class="hidden" style="display:flex; gap:5px;">
-            <button onclick="renameManufacturer()" style="width:auto; margin:0; padding:5px 10px; font-size:12px; background:#ffc107; color:black;">Rename</button>
-            <button onclick="deleteManufacturer()" style="width:auto; margin:0; padding:5px 10px; font-size:12px; background:#dc3545; color:white;">Del</button>
+        <div id="m-fab-btns" class="manage-btns hidden">
+            <button onclick="renameManufacturer()" class="btn-sm" style="background:#ffc107;">Rename</button>
+            <button onclick="deleteManufacturer()" class="btn-sm" style="background:#dc3545; color:white;">Del</button>
         </div>
     </div>
 
     <label>2. Aircraft Type:</label>
-    <div style="display:flex; gap:10px; align-items:center;">
-        <select id="select-type" onchange="showImage()" style="flex-grow:1;">
+    <div class="select-row">
+        <select id="select-type" onchange="showImage()">
             <option value="">-- Select Type --</option>
         </select>
-        <div id="m-type-btns" class="hidden" style="display:flex; gap:5px;">
-            <button onclick="renameType()" style="width:auto; margin:0; padding:5px 10px; font-size:12px; background:#ffc107; color:black;">Rename</button>
-            <button onclick="deleteType()" style="width:auto; margin:0; padding:5px 10px; font-size:12px; background:#dc3545; color:white;">Del</button>
+        <div id="m-type-btns" class="manage-btns hidden">
+            <button onclick="renameType()" class="btn-sm" style="background:#ffc107;">Rename</button>
+            <button onclick="deleteType()" class="btn-sm" style="background:#dc3545; color:white;">Del</button>
         </div>
     </div>
 
@@ -75,7 +80,7 @@
         
         <div id="admin-controls" class="hidden">
             <div class="admin-box">
-                <h3>Add New Aircraft</h3>
+                <h3>Add New Entry</h3>
                 <input type="text" id="new-fabrikant" placeholder="Manufacturer (e.g. Boeing)">
                 <input type="text" id="new-type" placeholder="Type (e.g. 737)">
                 <input type="text" id="new-image" placeholder="Filename (e.g. b737.jpg)">
@@ -114,16 +119,21 @@
     function authenticateEditor() {
         if(prompt("Access Key:") === "Scr@mble-Pl@tes") { 
             isEditor = true;
+            // Maak alle admin controls zichtbaar
             document.getElementById('admin-controls').classList.remove('hidden');
-            document.getElementById('auth-btn').innerText = "Editor Mode Active";
-            document.getElementById('auth-btn').style.background = "#28a745";
             document.getElementById('m-fab-btns').classList.remove('hidden');
             document.getElementById('m-type-btns').classList.remove('hidden');
+            
+            document.getElementById('auth-btn').innerText = "Editor Mode Active";
+            document.getElementById('auth-btn').style.background = "#28a745";
             checkDotEditor();
+        } else {
+            alert("Access denied.");
         }
     }
 
     function addEntry() {
+        if(!isEditor) return;
         const fab = document.getElementById('new-fabrikant').value.trim();
         const type = document.getElementById('new-type').value.trim();
         const img = document.getElementById('new-image').value.trim();
@@ -136,13 +146,13 @@
         refreshDataStructure();
     }
 
-    // MANAGEMENT FUNCTIES
     function renameManufacturer() {
+        if(!isEditor) return;
         const oldFab = document.getElementById('select-fabrikant').value;
         if(!oldFab) return alert("Select a manufacturer first");
         const newFab = prompt("New name for " + oldFab + "?", oldFab);
         if(newFab && newFab !== oldFab) {
-            if(!localData[oldFab]) localData[oldFab] = aircraftData[oldFab];
+            if(!localData[oldFab]) localData[oldFab] = JSON.parse(JSON.stringify(aircraftData[oldFab]));
             localData[newFab] = localData[oldFab];
             delete localData[oldFab];
             saveLocal();
@@ -151,9 +161,11 @@
     }
 
     function deleteManufacturer() {
+        if(!isEditor) return;
         const fab = document.getElementById('select-fabrikant').value;
         if(fab && confirm("Delete ENTIRE manufacturer " + fab + "?")) {
-            localData[fab] = null; // Mark for deletion if it was in githubData
+            if(!localData[fab]) localData[fab] = {};
+            localData[fab] = null;
             delete localData[fab];
             saveLocal();
             location.reload();
@@ -161,6 +173,7 @@
     }
 
     function renameType() {
+        if(!isEditor) return;
         const fab = document.getElementById('select-fabrikant').value;
         const oldType = document.getElementById('select-type').value;
         if(!oldType) return alert("Select a type first");
@@ -175,6 +188,7 @@
     }
 
     function deleteType() {
+        if(!isEditor) return;
         const fab = document.getElementById('select-fabrikant').value;
         const type = document.getElementById('select-type').value;
         if(type && confirm("Delete type " + type + "?")) {
@@ -296,6 +310,7 @@
     }
 
     function editDot(i) {
+        if(!isEditor) return;
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
         const newT = prompt("Update:", aircraftData[f][t].dots[i].info);
@@ -307,6 +322,7 @@
     }
 
     function delDot(i) {
+        if(!isEditor) return;
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
         if(confirm("Delete?")) {
@@ -319,6 +335,7 @@
     function saveLocal() { localStorage.setItem('aircraftDB', JSON.stringify(localData)); }
 
     function exportData() {
+        if(!isEditor) return;
         document.getElementById('export-area').value = "const permanentData = " + JSON.stringify(aircraftData, null, 2) + ";";
         document.getElementById('export-area').select();
     }
