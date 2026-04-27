@@ -454,6 +454,11 @@ const permanentData = {
           "info": "Both sides of the tail (painted; mispaints possible)."
         }
       ]
+    },
+    "Mi-24": {
+      "img": "Mil-24.png",
+      "dots": [],
+      "warning": ""
     }
   }
 };
