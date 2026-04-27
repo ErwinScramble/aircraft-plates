@@ -15,10 +15,8 @@
         .dot { position: absolute; width: 18px; height: 18px; background: #ff0000; border: 2px solid #fff; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; box-shadow: 0 0 8px rgba(0,0,0,0.5); z-index: 5; }
         .dot::after { content: attr(data-info); position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); color: white; padding: 6px 12px; border-radius: 4px; font-size: 13px; white-space: nowrap; display: none; z-index: 10; pointer-events: none; }
         .dot:hover::after { display: block; }
-        
         #related-section { margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 8px; display: none; border: 1px solid #e9ecef; }
         .related-link { color: #1a73e8; text-decoration: underline; cursor: pointer; margin-right: 12px; font-weight: bold; }
-        
         .admin-panel { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; }
         .admin-box { background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef; margin-top: 10px; }
         .dot-item { background: white; margin-bottom: 8px; padding: 12px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 6px; }
@@ -29,7 +27,6 @@
         .btn-delete { background: #dc3545; color: white; border: none; }
         .btn-save { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; }
         .hidden { display: none !important; }
-        
         .select-row { display: flex; gap: 10px; align-items: center; }
         .select-row select { flex-grow: 1; }
         .manage-btns { display: flex; gap: 5px; }
@@ -37,10 +34,8 @@
     </style>
 </head>
 <body>
-
 <div class="container">
     <h1>Aircraft Plates</h1>
-    
     <label>1. Manufacturer:</label>
     <div class="select-row">
         <select id="select-fabrikant" onchange="updateTypes()">
@@ -51,7 +46,6 @@
             <button onclick="deleteManufacturer()" class="btn-sm" style="background:#dc3545; color:white;">Del</button>
         </div>
     </div>
-
     <label>2. Aircraft Type:</label>
     <div class="select-row">
         <select id="select-type" onchange="showImage()">
@@ -62,33 +56,15 @@
             <button onclick="deleteType()" class="btn-sm" style="background:#dc3545; color:white;">Del</button>
         </div>
     </div>
-
-    <div id="related-section">
-        <small>Other models using this plate:</small><br>
-        <div id="related-links" style="margin-top:5px;"></div>
-    </div>
-
-    <div class="image-container" id="wrapper">
-        <img id="vliegtuig-beeld" src="" alt="Aircraft Plate" onclick="handleImageClick(event)">
-        <div id="dots-layer"></div>
-    </div>
-
+    <div id="related-section"><small>Other models using this plate:</small><br><div id="related-links" style="margin-top:5px;"></div></div>
+    <div class="image-container" id="wrapper"><img id="vliegtuig-beeld" src="" alt="Aircraft Plate" onclick="handleImageClick(event)"><div id="dots-layer"></div></div>
     <div class="admin-panel">
         <button id="auth-btn" onclick="handleAuthClick()" style="background:#6c757d; color:white; border:none; cursor:pointer;">Editor Login</button>
-        
         <div id="admin-controls" class="hidden">
             <div class="admin-box">
                 <h3>Add New Entry</h3>
-                <input type="text" id="new-fabrikant" placeholder="Manufacturer (e.g. Boeing)">
-                <input type="text" id="new-type" placeholder="Type (e.g. 737)">
-                <input type="text" id="new-image" placeholder="Filename (e.g. b737.jpg)">
-                <button class="btn-save" onclick="addEntry()">Save Aircraft</button>
-                
-                <div id="dot-editor" class="hidden">
-                    <hr>
-                    <span style="font-weight:bold; color:#555;">C/N Locations (Click image to add)</span>
-                    <div id="current-dots" style="margin-top:10px;"></div>
-                </div>
+                <input type="text" id="new-fabrikant" placeholder="Manufacturer"><input type="text" id="new-type" placeholder="Type"><input type="text" id="new-image" placeholder="Filename"><button class="btn-save" onclick="addEntry()">Save Aircraft</button>
+                <div id="dot-editor" class="hidden"><hr><span style="font-weight:bold; color:#555;">C/N Locations</span><div id="current-dots" style="margin-top:10px;"></div></div>
                 <hr>
                 <button onclick="exportData()" style="background:#17a2b8; color:white; border:none; cursor:pointer; font-weight:bold;">Generate Backup Code</button>
                 <textarea id="export-area" style="width:100%; height:80px; margin-top:10px; font-size:10px; font-family:monospace;" readonly></textarea>
@@ -96,20 +72,35 @@
         </div>
     </div>
 </div>
-
 <script src="data.js"></script>
-
 <script>
-    let githubData = (typeof permanentData !== 'undefined') ? permanentData : {};
-    let localData = JSON.parse(localStorage.getItem('aircraftDB')) || {};
-    let aircraftData = {};
+    // Gebruik browser-breed geheugen voor editor status
     let isEditor = sessionStorage.getItem('isEditorActive') === 'true';
-
+    let aircraftData = {};
+    
+    // We laden data uit data.js EN overschrijven dit met lokale wijzigingen
     function refreshDataStructure() {
+        let githubData = (typeof permanentData !== 'undefined') ? permanentData : {};
+        let localChanges = JSON.parse(localStorage.getItem('aircraftDB_Local')) || {};
+        
+        // Begin met data uit GitHub
         aircraftData = JSON.parse(JSON.stringify(githubData));
-        for (let f in localData) {
-            if (!aircraftData[f]) aircraftData[f] = {};
-            for (let t in localData[f]) { aircraftData[f][t] = localData[f][t]; }
+        
+        // Pas lokale wijzigingen toe (toevoegen, aanpassen, hernoemen)
+        for (let f in localChanges) {
+            if (localChanges[f] === null) {
+                delete aircraftData[f]; // Verwijder fabrikant als hij gemarkeerd is als null
+            } else {
+                if (!aircraftData[f]) aircraftData[f] = {};
+                for (let t in localChanges[f]) {
+                    if (localChanges[f][t] === null) {
+                        delete aircraftData[f][t]; // Verwijder type
+                    } else {
+                        aircraftData[f][t] = localChanges[f][t];
+                    }
+                }
+                if (Object.keys(aircraftData[f]).length === 0) delete aircraftData[f];
+            }
         }
         loadManufacturers();
         if(isEditor) applyEditorView();
@@ -124,7 +115,7 @@
                 sessionStorage.setItem('isEditorActive', 'true');
                 isEditor = true;
                 applyEditorView();
-            } else { alert("Access denied."); }
+            }
         }
     }
 
@@ -137,69 +128,68 @@
         checkDotEditor();
     }
 
+    function saveLocal(data) { localStorage.setItem('aircraftDB_Local', JSON.stringify(data)); }
+    function getLocal() { return JSON.parse(localStorage.getItem('aircraftDB_Local')) || {}; }
+
     function addEntry() {
-        if(!isEditor) return;
-        const fab = document.getElementById('new-fabrikant').value.trim();
-        const type = document.getElementById('new-type').value.trim();
-        const img = document.getElementById('new-image').value.trim();
-        if(!fab || !type || !img) return alert('Fill fields');
-        if(!localData[fab]) localData[fab] = {};
-        localData[fab][type] = { img: img, dots: [] };
-        saveLocal();
-        document.getElementById('new-type').value = "";
-        document.getElementById('new-image').value = "";
-        refreshDataStructure();
+        const f = document.getElementById('new-fabrikant').value.trim();
+        const t = document.getElementById('new-type').value.trim();
+        const i = document.getElementById('new-image').value.trim();
+        if(!f || !t || !i) return alert('Fill fields');
+        
+        let local = getLocal();
+        if(!local[f]) local[f] = aircraftData[f] ? JSON.parse(JSON.stringify(aircraftData[f])) : {};
+        local[f][t] = { img: i, dots: [] };
+        saveLocal(local);
+        location.reload();
     }
 
     function renameManufacturer() {
-        if(!isEditor) return;
-        const oldFab = document.getElementById('select-fabrikant').value;
-        if(!oldFab) return alert("Select a manufacturer first");
-        const newFab = prompt("New name for " + oldFab + "?", oldFab);
-        if(newFab && newFab !== oldFab) {
-            if(!localData[oldFab]) localData[oldFab] = JSON.parse(JSON.stringify(aircraftData[oldFab]));
-            localData[newFab] = localData[oldFab];
-            delete localData[oldFab];
-            saveLocal();
+        const oldF = document.getElementById('select-fabrikant').value;
+        if(!oldF) return;
+        const newF = prompt("New name for " + oldF + "?", oldF);
+        if(newF && newF !== oldF) {
+            let local = getLocal();
+            // Pak alle data van de fabrikant
+            local[newF] = JSON.parse(JSON.stringify(aircraftData[oldF]));
+            local[oldF] = null; // Markeer oude naam als verwijderd voor de merge
+            saveLocal(local);
             location.reload();
         }
     }
 
     function deleteManufacturer() {
-        if(!isEditor) return;
-        const fab = document.getElementById('select-fabrikant').value;
-        if(fab && confirm("Delete ENTIRE manufacturer " + fab + "?")) {
-            if(!localData[fab]) localData[fab] = {};
-            localData[fab] = null;
-            delete localData[fab];
-            saveLocal();
+        const f = document.getElementById('select-fabrikant').value;
+        if(f && confirm("Delete " + f + "?")) {
+            let local = getLocal();
+            local[f] = null;
+            saveLocal(local);
             location.reload();
         }
     }
 
     function renameType() {
-        if(!isEditor) return;
-        const fab = document.getElementById('select-fabrikant').value;
-        const oldType = document.getElementById('select-type').value;
-        if(!oldType) return alert("Select a type first");
-        const newType = prompt("New name for " + oldType + "?", oldType);
-        if(newType && newType !== oldType) {
-            if(!localData[fab]) localData[fab] = JSON.parse(JSON.stringify(aircraftData[fab]));
-            localData[fab][newType] = localData[fab][oldType];
-            delete localData[fab][oldType];
-            saveLocal();
+        const f = document.getElementById('select-fabrikant').value;
+        const oldT = document.getElementById('select-type').value;
+        const newT = prompt("New name for " + oldT + "?", oldT);
+        if(newT && newT !== oldT) {
+            let local = getLocal();
+            if(!local[f]) local[f] = JSON.parse(JSON.stringify(aircraftData[f]));
+            local[f][newT] = JSON.parse(JSON.stringify(aircraftData[f][oldT]));
+            local[f][oldT] = null;
+            saveLocal(local);
             location.reload();
         }
     }
 
     function deleteType() {
-        if(!isEditor) return;
-        const fab = document.getElementById('select-fabrikant').value;
-        const type = document.getElementById('select-type').value;
-        if(type && confirm("Delete type " + type + "?")) {
-            if(!localData[fab]) localData[fab] = JSON.parse(JSON.stringify(aircraftData[fab]));
-            delete localData[fab][type];
-            saveLocal();
+        const f = document.getElementById('select-fabrikant').value;
+        const t = document.getElementById('select-type').value;
+        if(t && confirm("Delete " + t + "?")) {
+            let local = getLocal();
+            if(!local[f]) local[f] = JSON.parse(JSON.stringify(aircraftData[f]));
+            local[f][t] = null;
+            saveLocal(local);
             location.reload();
         }
     }
@@ -216,11 +206,11 @@
     }
 
     function updateTypes() {
-        const fab = document.getElementById('select-fabrikant').value;
+        const f = document.getElementById('select-fabrikant').value;
         const sel = document.getElementById('select-type');
         sel.innerHTML = '<option value="">-- Select Type --</option>';
-        if(aircraftData[fab]) {
-            Object.keys(aircraftData[fab]).sort().forEach(t => {
+        if(aircraftData[f]) {
+            Object.keys(aircraftData[f]).sort().forEach(t => {
                 let opt = document.createElement('option');
                 opt.value = t; opt.text = t; sel.add(opt);
             });
@@ -232,25 +222,22 @@
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
         const wrap = document.getElementById('wrapper');
-        const imgTag = document.getElementById('vliegtuig-beeld');
-        const relLinks = document.getElementById('related-links');
-        
+        const imgT = document.getElementById('vliegtuig-beeld');
+        const relL = document.getElementById('related-links');
         if(f && t && aircraftData[f][t]) {
             const currentImg = aircraftData[f][t].img;
-            imgTag.src = "Images/" + currentImg;
-            imgTag.onload = () => { wrap.style.display = "block"; renderDots(); };
-            
-            relLinks.innerHTML = "";
+            imgT.src = "Images/" + currentImg;
+            imgT.onload = () => { wrap.style.display = "block"; renderDots(); };
+            relL.innerHTML = "";
             let found = false;
             for (let oF in aircraftData) {
                 for (let oT in aircraftData[oF]) {
                     if (aircraftData[oF][oT].img === currentImg && (oF !== f || oT !== t)) {
                         found = true;
                         const a = document.createElement('span');
-                        a.className = "related-link";
-                        a.innerText = oF + " " + oT;
+                        a.className = "related-link"; a.innerText = oF + " " + oT;
                         a.onclick = () => { document.getElementById('select-fabrikant').value = oF; updateTypes(); document.getElementById('select-type').value = oT; showImage(); };
-                        relLinks.appendChild(a);
+                        relL.appendChild(a);
                     }
                 }
             }
@@ -263,19 +250,17 @@
         if(!isEditor) return;
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
-        if(!f || !t) return;
         const rect = e.target.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
-        const info = prompt("Location description:");
+        const info = prompt("Location:");
         if(info) {
-            if(!localData[f]) localData[f] = JSON.parse(JSON.stringify(aircraftData[f]));
-            if(!localData[f][t]) localData[f][t] = JSON.parse(JSON.stringify(aircraftData[f][t]));
-            localData[f][t].dots.push({x, y, info});
-            saveLocal();
+            let local = getLocal();
+            if(!local[f]) local[f] = JSON.parse(JSON.stringify(aircraftData[f]));
+            if(!local[f][t]) local[f][t] = JSON.parse(JSON.stringify(aircraftData[f][t]));
+            local[f][t].dots.push({x, y, info});
+            saveLocal(local);
             refreshDataStructure();
-            renderDots();
-            checkDotEditor();
         }
     }
 
@@ -296,10 +281,9 @@
     function checkDotEditor() {
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
-        const ctrl = document.getElementById('dot-editor');
         const list = document.getElementById('current-dots');
         if (t && isEditor && aircraftData[f][t]) {
-            ctrl.classList.remove('hidden');
+            document.getElementById('dot-editor').classList.remove('hidden');
             list.innerHTML = "";
             aircraftData[f][t].dots.forEach((d, i) => {
                 const item = document.createElement('div');
@@ -311,36 +295,35 @@
                     </div>`;
                 list.appendChild(item);
             });
-        } else { ctrl.classList.add('hidden'); }
+        } else { document.getElementById('dot-editor').classList.add('hidden'); }
     }
 
     function editDot(i) {
-        if(!isEditor) return;
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
-        const newT = prompt("Update:", aircraftData[f][t].dots[i].info);
-        if(newT) {
-            if(!localData[f]) localData[f] = JSON.parse(JSON.stringify(aircraftData[f]));
-            localData[f][t].dots[i].info = newT;
-            saveLocal(); refreshDataStructure(); checkDotEditor(); renderDots();
+        const newI = prompt("Update:", aircraftData[f][t].dots[i].info);
+        if(newI) {
+            let local = getLocal();
+            if(!local[f]) local[f] = JSON.parse(JSON.stringify(aircraftData[f]));
+            if(!local[f][t]) local[f][t] = JSON.parse(JSON.stringify(aircraftData[f][t]));
+            local[f][t].dots[i].info = newI;
+            saveLocal(local); refreshDataStructure();
         }
     }
 
     function delDot(i) {
-        if(!isEditor) return;
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
         if(confirm("Delete?")) {
-            if(!localData[f]) localData[f] = JSON.parse(JSON.stringify(aircraftData[f]));
-            localData[f][t].dots.splice(i, 1);
-            saveLocal(); refreshDataStructure(); checkDotEditor(); renderDots();
+            let local = getLocal();
+            if(!local[f]) local[f] = JSON.parse(JSON.stringify(aircraftData[f]));
+            if(!local[f][t]) local[f][t] = JSON.parse(JSON.stringify(aircraftData[f][t]));
+            local[f][t].dots.splice(i, 1);
+            saveLocal(local); refreshDataStructure();
         }
     }
 
-    function saveLocal() { localStorage.setItem('aircraftDB', JSON.stringify(localData)); }
-
     function exportData() {
-        if(!isEditor) return;
         document.getElementById('export-area').value = "const permanentData = " + JSON.stringify(aircraftData, null, 2) + ";";
         document.getElementById('export-area').select();
     }
