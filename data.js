@@ -422,5 +422,22 @@ const permanentData = {
         }
       ]
     }
+  },
+  "Mil": {
+    "Mi-2": {
+      "img": "Mil-2.png",
+      "dots": [
+        {
+          "x": 68.375,
+          "y": 60.816334372842775,
+          "info": "Right-hand control panel, visible through lower cockpit glazing."
+        },
+        {
+          "x": 30.75,
+          "y": 47.6999452644985,
+          "info": "Both sides of the tail (painted; mispaints possible)."
+        }
+      ]
+    }
   }
 };
