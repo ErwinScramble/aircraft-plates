@@ -410,5 +410,17 @@ const permanentData = {
         }
       ]
     }
+  },
+  "Northrop": {
+    "F-5 Freedom Fighter": {
+      "img": "F-5.png",
+      "dots": [
+        {
+          "x": 46,
+          "y": 39.830107224857464,
+          "info": "Cockpit floor, left side behind the ejection seat."
+        }
+      ]
+    }
   }
 };
