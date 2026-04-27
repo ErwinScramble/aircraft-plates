@@ -457,7 +457,53 @@ const permanentData = {
     },
     "Mi-24": {
       "img": "Mil-24.png",
-      "dots": [],
+      "dots": [
+        {
+          "x": 63,
+          "y": 49.606251701593465,
+          "info": "Bulkhead, closest to the cockpit."
+        },
+        {
+          "x": 29.625,
+          "y": 61.043752137899475,
+          "info": "Weapon pylons, outer sides. (Painted)"
+        },
+        {
+          "x": 44.25,
+          "y": 60.66875212359436,
+          "info": "Fuselage, below the weapon pylons. (Painted)"
+        },
+        {
+          "x": 46.625,
+          "y": 70.2312524883748,
+          "info": "Inside the radio hatch, rear fuselage."
+        },
+        {
+          "x": 76.875,
+          "y": 52.79375182318694,
+          "info": "Inside the front canopy."
+        },
+        {
+          "x": 36.375,
+          "y": 58.23125203061112,
+          "info": "Launching rails, wingtip. (Painted)"
+        },
+        {
+          "x": 40.125,
+          "y": 57.48125200200088,
+          "info": "Launching rails, wingtip. (Painted)"
+        },
+        {
+          "x": 52.87500000000001,
+          "y": 55.2312519161702,
+          "info": "Main cabin doors (upward-opening), both sides. Note: Removable parts. Treat c/n with caution as doors may have been swapped."
+        },
+        {
+          "x": 63.125,
+          "y": 41.73125140118604,
+          "info": "Inside air intakes (Painted)."
+        }
+      ],
       "warning": ""
     }
   }
