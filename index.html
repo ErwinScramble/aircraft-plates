@@ -10,10 +10,35 @@
         h1 { text-align: center; color: #1a73e8; margin-top: 0; }
         label { font-weight: bold; display: block; margin-top: 15px; }
         select, input, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        
         .image-container { position: relative; width: 100%; margin-top: 20px; display: none; border-radius: 8px; background: #eee; border: 1px solid #ddd; overflow: hidden; }
         #vliegtuig-beeld { width: 100%; height: auto; display: block; cursor: crosshair; }
+        
+        /* De Rode Stip */
         .dot { position: absolute; width: 18px; height: 18px; background: #ff0000; border: 2px solid #fff; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; box-shadow: 0 0 8px rgba(0,0,0,0.5); z-index: 5; }
-        .dot::after { content: attr(data-info); position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); color: white; padding: 6px 12px; border-radius: 4px; font-size: 13px; white-space: nowrap; display: none; z-index: 10; pointer-events: none; }
+        
+        /* Tooltip Verbeterd voor lange teksten */
+        .dot::after {
+            content: attr(data-info);
+            position: absolute;
+            bottom: 25px; 
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.85);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            white-space: normal;       /* Laat tekst afbreken */
+            width: max-content;        /* Breedte op basis van inhoud */
+            max-width: 200px;          /* Limiet voor breedte */
+            text-align: center;        /* Centreren */
+            line-height: 1.4;
+            display: none;
+            z-index: 10;
+            pointer-events: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
         .dot:hover::after { display: block; }
         
         /* Waarschuwingstekst stijl */
@@ -21,6 +46,7 @@
         
         #related-section { margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 8px; display: none; border: 1px solid #e9ecef; }
         .related-link { color: #1a73e8; text-decoration: underline; cursor: pointer; margin-right: 12px; font-weight: bold; }
+        
         .admin-panel { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; }
         .admin-box { background: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef; margin-top: 10px; }
         .dot-item { background: white; margin-bottom: 8px; padding: 12px; display: flex; align-items: center; border: 1px solid #ddd; border-radius: 6px; }
@@ -31,6 +57,7 @@
         .btn-delete { background: #dc3545; color: white; border: none; }
         .btn-save { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; }
         .hidden { display: none !important; }
+        
         .select-row { display: flex; gap: 10px; align-items: center; }
         .select-row select { flex-grow: 1; }
         .manage-btns { display: flex; gap: 5px; }
@@ -76,7 +103,7 @@
                 <input type="text" id="new-fabrikant" placeholder="Manufacturer">
                 <input type="text" id="new-type" placeholder="Type">
                 <input type="text" id="new-image" placeholder="Filename">
-                <input type="text" id="new-warning" placeholder="Optional Warning/Note (appears at bottom of image)">
+                <input type="text" id="new-warning" placeholder="Optional Warning/Note">
                 <button class="btn-save" onclick="addEntry()">Save Aircraft</button>
                 <div id="dot-editor" class="hidden"><hr><span style="font-weight:bold; color:#555;">C/N Locations</span><div id="current-dots" style="margin-top:10px;"></div></div>
                 <hr>
@@ -141,11 +168,8 @@
         if(!f || !t || !i) return alert('Fill fields');
         let local = getLocal();
         if(!local[f]) local[f] = aircraftData[f] ? JSON.parse(JSON.stringify(aircraftData[f])) : {};
-        
-        // Behoud stippen als we alleen de waarschuwing of afbeelding updaten
         const dots = (aircraftData[f] && aircraftData[f][t]) ? aircraftData[f][t].dots : [];
         local[f][t] = { img: i, dots: dots, warning: w };
-        
         saveLocal(local);
         location.reload();
     }
@@ -161,17 +185,11 @@
         if(f && t && aircraftData[f][t]) {
             const entry = aircraftData[f][t];
             imgT.src = "Images/" + entry.img;
-            
-            // Waarschuwing tonen indien aanwezig
             if(entry.warning && entry.warning !== "") {
                 warnB.innerText = "⚠️ " + entry.warning;
                 warnB.style.display = "block";
-            } else {
-                warnB.style.display = "none";
-            }
-
+            } else { warnB.style.display = "none"; }
             imgT.onload = () => { wrap.style.display = "block"; renderDots(); };
-            
             relL.innerHTML = "";
             let found = false;
             for (let oF in aircraftData) {
@@ -190,7 +208,6 @@
         if(isEditor) checkDotEditor();
     }
 
-    // --- De rest van de functies blijven hetzelfde ---
     function handleImageClick(e) {
         if(!isEditor) return;
         const f = document.getElementById('select-fabrikant').value;
