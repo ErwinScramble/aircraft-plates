@@ -117,18 +117,14 @@
 
     function handleAuthClick() {
         if(isEditor) {
-            // Logout
             sessionStorage.removeItem('isEditorActive');
             location.reload();
         } else {
-            // Login
             if(prompt("Access Key:") === "Scr@mble-Pl@tes") { 
                 sessionStorage.setItem('isEditorActive', 'true');
                 isEditor = true;
                 applyEditorView();
-            } else {
-                alert("Access denied.");
-            }
+            } else { alert("Access denied."); }
         }
     }
 
