@@ -38,15 +38,16 @@
         }
 
         .auto-links { margin: 10px 0; font-size: 14px; color: #666; display: none; }
-        .reference-link { 
-            color: #1a73e8; text-decoration: underline; cursor: pointer; font-weight: bold;
-        }
+        .reference-link { color: #1a73e8; text-decoration: underline; cursor: pointer; font-weight: bold; }
         .reference-link:hover { color: #0d47a1; }
 
         .admin-panel { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; }
         .admin-box { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef; margin-top: 10px; }
         .dot-item { background: white; margin: 5px 0; padding: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+        
         .btn-save { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; }
+        .btn-clear { background: #6c757d; color: white; border: none; cursor: pointer; margin-top: 5px; }
+        .btn-logout { background: #dc3545; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .btn-export { background: #17a2b8; color: white; border: none; cursor: pointer; margin-top: 10px; font-weight: bold; }
         .hidden { display: none; }
     </style>
@@ -82,6 +83,7 @@
         <div id="admin-controls" class="hidden">
             <div class="admin-box">
                 <h3>Editor Menu</h3>
+                <button class="btn-clear" onclick="clearEditorFields()">Clear Fields for New Entry</button>
                 <input type="text" id="new-fabrikant" placeholder="Manufacturer (e.g. Antonov)">
                 <input type="text" id="new-type" placeholder="Type (e.g. An-2)">
                 <input type="text" id="new-image" placeholder="Filename (e.g. an2.jpg)">
@@ -96,6 +98,8 @@
                 <hr>
                 <button class="btn-export" onclick="exportData()">Generate Backup Code</button>
                 <textarea id="export-area" style="width:100%; height:120px; font-size:10px; font-family:monospace;" readonly></textarea>
+                
+                <button class="btn-logout" onclick="logoutEditor()">Logout Editor</button>
             </div>
         </div>
     </div>
@@ -118,9 +122,23 @@
         if(prompt("Enter Access Key:") === "Scr@mble-Pl@tes") {
             isEditor = true;
             document.getElementById('admin-controls').classList.remove('hidden');
-            document.getElementById('auth-btn').innerText = "Editor Mode: ACTIVE";
+            document.getElementById('auth-btn').classList.add('hidden');
             checkDotEditorVisibility();
         }
+    }
+
+    function logoutEditor() {
+        isEditor = false;
+        document.getElementById('admin-controls').classList.add('hidden');
+        document.getElementById('auth-btn').classList.remove('hidden');
+        location.reload();
+    }
+
+    function clearEditorFields() {
+        document.getElementById('new-fabrikant').value = "";
+        document.getElementById('new-type').value = "";
+        document.getElementById('new-image').value = "";
+        document.getElementById('new-warning').value = "";
     }
 
     function addEntry() {
@@ -170,7 +188,6 @@
         const wrap = document.getElementById('wrapper');
         const imgTag = document.getElementById('vliegtuig-beeld');
         const warnDiv = document.getElementById('display-warning');
-        const autoLinksContainer = document.getElementById('auto-links-display');
         const autoLinksList = document.getElementById('auto-links-list');
         
         if(currentFab && currentType && aircraftData[currentFab][currentType]) {
@@ -186,7 +203,6 @@
             warnDiv.innerText = data.warning || "";
             warnDiv.style.display = (data.warning) ? "block" : "none";
 
-            // Automatische Links Fix
             autoLinksList.innerHTML = "";
             let relatedFound = [];
             for (let f in aircraftData) {
@@ -210,9 +226,9 @@
                     autoLinksList.appendChild(span);
                     if (index < relatedFound.length - 1) autoLinksList.appendChild(document.createTextNode(", "));
                 });
-                autoLinksContainer.style.display = "block";
-            } else { autoLinksContainer.style.display = "none"; }
-        } else { wrap.style.display = "none"; autoLinksContainer.style.display = "none"; }
+                document.getElementById('auto-links-display').style.display = "block";
+            } else { document.getElementById('auto-links-display').style.display = "none"; }
+        } else { wrap.style.display = "none"; document.getElementById('auto-links-display').style.display = "none"; }
         if(isEditor) checkDotEditorVisibility();
     }
 
@@ -272,7 +288,7 @@
 
     function checkDotEditorVisibility() {
         const type = document.getElementById('select-type').value;
-        const isVisible = type && !document.getElementById('admin-controls').classList.contains('hidden');
+        const isVisible = type && isEditor;
         document.getElementById('dot-editor').classList.toggle('hidden', !isVisible);
         if(isVisible) renderDotList();
     }
