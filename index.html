@@ -5,62 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aircraft Plates Database</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; padding: 20px; background: #f0f2f5; color: #333; margin: 0; }
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: #f0f2f5; color: #333; margin: 0; }
         .container { max-width: 800px; margin: 20px auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #1a73e8; margin-top: 0; }
+        h1 { text-align: center; color: #1a73e8; }
         label { font-weight: bold; display: block; margin-top: 15px; }
         select, input, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        .image-container { position: relative; width: 100%; margin-top: 20px; display: none; border-radius: 8px; background: #eee; border: 1px solid #ddd; overflow: hidden; }
+        #vliegtuig-beeld { width: 100%; height: auto; display: block; }
         
-        .image-container { position: relative; width: 100%; margin-top: 20px; display: none; line-height: 0; overflow: visible; border-radius: 8px; background: #eee; border: 1px solid #ddd; }
-        #vliegtuig-beeld { width: 100%; height: auto; display: block; cursor: crosshair; border-radius: 8px; }
-
-        /* De Rode Stip */
         .dot { 
             position: absolute; 
             width: 18px; height: 18px; 
-            background: #ff0000; 
-            border: 2px solid #fff; 
-            border-radius: 50%; 
-            transform: translate(-50%, -50%); 
-            cursor: pointer; 
-            box-shadow: 0 0 8px rgba(0,0,0,0.5); 
-            z-index: 5; 
+            background: red; border: 2px solid white; 
+            border-radius: 50%; transform: translate(-50%, -50%); 
+            cursor: pointer; z-index: 5;
+            touch-action: manipulation; /* Safari fix: voorkomt zoom-vertraging */
+            outline: none;
         }
 
-        /* Zorg dat de actieve stip en tekst ALTIJD bovenop liggen */
-        .dot:hover { z-index: 100; }
-
-        /* Tooltip (Beschrijving) - Nu met tekst-wrap fix */
+        /* Tooltip: Toont bij hover (muis) EN focus (tik op Safari/mobiel) */
         .dot::after { 
             content: attr(data-info); 
-            position: absolute; 
-            bottom: 25px; left: 50%; 
+            position: absolute; bottom: 25px; left: 50%; 
             transform: translateX(-50%); 
-            background: rgba(0,0,0,0.9); 
-            color: white; 
-            padding: 8px 12px; 
-            border-radius: 6px; 
-            font-size: 13px; 
-            
-            /* Tekst-wrap instellingen */
-            white-space: normal;       /* Laat tekst afbreken */
-            width: 180px;              /* Breedte van het ballonnetje */
-            text-align: center; 
-            line-height: 1.4;
-            
-            display: none; 
-            z-index: 101; 
-            pointer-events: none; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.8); color: white; 
+            padding: 6px 12px; border-radius: 4px; 
+            font-size: 13px; display: none; 
+            white-space: nowrap; z-index: 10;
+            pointer-events: none;
         }
-        .dot:hover::after { display: block; }
+        .dot:hover::after, .dot:focus::after { display: block; }
 
-        /* Admin Gedeelte */
         .admin-panel { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; }
-        .admin-box { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef; margin-top: 10px; }
-        .dot-item { background: white; margin: 5px 0; padding: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
-        .btn-save { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; }
-        .btn-export { background: #17a2b8; color: white; border: none; cursor: pointer; margin-top: 10px; font-weight: bold; }
+        .admin-box { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 10px; }
+        .btn-save { background: #28a745; color: white; border: none; font-weight: bold; }
+        .btn-export { background: #17a2b8; color: white; border: none; font-weight: bold; margin-top: 10px; }
         .hidden { display: none; }
     </style>
 </head>
@@ -84,7 +63,6 @@
         <div id="dots-layer"></div>
     </div>
 
-    <!-- Admin Section -->
     <div class="admin-panel">
         <button id="auth-btn" onclick="authenticateEditor()" style="background:#6c757d; color:white; border:none; cursor:pointer;">Editor Login</button>
         
@@ -93,20 +71,24 @@
                 <h3>Editor Menu</h3>
                 <input type="text" id="new-fabrikant" placeholder="Manufacturer (e.g. Boeing)">
                 <input type="text" id="new-type" placeholder="Type (e.g. 737)">
-                <input type="text" id="new-image" placeholder="Filename (e.g. b737.jpg)">
+                
+                <label>Select Image File:</label>
+                <select id="new-image-select">
+                    <option value="">-- Manual Entry Below --</option>
+                </select>
+                <input type="text" id="new-image-manual" placeholder="Or type filename (e.g. b737.jpg)">
+                
                 <button class="btn-save" onclick="addEntry()">Save to local list</button>
                 
                 <div id="dot-editor" class="hidden">
                     <hr>
-                    <h4>Manage Dots for selected type</h4>
-                    <p><small>Click on the image above to add a red dot.</small></p>
+                    <h4>Dots Management</h4>
                     <ul id="current-dots" style="list-style:none; padding:0;"></ul>
                 </div>
                 <hr>
-                <h4>Backup & Publish</h4>
-                <p><small>Copy this code to your <b>data.js</b> file on GitHub:</small></p>
+                <h4>Publish to GitHub</h4>
                 <button class="btn-export" onclick="exportData()">Generate Full Backup Code</button>
-                <textarea id="export-area" style="width:100%; height:120px; margin-top:10px; font-size:10px; font-family:monospace;" readonly></textarea>
+                <textarea id="export-area" style="width:100%; height:120px; margin-top:10px; font-size:10px; font-family:monospace;"></textarea>
             </div>
         </div>
     </div>
@@ -128,24 +110,39 @@
 
     let isEditor = false;
 
+    async function fetchImages() {
+        try {
+            const res = await fetch('https://github.com');
+            const data = await res.json();
+            const sel = document.getElementById('new-image-select');
+            data.forEach(file => {
+                if(file.name.includes('.')) {
+                    let opt = document.createElement('option');
+                    opt.value = file.name; opt.text = file.name; sel.add(opt);
+                }
+            });
+        } catch(e) { console.log("Image fetch limit or error."); }
+    }
+
     function authenticateEditor() {
         if(prompt("Enter Access Key:") === "Scr@mble-Pl@tes") {
             isEditor = true;
             document.getElementById('admin-controls').classList.remove('hidden');
-            document.getElementById('auth-btn').innerText = "Editor Mode: ACTIVE";
-            document.getElementById('auth-btn').style.background = "#28a745";
-            checkDotEditorVisibility();
+            fetchImages();
         } else { alert("Wrong key!"); }
     }
 
     function addEntry() {
         const fab = document.getElementById('new-fabrikant').value.trim();
         const type = document.getElementById('new-type').value.trim();
-        const img = document.getElementById('new-image').value.trim();
+        const img = document.getElementById('new-image-select').value || document.getElementById('new-image-manual').value.trim();
+
         if(!fab || !type || !img) return alert("Fill all fields");
+
         if(!aircraftData[fab]) aircraftData[fab] = {};
-        const dots = (aircraftData[fab][type]) ? aircraftData[fab][type].dots : [];
-        aircraftData[fab][type] = { img: img, dots: dots };
+        if(!aircraftData[fab][type]) aircraftData[fab][type] = { img: img, dots: [] };
+        else aircraftData[fab][type].img = img;
+
         localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
         alert("Saved locally!");
         location.reload();
@@ -153,14 +150,13 @@
 
     function exportData() {
         const finalCode = "const permanentData = " + JSON.stringify(aircraftData, null, 2) + ";";
-        document.getElementById('export-area').value = finalCode;
-        document.getElementById('export-area').select();
-        alert("Code generated!");
+        const area = document.getElementById('export-area');
+        area.value = finalCode;
+        area.select();
     }
 
     function loadManufacturers() {
         const sel = document.getElementById('select-fabrikant');
-        sel.innerHTML = '<option value="">-- Select Manufacturer --</option>';
         Object.keys(aircraftData).sort().forEach(f => {
             let opt = document.createElement('option');
             opt.value = f; opt.text = f; sel.add(opt);
@@ -189,14 +185,13 @@
             img.src = "Images/" + aircraftData[f][t].img;
             img.onload = () => { wrap.style.display = "block"; renderDots(); };
         } else { wrap.style.display = "none"; }
-        if(isEditor) checkDotEditorVisibility();
+        if(isEditor) checkDotEditor();
     }
 
     function handleImageClick(e) {
         if(!isEditor) return;
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
-        if(!f || !t) return;
         const rect = e.target.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -219,7 +214,12 @@
                 dot.className = 'dot'; 
                 dot.style.left = d.x + "%"; 
                 dot.style.top = d.y + "%";
-                dot.setAttribute('data-info', d.info); 
+                dot.setAttribute('data-info', d.info);
+                
+                // Safari & Mobile fixes:
+                dot.setAttribute('tabindex', '0');
+                dot.setAttribute('onclick', 'void(0)');
+                
                 layer.appendChild(dot);
             });
         }
@@ -233,8 +233,7 @@
         if(aircraftData[f] && aircraftData[f][t]) {
             aircraftData[f][t].dots.forEach((d, i) => {
                 const li = document.createElement('li');
-                li.className = 'dot-item';
-                li.innerHTML = `<span><b>${d.info}</b></span> <button onclick="delDot(${i})" style="width:auto; background:red; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Delete</button>`;
+                li.innerHTML = `${d.info} <button onclick="delDot(${i})" style="width:auto; background:red; color:white;">X</button>`;
                 list.appendChild(li);
             });
         }
@@ -248,13 +247,9 @@
         renderDots(); renderDotList();
     }
 
-    function checkDotEditorVisibility() {
-        const type = document.getElementById('select-type').value;
-        const dotEditor = document.getElementById('dot-editor');
-        if (type && isEditor) {
-            dotEditor.classList.remove('hidden');
-            renderDotList();
-        } else { dotEditor.classList.add('hidden'); }
+    function checkDotEditor() {
+        document.getElementById('dot-editor').classList.toggle('hidden', !document.getElementById('select-type').value);
+        renderDotList();
     }
 
     loadManufacturers();
