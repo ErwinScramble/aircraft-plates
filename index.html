@@ -167,23 +167,26 @@
         
         if(f && t && aircraftData[f][t]) {
             const data = aircraftData[f][t];
-            imgTag.src = "Images/" + data.img;
-            imgTag.onload = () => { wrap.style.display = "block"; renderDots(); };
             
-            // Toon waarschuwing
-            if(data.warning && data.warning.trim() !== "") {
-                warnDiv.innerText = data.warning;
-                warnDiv.style.display = "block";
-            } else {
-                warnDiv.style.display = "none";
-            }
-
-            // --- NIEUW: Vul het editor menu met de geselecteerde data ---
+            // --- VERBETERING: Update editor menu DIRECT bij selectie ---
             if(isEditor) {
                 document.getElementById('new-fabrikant').value = f;
                 document.getElementById('new-type').value = t;
                 document.getElementById('new-image').value = data.img;
                 document.getElementById('new-warning').value = data.warning || "";
+            }
+
+            imgTag.src = "Images/" + data.img;
+            imgTag.onload = () => { 
+                wrap.style.display = "block"; 
+                renderDots(); 
+            };
+            
+            if(data.warning && data.warning.trim() !== "") {
+                warnDiv.innerText = data.warning;
+                warnDiv.style.display = "block";
+            } else {
+                warnDiv.style.display = "none";
             }
 
         } else {
@@ -192,7 +195,6 @@
         if(isEditor) checkDotEditorVisibility();
     }
 
-    // Klikken op afbeelding om stip te plaatsen
     function handleImageClick(e) {
         if(!isEditor) return;
         const f = document.getElementById('select-fabrikant').value;
