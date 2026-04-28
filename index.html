@@ -37,7 +37,8 @@
             text-align: center; z-index: 10; display: none; max-width: 80%; line-height: 1.2; pointer-events: none;
         }
 
-        .links-line { margin: 10px 0; font-size: 14px; color: #666; display: none; }
+        /* De Automatische "See also" regel */
+        .auto-links { margin: 10px 0; font-size: 14px; color: #666; display: none; }
         .reference-link { 
             color: #1a73e8; text-decoration: underline; cursor: pointer; font-weight: bold;
         }
@@ -66,8 +67,8 @@
         <option value="">-- Select Type --</option>
     </select>
 
-    <div id="links-display" class="links-line">
-        Also see: <span id="type-links-list"></span>
+    <div id="auto-links-display" class="auto-links">
+        See also (using the same image): <span id="auto-links-list"></span>
     </div>
 
     <div class="image-container" id="wrapper">
@@ -86,7 +87,6 @@
                 <input type="text" id="new-type" placeholder="Type (e.g. An-2)">
                 <input type="text" id="new-image" placeholder="Filename (e.g. an2.jpg)">
                 <textarea id="new-warning" placeholder="Optional Warning Text"></textarea>
-                <input type="text" id="new-links" placeholder="References (Format: Manufacturer|Type, Manufacturer|Type)">
                 <button class="btn-save" onclick="addEntry()">Save / Update Aircraft</button>
                 
                 <div id="dot-editor" class="hidden">
@@ -95,7 +95,7 @@
                     <ul id="current-dots" style="list-style:none; padding:0;"></ul>
                 </div>
                 <hr>
-                <button class="btn-export" onclick="exportData()">Generate Full Backup Code</button>
+                <button class="btn-export" onclick="exportData()">Generate Backup Code</button>
                 <textarea id="export-area" style="width:100%; height:120px; font-size:10px; font-family:monospace;" readonly></textarea>
             </div>
         </div>
@@ -113,8 +113,11 @@
         for (let t in localData[f]) { aircraftData[f][t] = localData[f][t]; }
     }
 
+    let isEditor = false;
+
     function authenticateEditor() {
         if(prompt("Enter Access Key:") === "Scr@mble-Pl@tes") {
+            isEditor = true;
             document.getElementById('admin-controls').classList.remove('hidden');
             document.getElementById('auth-btn').innerText = "Editor Mode: ACTIVE";
             checkDotEditorVisibility();
@@ -126,15 +129,12 @@
         const type = document.getElementById('new-type').value.trim();
         const img = document.getElementById('new-image').value.trim();
         const warn = document.getElementById('new-warning').value.trim();
-        const linksRaw = document.getElementById('new-links').value.trim();
 
         if(!fab || !type || !img) return alert("Fill required fields");
 
-        const links = linksRaw ? linksRaw.split(',').map(s => s.trim()) : [];
-
         if(!aircraftData[fab]) aircraftData[fab] = {};
         const dots = (aircraftData[fab][type]) ? aircraftData[fab][type].dots : [];
-        aircraftData[fab][type] = { img, dots, warning: warn, links: links };
+        aircraftData[fab][type] = { img, dots, warning: warn };
         
         localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
         location.reload();
@@ -169,23 +169,22 @@
     }
 
     function showImage() {
-        const f = document.getElementById('select-fabrikant').value;
-        const t = document.getElementById('select-type').value;
+        const currentFab = document.getElementById('select-fabrikant').value;
+        const currentType = document.getElementById('select-type').value;
         const wrap = document.getElementById('wrapper');
         const imgTag = document.getElementById('vliegtuig-beeld');
         const warnDiv = document.getElementById('display-warning');
-        const linksContainer = document.getElementById('links-display');
-        const linksList = document.getElementById('type-links-list');
+        const autoLinksContainer = document.getElementById('auto-links-display');
+        const autoLinksList = document.getElementById('auto-links-list');
         
-        if(f && t && aircraftData[f][t]) {
-            const data = aircraftData[f][t];
+        if(currentFab && currentType && aircraftData[currentFab][currentType]) {
+            const data = aircraftData[currentFab][currentType];
             
-            if(!document.getElementById('admin-controls').classList.contains('hidden')) {
-                document.getElementById('new-fabrikant').value = f;
-                document.getElementById('new-type').value = t;
+            if(isEditor) {
+                document.getElementById('new-fabrikant').value = currentFab;
+                document.getElementById('new-type').value = currentType;
                 document.getElementById('new-image').value = data.img;
                 document.getElementById('new-warning').value = data.warning || "";
-                document.getElementById('new-links').value = (data.links || []).join(', ');
             }
 
             imgTag.src = "Images/" + data.img;
@@ -194,35 +193,44 @@
             warnDiv.innerText = data.warning || "";
             warnDiv.style.display = (data.warning) ? "block" : "none";
 
-            linksList.innerHTML = "";
-            if(data.links && data.links.length > 0) {
-                let foundAny = false;
-                data.links.forEach((linkStr, index) => {
-                    const [linkFab, linkType] = linkStr.split('|').map(s => s.trim());
-                    if(aircraftData[linkFab] && aircraftData[linkFab][linkType]) {
-                        foundAny = true;
-                        let span = document.createElement('span');
-                        span.className = "reference-link";
-                        span.innerText = `${linkFab} ${linkType}`;
-                        span.onclick = () => {
-                            document.getElementById('select-fabrikant').value = linkFab;
-                            updateTypes();
-                            document.getElementById('select-type').value = linkType;
-                            showImage();
-                        };
-                        linksList.appendChild(span);
-                        if(index < data.links.length - 1) linksList.innerHTML += ", ";
-                    }
-                });
-                linksContainer.style.display = foundAny ? "block" : "none";
-            } else { linksContainer.style.display = "none"; }
+            // --- AUTOMATISCH ZOEKEN NAAR ANDERE TYPES MET DEZELFDE AFBEELDING ---
+            autoLinksList.innerHTML = "";
+            let relatedFound = [];
 
-        } else { wrap.style.display = "none"; linksContainer.style.display = "none"; }
-        checkDotEditorVisibility();
+            for (let f in aircraftData) {
+                for (let t in aircraftData[f]) {
+                    // Check of het een ander type is, maar wel dezelfde afbeelding gebruikt
+                    if ((f !== currentFab || t !== currentType) && aircraftData[f][t].img === data.img) {
+                        relatedFound.push({ fab: f, type: t });
+                    }
+                }
+            }
+
+            if (relatedFound.length > 0) {
+                relatedFound.forEach((item, index) => {
+                    let span = document.createElement('span');
+                    span.className = "reference-link";
+                    span.innerText = `${item.fab} ${item.type}`;
+                    span.onclick = () => {
+                        document.getElementById('select-fabrikant').value = item.fab;
+                        updateTypes();
+                        document.getElementById('select-type').value = item.type;
+                        showImage();
+                    };
+                    autoLinksList.appendChild(span);
+                    if (index < relatedFound.length - 1) autoLinksList.innerHTML += ", ";
+                });
+                autoLinksContainer.style.display = "block";
+            } else {
+                autoLinksContainer.style.display = "none";
+            }
+
+        } else { wrap.style.display = "none"; autoLinksContainer.style.display = "none"; }
+        if(isEditor) checkDotEditorVisibility();
     }
 
     function handleImageClick(e) {
-        if(document.getElementById('admin-controls').classList.contains('hidden')) return;
+        if(!isEditor) return;
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
         const rect = e.target.getBoundingClientRect();
@@ -276,10 +284,8 @@
     }
 
     function checkDotEditorVisibility() {
-        const type = document.getElementById('select-type').value;
-        const isVisible = type && !document.getElementById('admin-controls').classList.contains('hidden');
-        document.getElementById('dot-editor').classList.toggle('hidden', !isVisible);
-        if(isVisible) renderDotList();
+        document.getElementById('dot-editor').classList.toggle('hidden', !document.getElementById('select-type').value);
+        renderDotList();
     }
 
     loadManufacturers();
