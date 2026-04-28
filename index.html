@@ -37,7 +37,6 @@
             text-align: center; z-index: 10; display: none; max-width: 80%; line-height: 1.2; pointer-events: none;
         }
 
-        /* De Automatische "See also" regel */
         .auto-links { margin: 10px 0; font-size: 14px; color: #666; display: none; }
         .reference-link { 
             color: #1a73e8; text-decoration: underline; cursor: pointer; font-weight: bold;
@@ -129,13 +128,10 @@
         const type = document.getElementById('new-type').value.trim();
         const img = document.getElementById('new-image').value.trim();
         const warn = document.getElementById('new-warning').value.trim();
-
         if(!fab || !type || !img) return alert("Fill required fields");
-
         if(!aircraftData[fab]) aircraftData[fab] = {};
         const dots = (aircraftData[fab][type]) ? aircraftData[fab][type].dots : [];
         aircraftData[fab][type] = { img, dots, warning: warn };
-        
         localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
         location.reload();
     }
@@ -179,52 +175,43 @@
         
         if(currentFab && currentType && aircraftData[currentFab][currentType]) {
             const data = aircraftData[currentFab][currentType];
-            
             if(isEditor) {
                 document.getElementById('new-fabrikant').value = currentFab;
                 document.getElementById('new-type').value = currentType;
                 document.getElementById('new-image').value = data.img;
                 document.getElementById('new-warning').value = data.warning || "";
             }
-
             imgTag.src = "Images/" + data.img;
             imgTag.onload = () => { wrap.style.display = "block"; renderDots(); };
-            
             warnDiv.innerText = data.warning || "";
             warnDiv.style.display = (data.warning) ? "block" : "none";
 
-            // --- AUTOMATISCH ZOEKEN NAAR ANDERE TYPES MET DEZELFDE AFBEELDING ---
+            // Automatische Links Fix
             autoLinksList.innerHTML = "";
             let relatedFound = [];
-
             for (let f in aircraftData) {
                 for (let t in aircraftData[f]) {
-                    // Check of het een ander type is, maar wel dezelfde afbeelding gebruikt
                     if ((f !== currentFab || t !== currentType) && aircraftData[f][t].img === data.img) {
                         relatedFound.push({ fab: f, type: t });
                     }
                 }
             }
-
             if (relatedFound.length > 0) {
                 relatedFound.forEach((item, index) => {
                     let span = document.createElement('span');
                     span.className = "reference-link";
                     span.innerText = `${item.fab} ${item.type}`;
-                    span.onclick = () => {
+                    span.addEventListener('click', function() {
                         document.getElementById('select-fabrikant').value = item.fab;
                         updateTypes();
                         document.getElementById('select-type').value = item.type;
                         showImage();
-                    };
+                    });
                     autoLinksList.appendChild(span);
-                    if (index < relatedFound.length - 1) autoLinksList.innerHTML += ", ";
+                    if (index < relatedFound.length - 1) autoLinksList.appendChild(document.createTextNode(", "));
                 });
                 autoLinksContainer.style.display = "block";
-            } else {
-                autoLinksContainer.style.display = "none";
-            }
-
+            } else { autoLinksContainer.style.display = "none"; }
         } else { wrap.style.display = "none"; autoLinksContainer.style.display = "none"; }
         if(isEditor) checkDotEditorVisibility();
     }
@@ -284,8 +271,10 @@
     }
 
     function checkDotEditorVisibility() {
-        document.getElementById('dot-editor').classList.toggle('hidden', !document.getElementById('select-type').value);
-        renderDotList();
+        const type = document.getElementById('select-type').value;
+        const isVisible = type && !document.getElementById('admin-controls').classList.contains('hidden');
+        document.getElementById('dot-editor').classList.toggle('hidden', !isVisible);
+        if(isVisible) renderDotList();
     }
 
     loadManufacturers();
