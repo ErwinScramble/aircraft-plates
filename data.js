@@ -132,9 +132,9 @@ const permanentData = {
       "img": "Aero Commander.png",
       "dots": [
         {
-          "x": 80.875,
-          "y": 54.856251901865086,
-          "info": "Fuselage, left side below the stabilizer/tailplane."
+          "x": 80.375,
+          "y": 54.66875189471252,
+          "info": "Fuselage, left side below the stabilizer/tailplane. "
         }
       ]
     }
