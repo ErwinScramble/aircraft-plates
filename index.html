@@ -14,7 +14,6 @@
         .image-container { position: relative; width: 100%; margin-top: 20px; display: none; line-height: 0; overflow: visible; border-radius: 8px; background: #eee; border: 1px solid #ddd; }
         #vliegtuig-beeld { width: 100%; height: auto; display: block; cursor: crosshair; border-radius: 8px; }
 
-        /* De Rode Stip */
         .dot { 
             position: absolute; width: 18px; height: 18px; 
             background: #ff0000; border: 2px solid #fff; border-radius: 50%; 
@@ -32,24 +31,11 @@
         }
         .dot:hover::after, .dot:focus::after { display: block; }
 
-        /* Waarschuwingstekst OP de afbeelding (midden onderin) */
         #display-warning {
-            position: absolute;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(211, 47, 47, 0.85); /* Scramble rood, transparant */
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-size: 14px;
-            font-weight: bold;
-            text-align: center;
-            z-index: 10;
-            display: none;
-            max-width: 80%;
-            line-height: 1.2;
-            pointer-events: none; /* Klikken gaat door de tekst heen naar de plaat */
+            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+            background: rgba(211, 47, 47, 0.85); color: white;
+            padding: 8px 15px; border-radius: 5px; font-size: 14px; font-weight: bold;
+            text-align: center; z-index: 10; display: none; max-width: 80%; line-height: 1.2; pointer-events: none;
         }
 
         .admin-panel { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; }
@@ -91,7 +77,7 @@
                 <input type="text" id="new-type" placeholder="Type (e.g. MiG-21)">
                 <input type="text" id="new-image" placeholder="Filename (e.g. mig21.jpg)">
                 <textarea id="new-warning" placeholder="Optional Warning Text (e.g. Caution: Plate is often missing)"></textarea>
-                <button class="btn-save" onclick="addEntry()">Save Aircraft</button>
+                <button class="btn-save" onclick="addEntry()">Save / Update Aircraft</button>
                 
                 <div id="dot-editor" class="hidden">
                     <hr>
@@ -152,6 +138,7 @@
 
     function loadManufacturers() {
         const sel = document.getElementById('select-fabrikant');
+        sel.innerHTML = '<option value="">-- Select Manufacturer --</option>';
         Object.keys(aircraftData).sort().forEach(f => {
             let opt = document.createElement('option');
             opt.value = f; opt.text = f; sel.add(opt);
@@ -175,27 +162,37 @@
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
         const wrap = document.getElementById('wrapper');
-        const img = document.getElementById('vliegtuig-beeld');
+        const imgTag = document.getElementById('vliegtuig-beeld');
         const warnDiv = document.getElementById('display-warning');
         
         if(f && t && aircraftData[f][t]) {
             const data = aircraftData[f][t];
-            img.src = "Images/" + data.img;
-            img.onload = () => { wrap.style.display = "block"; renderDots(); };
+            imgTag.src = "Images/" + data.img;
+            imgTag.onload = () => { wrap.style.display = "block"; renderDots(); };
             
-            // Toon waarschuwing alleen als er tekst is
+            // Toon waarschuwing
             if(data.warning && data.warning.trim() !== "") {
                 warnDiv.innerText = data.warning;
                 warnDiv.style.display = "block";
             } else {
                 warnDiv.style.display = "none";
             }
+
+            // --- NIEUW: Vul het editor menu met de geselecteerde data ---
+            if(isEditor) {
+                document.getElementById('new-fabrikant').value = f;
+                document.getElementById('new-type').value = t;
+                document.getElementById('new-image').value = data.img;
+                document.getElementById('new-warning').value = data.warning || "";
+            }
+
         } else {
             wrap.style.display = "none";
         }
         if(isEditor) checkDotEditorVisibility();
     }
 
+    // Klikken op afbeelding om stip te plaatsen
     function handleImageClick(e) {
         if(!isEditor) return;
         const f = document.getElementById('select-fabrikant').value;
