@@ -505,6 +505,55 @@ const permanentData = {
         }
       ],
       "warning": ""
+    },
+    "Mi-1": {
+      "img": "Mil-1.png",
+      "dots": [
+        {
+          "x": 46.75,
+          "y": 57.29375199484833,
+          "info": "Rear bulkhead (engine/luggage partition), accessible via left-side hatch."
+        }
+      ],
+      "warning": ""
+    },
+    "Mi-4": {
+      "img": "Mil-4.png",
+      "dots": [
+        {
+          "x": 63.5,
+          "y": 37.680081564933865,
+          "info": "Cockpit bulkhead (rear side), right of the corridor."
+        }
+      ],
+      "warning": "May be covered or hidden."
+    },
+    "Mi-6": {
+      "img": "Mil-6.png",
+      "dots": [
+        {
+          "x": 80,
+          "y": 64.79374941992756,
+          "info": "Tail boom, left side. (Painted)"
+        }
+      ],
+      "warning": ""
+    },
+    "Mi-8": {
+      "img": "Mil-8.png",
+      "dots": [
+        {
+          "x": 81.5,
+          "y": 46.00384081179249,
+          "info": "Tail boom (both sides) or Fin. (Painted)"
+        },
+        {
+          "x": 57.49999999999999,
+          "y": 54.7227316353354,
+          "info": "On the inside of the fuel filler lid and is visible only when opened. (Painted)"
+        }
+      ],
+      "warning": ""
     }
   }
 };
