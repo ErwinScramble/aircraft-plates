@@ -22,7 +22,6 @@
             touch-action: manipulation; outline: none;
         }
         .dot:hover { z-index: 100; }
-
         .dot::after { 
             content: attr(data-info); position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); 
             background: rgba(0,0,0,0.9); color: white; padding: 8px 12px; border-radius: 6px; font-size: 13px; 
@@ -37,6 +36,12 @@
             padding: 8px 15px; border-radius: 5px; font-size: 14px; font-weight: bold;
             text-align: center; z-index: 10; display: none; max-width: 80%; line-height: 1.2; pointer-events: none;
         }
+
+        .links-line { margin: 10px 0; font-size: 14px; color: #666; display: none; }
+        .reference-link { 
+            color: #1a73e8; text-decoration: underline; cursor: pointer; font-weight: bold;
+        }
+        .reference-link:hover { color: #0d47a1; }
 
         .admin-panel { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; }
         .admin-box { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef; margin-top: 10px; }
@@ -61,6 +66,10 @@
         <option value="">-- Select Type --</option>
     </select>
 
+    <div id="links-display" class="links-line">
+        Also see: <span id="type-links-list"></span>
+    </div>
+
     <div class="image-container" id="wrapper">
         <img id="vliegtuig-beeld" src="" alt="Aircraft Plate" onclick="handleImageClick(event)">
         <div id="dots-layer"></div>
@@ -73,10 +82,11 @@
         <div id="admin-controls" class="hidden">
             <div class="admin-box">
                 <h3>Editor Menu</h3>
-                <input type="text" id="new-fabrikant" placeholder="Manufacturer (e.g. Mikoyan-Gurevich)">
-                <input type="text" id="new-type" placeholder="Type (e.g. MiG-21)">
-                <input type="text" id="new-image" placeholder="Filename (e.g. mig21.jpg)">
-                <textarea id="new-warning" placeholder="Optional Warning Text (e.g. Caution: Plate is often missing)"></textarea>
+                <input type="text" id="new-fabrikant" placeholder="Manufacturer (e.g. Antonov)">
+                <input type="text" id="new-type" placeholder="Type (e.g. An-2)">
+                <input type="text" id="new-image" placeholder="Filename (e.g. an2.jpg)">
+                <textarea id="new-warning" placeholder="Optional Warning Text"></textarea>
+                <input type="text" id="new-links" placeholder="References (Format: Manufacturer|Type, Manufacturer|Type)">
                 <button class="btn-save" onclick="addEntry()">Save / Update Aircraft</button>
                 
                 <div id="dot-editor" class="hidden">
@@ -85,7 +95,7 @@
                     <ul id="current-dots" style="list-style:none; padding:0;"></ul>
                 </div>
                 <hr>
-                <button class="btn-export" onclick="exportData()">Generate Backup Code</button>
+                <button class="btn-export" onclick="exportData()">Generate Full Backup Code</button>
                 <textarea id="export-area" style="width:100%; height:120px; font-size:10px; font-family:monospace;" readonly></textarea>
             </div>
         </div>
@@ -103,11 +113,8 @@
         for (let t in localData[f]) { aircraftData[f][t] = localData[f][t]; }
     }
 
-    let isEditor = false;
-
     function authenticateEditor() {
         if(prompt("Enter Access Key:") === "Scr@mble-Pl@tes") {
-            isEditor = true;
             document.getElementById('admin-controls').classList.remove('hidden');
             document.getElementById('auth-btn').innerText = "Editor Mode: ACTIVE";
             checkDotEditorVisibility();
@@ -119,12 +126,15 @@
         const type = document.getElementById('new-type').value.trim();
         const img = document.getElementById('new-image').value.trim();
         const warn = document.getElementById('new-warning').value.trim();
+        const linksRaw = document.getElementById('new-links').value.trim();
 
         if(!fab || !type || !img) return alert("Fill required fields");
 
+        const links = linksRaw ? linksRaw.split(',').map(s => s.trim()) : [];
+
         if(!aircraftData[fab]) aircraftData[fab] = {};
         const dots = (aircraftData[fab][type]) ? aircraftData[fab][type].dots : [];
-        aircraftData[fab][type] = { img, dots, warning: warn };
+        aircraftData[fab][type] = { img, dots, warning: warn, links: links };
         
         localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
         location.reload();
@@ -164,39 +174,55 @@
         const wrap = document.getElementById('wrapper');
         const imgTag = document.getElementById('vliegtuig-beeld');
         const warnDiv = document.getElementById('display-warning');
+        const linksContainer = document.getElementById('links-display');
+        const linksList = document.getElementById('type-links-list');
         
         if(f && t && aircraftData[f][t]) {
             const data = aircraftData[f][t];
             
-            // --- VERBETERING: Update editor menu DIRECT bij selectie ---
-            if(isEditor) {
+            if(!document.getElementById('admin-controls').classList.contains('hidden')) {
                 document.getElementById('new-fabrikant').value = f;
                 document.getElementById('new-type').value = t;
                 document.getElementById('new-image').value = data.img;
                 document.getElementById('new-warning').value = data.warning || "";
+                document.getElementById('new-links').value = (data.links || []).join(', ');
             }
 
             imgTag.src = "Images/" + data.img;
-            imgTag.onload = () => { 
-                wrap.style.display = "block"; 
-                renderDots(); 
-            };
+            imgTag.onload = () => { wrap.style.display = "block"; renderDots(); };
             
-            if(data.warning && data.warning.trim() !== "") {
-                warnDiv.innerText = data.warning;
-                warnDiv.style.display = "block";
-            } else {
-                warnDiv.style.display = "none";
-            }
+            warnDiv.innerText = data.warning || "";
+            warnDiv.style.display = (data.warning) ? "block" : "none";
 
-        } else {
-            wrap.style.display = "none";
-        }
-        if(isEditor) checkDotEditorVisibility();
+            linksList.innerHTML = "";
+            if(data.links && data.links.length > 0) {
+                let foundAny = false;
+                data.links.forEach((linkStr, index) => {
+                    const [linkFab, linkType] = linkStr.split('|').map(s => s.trim());
+                    if(aircraftData[linkFab] && aircraftData[linkFab][linkType]) {
+                        foundAny = true;
+                        let span = document.createElement('span');
+                        span.className = "reference-link";
+                        span.innerText = `${linkFab} ${linkType}`;
+                        span.onclick = () => {
+                            document.getElementById('select-fabrikant').value = linkFab;
+                            updateTypes();
+                            document.getElementById('select-type').value = linkType;
+                            showImage();
+                        };
+                        linksList.appendChild(span);
+                        if(index < data.links.length - 1) linksList.innerHTML += ", ";
+                    }
+                });
+                linksContainer.style.display = foundAny ? "block" : "none";
+            } else { linksContainer.style.display = "none"; }
+
+        } else { wrap.style.display = "none"; linksContainer.style.display = "none"; }
+        checkDotEditorVisibility();
     }
 
     function handleImageClick(e) {
-        if(!isEditor) return;
+        if(document.getElementById('admin-controls').classList.contains('hidden')) return;
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
         const rect = e.target.getBoundingClientRect();
@@ -250,8 +276,10 @@
     }
 
     function checkDotEditorVisibility() {
-        document.getElementById('dot-editor').classList.toggle('hidden', !document.getElementById('select-type').value);
-        renderDotList();
+        const type = document.getElementById('select-type').value;
+        const isVisible = type && !document.getElementById('admin-controls').classList.contains('hidden');
+        document.getElementById('dot-editor').classList.toggle('hidden', !isVisible);
+        if(isVisible) renderDotList();
     }
 
     loadManufacturers();
