@@ -14,7 +14,6 @@
         .image-container { position: relative; width: 100%; margin-top: 20px; display: none; line-height: 0; overflow: visible; border-radius: 8px; background: #eee; border: 1px solid #ddd; }
         #vliegtuig-beeld { width: 100%; height: auto; display: block; cursor: crosshair; border-radius: 8px; }
 
-        /* De Rode Stip */
         .dot { 
             position: absolute; 
             width: 18px; height: 18px; 
@@ -25,12 +24,14 @@
             cursor: pointer; 
             box-shadow: 0 0 8px rgba(0,0,0,0.5); 
             z-index: 5; 
+            /* Safari fixes: */
+            touch-action: manipulation;
+            outline: none;
         }
 
-        /* Zorg dat de actieve stip en tekst ALTIJD bovenop liggen */
         .dot:hover { z-index: 100; }
 
-        /* Tooltip (Beschrijving) - Nu met tekst-wrap fix */
+        /* Tooltip - Nu met tekst-wrap fix en Safari focus ondersteuning */
         .dot::after { 
             content: attr(data-info); 
             position: absolute; 
@@ -41,21 +42,18 @@
             padding: 8px 12px; 
             border-radius: 6px; 
             font-size: 13px; 
-            
-            /* Tekst-wrap instellingen */
-            white-space: normal;       /* Laat tekst afbreken */
-            width: 180px;              /* Breedte van het ballonnetje */
+            white-space: normal; 
+            width: 180px; 
             text-align: center; 
             line-height: 1.4;
-            
             display: none; 
             z-index: 101; 
             pointer-events: none; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
-        .dot:hover::after { display: block; }
+        /* Safari toont tekst bij focus (aanraking) */
+        .dot:hover::after, .dot:focus::after { display: block; }
 
-        /* Admin Gedeelte */
         .admin-panel { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; }
         .admin-box { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef; margin-top: 10px; }
         .dot-item { background: white; margin: 5px 0; padding: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
@@ -84,7 +82,6 @@
         <div id="dots-layer"></div>
     </div>
 
-    <!-- Admin Section -->
     <div class="admin-panel">
         <button id="auth-btn" onclick="authenticateEditor()" style="background:#6c757d; color:white; border:none; cursor:pointer;">Editor Login</button>
         
@@ -153,8 +150,9 @@
 
     function exportData() {
         const finalCode = "const permanentData = " + JSON.stringify(aircraftData, null, 2) + ";";
-        document.getElementById('export-area').value = finalCode;
-        document.getElementById('export-area').select();
+        const area = document.getElementById('export-area');
+        area.value = finalCode;
+        area.select();
         alert("Code generated!");
     }
 
@@ -196,7 +194,6 @@
         if(!isEditor) return;
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
-        if(!f || !t) return;
         const rect = e.target.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -219,7 +216,10 @@
                 dot.className = 'dot'; 
                 dot.style.left = d.x + "%"; 
                 dot.style.top = d.y + "%";
-                dot.setAttribute('data-info', d.info); 
+                dot.setAttribute('data-info', d.info);
+                // Safari fix:
+                dot.setAttribute('tabindex', '0');
+                dot.setAttribute('onclick', 'void(0)');
                 layer.appendChild(dot);
             });
         }
@@ -234,7 +234,7 @@
             aircraftData[f][t].dots.forEach((d, i) => {
                 const li = document.createElement('li');
                 li.className = 'dot-item';
-                li.innerHTML = `<span><b>${d.info}</b></span> <button onclick="delDot(${i})" style="width:auto; background:red; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Delete</button>`;
+                li.innerHTML = `${d.info} <button onclick="delDot(${i})" style="width:auto; background:red; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">X</button>`;
                 list.appendChild(li);
             });
         }
@@ -254,7 +254,9 @@
         if (type && isEditor) {
             dotEditor.classList.remove('hidden');
             renderDotList();
-        } else { dotEditor.classList.add('hidden'); }
+        } else {
+            dotEditor.classList.add('hidden');
+        }
     }
 
     loadManufacturers();
