@@ -565,6 +565,63 @@ const permanentData = {
         }
       ],
       "warning": ""
+    },
+    "Mi-26": {
+      "img": "Mil-26.png",
+      "dots": [
+        {
+          "x": 30,
+          "y": 56.75436016971764,
+          "info": "Left-hand cockpit wall (visible from outside via the right-hand window)."
+        },
+        {
+          "x": 36.75,
+          "y": 59.4118184697936,
+          "info": "Cabin doors (all three): on the left-hand edge of each door (leading edge on the left side, trailing edge on the right side)."
+        },
+        {
+          "x": 55.875,
+          "y": 62.06927271491618,
+          "info": "Cabin doors (all three): on the left-hand edge of each door (leading edge on the left side, trailing edge on the right side)."
+        },
+        {
+          "x": 35.875,
+          "y": 51.1737103099136,
+          "info": "Forward bulkhead of the freight hold, near the ceiling maintenance hatch (left side)."
+        },
+        {
+          "x": 60.62499999999999,
+          "y": 67.91567205418586,
+          "info": "Both vehicle loading ramps (hinged to the main cargo ramp)."
+        },
+        {
+          "x": 70.625,
+          "y": 54.62840082857296,
+          "info": "Rear end of the cargo ramp."
+        },
+        {
+          "x": 48.875,
+          "y": 57.28585507369554,
+          "info": "Various equipment items on the cargo hold walls."
+        },
+        {
+          "x": 43.375,
+          "y": 70.30738087479618,
+          "info": "Right side of the vertical tunnel (external sling lock) in the freight hold floor."
+        }
+      ],
+      "warning": "Parts may be 'borrowed' from other airframes. Always cross-check several locations to confirm the identity."
+    },
+    "Mi-34": {
+      "img": "Mil-34.png",
+      "dots": [
+        {
+          "x": 75.25,
+          "y": 61.04278887270299,
+          "info": "Right side of the cockpit center console (visible through the lower glazing)."
+        }
+      ],
+      "warning": ""
     }
   }
 };
