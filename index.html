@@ -46,8 +46,9 @@
         .dot-item { background: white; margin: 5px 0; padding: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
         
         .btn-save { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; }
+        .btn-download { background: #17a2b8; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-copy { background: #007bff; color: white; border: none; cursor: pointer; margin-top: 5px; }
         .btn-logout { background: #dc3545; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .btn-export { background: #17a2b8; color: white; border: none; cursor: pointer; margin-top: 10px; font-weight: bold; }
         .hidden { display: none; }
     </style>
 </head>
@@ -94,8 +95,15 @@
                     <ul id="current-dots" style="list-style:none; padding:0;"></ul>
                 </div>
                 <hr>
-                <button class="btn-export" onclick="exportData()">Generate Backup Code</button>
-                <textarea id="export-area" style="width:100%; height:120px; font-size:10px; font-family:monospace;" readonly></textarea>
+                <h4>Publish to GitHub</h4>
+                <p><small>1. Click "Download data.js" below.<br>
+                2. Upload the file to GitHub using the link below.</small></p>
+                
+                <button class="btn-download" onclick="downloadDataFile()">Download data.js</button>
+                <button class="btn-copy" onclick="copyToClipboard()">Or Copy Code to Clipboard</button>
+                <textarea id="export-area" style="position:absolute; left:-9999px;" readonly></textarea>
+                
+                <p><small><a href="https://github.com" target="_blank" style="color:#1a73e8; font-weight:bold;">→ Open GitHub Upload Page</a></small></p>
                 
                 <button class="btn-logout" onclick="logoutEditor()">Logout Editor</button>
             </div>
@@ -152,13 +160,38 @@
         mergeData();
         loadManufacturers();
         
-        // Velden legen na opslaan
         document.getElementById('new-fabrikant').value = "";
         document.getElementById('new-type').value = "";
         document.getElementById('new-image').value = "";
         document.getElementById('new-warning').value = "";
 
-        alert("Saved successfully! Fields cleared for your next entry.");
+        alert("Saved successfully! Fields cleared for next entry.");
+    }
+
+    function generateFinalCode() {
+        return "const permanentData = " + JSON.stringify(aircraftData, null, 2) + ";";
+    }
+
+    function downloadDataFile() {
+        const code = generateFinalCode();
+        const blob = new Blob([code], { type: "text/javascript" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "data.js";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        alert("File 'data.js' downloaded. Now upload it to GitHub.");
+    }
+
+    function copyToClipboard() {
+        const area = document.getElementById('export-area');
+        area.value = generateFinalCode();
+        area.select();
+        document.execCommand('copy');
+        alert("Code copied to clipboard!");
     }
 
     function loadManufacturers() {
@@ -206,7 +239,6 @@
                 } else {
                     warnDiv.style.display = "none";
                 }
-
                 findAutoLinks(currentImg, f, t);
             };
         } else {
@@ -246,6 +278,7 @@
         if(!isEditor) return;
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
+        if(!f || !t) return;
         const rect = e.target.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -300,12 +333,6 @@
         const hasType = document.getElementById('select-type').value !== "";
         document.getElementById('dot-editor').classList.toggle('hidden', !isEditor || !hasType);
         if(isEditor && hasType) renderDotList();
-    }
-
-    function exportData() {
-        const finalCode = "const permanentData = " + JSON.stringify(aircraftData, null, 2) + ";";
-        document.getElementById('export-area').value = finalCode;
-        document.getElementById('export-area').select();
     }
 
     loadManufacturers();
