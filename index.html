@@ -38,7 +38,7 @@
         }
 
         .auto-links { margin: 10px 0; font-size: 14px; color: #666; display: none; }
-        .reference-link { color: #1a73e8; text-decoration: underline; cursor: pointer; font-weight: bold; }
+        .reference-link { color: #1a73e8; text-decoration: underline; cursor: pointer; font-weight: bold; margin-right: 10px; }
         .reference-link:hover { color: #0d47a1; }
 
         .admin-panel { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; }
@@ -46,7 +46,6 @@
         .dot-item { background: white; margin: 5px 0; padding: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
         
         .btn-save { background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; }
-        .btn-clear { background: #6c757d; color: white; border: none; cursor: pointer; margin-top: 5px; }
         .btn-logout { background: #dc3545; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .btn-export { background: #17a2b8; color: white; border: none; cursor: pointer; margin-top: 10px; font-weight: bold; }
         .hidden { display: none; }
@@ -83,7 +82,6 @@
         <div id="admin-controls" class="hidden">
             <div class="admin-box">
                 <h3>Editor Menu</h3>
-                <button class="btn-clear" onclick="clearEditorFields()">Clear Fields for New Entry</button>
                 <input type="text" id="new-fabrikant" placeholder="Manufacturer (e.g. Antonov)">
                 <input type="text" id="new-type" placeholder="Type (e.g. An-2)">
                 <input type="text" id="new-image" placeholder="Filename (e.g. an2.jpg)">
@@ -110,7 +108,7 @@
 <script>
     let githubData = (typeof permanentData !== 'undefined') ? permanentData : {};
     let localData = JSON.parse(localStorage.getItem('aircraftDB')) || {};
-    let aircraftData = JSON.parse(JSON.stringify(githubData));
+    let aircraftData = {};
     
     function mergeData() {
         aircraftData = JSON.parse(JSON.stringify(githubData));
@@ -134,16 +132,7 @@
 
     function logoutEditor() {
         isEditor = false;
-        document.getElementById('admin-controls').classList.add('hidden');
-        document.getElementById('auth-btn').classList.remove('hidden');
         location.reload(); 
-    }
-
-    function clearEditorFields() {
-        document.getElementById('new-fabrikant').value = "";
-        document.getElementById('new-type').value = "";
-        document.getElementById('new-image').value = "";
-        document.getElementById('new-warning').value = "";
     }
 
     function addEntry() {
@@ -160,15 +149,16 @@
         localData[fab][type] = { img, dots, warning: warn };
         localStorage.setItem('aircraftDB', JSON.stringify(localData));
         
-        mergeData(); // Update de werk-database
-        loadManufacturers(); // Update de dropdowns
-        alert("Saved successfully! You are still logged in.");
-    }
+        mergeData();
+        loadManufacturers();
+        
+        // Velden legen na opslaan
+        document.getElementById('new-fabrikant').value = "";
+        document.getElementById('new-type').value = "";
+        document.getElementById('new-image').value = "";
+        document.getElementById('new-warning').value = "";
 
-    function exportData() {
-        const finalCode = "const permanentData = " + JSON.stringify(aircraftData, null, 2) + ";";
-        document.getElementById('export-area').value = finalCode;
-        document.getElementById('export-area').select();
+        alert("Saved successfully! Fields cleared for your next entry.");
     }
 
     function loadManufacturers() {
@@ -196,67 +186,73 @@
     }
 
     function showImage() {
-        const currentFab = document.getElementById('select-fabrikant').value;
-        const currentType = document.getElementById('select-type').value;
+        const f = document.getElementById('select-fabrikant').value;
+        const t = document.getElementById('select-type').value;
         const wrap = document.getElementById('wrapper');
-        const imgTag = document.getElementById('vliegtuig-beeld');
+        const img = document.getElementById('vliegtuig-beeld');
         const warnDiv = document.getElementById('display-warning');
-        const autoLinksList = document.getElementById('auto-links-list');
+        const linksDiv = document.getElementById('auto-links-display');
         
-        if(currentFab && currentType && aircraftData[currentFab][currentType]) {
-            const data = aircraftData[currentFab][currentType];
-            if(isEditor) {
-                document.getElementById('new-fabrikant').value = currentFab;
-                document.getElementById('new-type').value = currentType;
-                document.getElementById('new-image').value = data.img;
-                document.getElementById('new-warning').value = data.warning || "";
-            }
-            imgTag.src = "Images/" + data.img;
-            imgTag.onload = () => { wrap.style.display = "block"; renderDots(); };
-            warnDiv.innerText = data.warning || "";
-            warnDiv.style.display = (data.warning) ? "block" : "none";
-
-            autoLinksList.innerHTML = "";
-            let relatedFound = [];
-            for (let f in aircraftData) {
-                for (let t in aircraftData[f]) {
-                    if ((f !== currentFab || t !== currentType) && aircraftData[f][t].img === data.img) {
-                        relatedFound.push({ fab: f, type: t });
-                    }
+        if(f && t && aircraftData[f][t]) {
+            const currentImg = aircraftData[f][t].img;
+            img.src = "Images/" + currentImg;
+            img.onload = () => { 
+                wrap.style.display = "block"; 
+                renderDots(); 
+                
+                if(aircraftData[f][t].warning) {
+                    warnDiv.innerText = aircraftData[f][t].warning;
+                    warnDiv.style.display = "block";
+                } else {
+                    warnDiv.style.display = "none";
                 }
-            }
-            if (relatedFound.length > 0) {
-                relatedFound.forEach((item, index) => {
-                    let span = document.createElement('span');
-                    span.className = "reference-link";
-                    span.innerText = `${item.fab} ${item.type}`;
-                    span.onclick = () => {
-                        document.getElementById('select-fabrikant').value = item.fab;
+
+                findAutoLinks(currentImg, f, t);
+            };
+        } else {
+            wrap.style.display = "none";
+            linksDiv.style.display = "none";
+        }
+        checkDotEditorVisibility();
+    }
+
+    function findAutoLinks(imageName, currentFab, currentType) {
+        const listSpan = document.getElementById('auto-links-list');
+        const linksDiv = document.getElementById('auto-links-display');
+        listSpan.innerHTML = "";
+        let found = false;
+
+        for (let fab in aircraftData) {
+            for (let type in aircraftData[fab]) {
+                if (aircraftData[fab][type].img === imageName && (fab !== currentFab || type !== currentType)) {
+                    found = true;
+                    let link = document.createElement('span');
+                    link.className = "reference-link";
+                    link.innerText = `${fab} ${type}`;
+                    link.onclick = () => {
+                        document.getElementById('select-fabrikant').value = fab;
                         updateTypes();
-                        document.getElementById('select-type').value = item.type;
+                        document.getElementById('select-type').value = type;
                         showImage();
                     };
-                    autoLinksList.appendChild(span);
-                    if (index < relatedFound.length - 1) autoLinksList.appendChild(document.createTextNode(", "));
-                });
-                document.getElementById('auto-links-display').style.display = "block";
-            } else { document.getElementById('auto-links-display').style.display = "none"; }
-        } else { wrap.style.display = "none"; document.getElementById('auto-links-display').style.display = "none"; }
-        if(isEditor) checkDotEditorVisibility();
+                    listSpan.appendChild(link);
+                }
+            }
+        }
+        linksDiv.style.display = found ? "block" : "none";
     }
 
     function handleImageClick(e) {
         if(!isEditor) return;
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
-        if(!f || !t) return;
         const rect = e.target.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
-        const info = prompt("Description:");
+        const info = prompt("Dot description:");
         if(info) {
             if(!localData[f]) localData[f] = {};
-            if(!localData[f][t]) localData[f][t] = aircraftData[f][t];
+            if(!localData[f][t]) localData[f][t] = JSON.parse(JSON.stringify(aircraftData[f][t]));
             localData[f][t].dots.push({x, y, info});
             localStorage.setItem('aircraftDB', JSON.stringify(localData));
             mergeData(); renderDots(); renderDotList();
@@ -272,9 +268,7 @@
             aircraftData[f][t].dots.forEach(d => {
                 const dot = document.createElement('div');
                 dot.className = 'dot'; dot.style.left = d.x + "%"; dot.style.top = d.y + "%";
-                dot.setAttribute('data-info', d.info);
-                dot.setAttribute('tabindex', '0'); dot.setAttribute('onclick', 'void(0)');
-                layer.appendChild(dot);
+                dot.setAttribute('data-info', d.info); layer.appendChild(dot);
             });
         }
     }
@@ -287,8 +281,8 @@
         if(aircraftData[f] && aircraftData[f][t]) {
             aircraftData[f][t].dots.forEach((d, i) => {
                 const li = document.createElement('li');
-                li.className = 'dot-item';
-                li.innerHTML = `${d.info} <button onclick="delDot(${i})" style="width:auto; background:red; color:white; border:none; padding:4px 8px; cursor:pointer;">X</button>`;
+                li.className = "dot-item";
+                li.innerHTML = `<span>${d.info}</span> <button onclick="delDot(${i})" style="width:auto; background:red; color:white; border:none; padding:5px; border-radius:4px; cursor:pointer;">Delete</button>`;
                 list.appendChild(li);
             });
         }
@@ -303,10 +297,15 @@
     }
 
     function checkDotEditorVisibility() {
-        const type = document.getElementById('select-type').value;
-        const isVisible = type && isEditor;
-        document.getElementById('dot-editor').classList.toggle('hidden', !isVisible);
-        if(isVisible) renderDotList();
+        const hasType = document.getElementById('select-type').value !== "";
+        document.getElementById('dot-editor').classList.toggle('hidden', !isEditor || !hasType);
+        if(isEditor && hasType) renderDotList();
+    }
+
+    function exportData() {
+        const finalCode = "const permanentData = " + JSON.stringify(aircraftData, null, 2) + ";";
+        document.getElementById('export-area').value = finalCode;
+        document.getElementById('export-area').select();
     }
 
     loadManufacturers();
