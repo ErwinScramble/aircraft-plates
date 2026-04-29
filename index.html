@@ -30,11 +30,13 @@
         }
         .dot:hover::after, .dot:focus::after { display: block; }
 
+        /* De vernieuwde Warning Style (onder de afbeelding) */
         #display-warning {
-            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
-            background: rgba(211, 47, 47, 0.85); color: white;
-            padding: 8px 15px; border-radius: 5px; font-size: 14px; font-weight: bold;
-            text-align: center; z-index: 10; display: none; max-width: 80%; line-height: 1.2; pointer-events: none;
+            margin-top: 15px;
+            background: #fff5f5; color: #d32f2f;
+            padding: 12px 15px; border-radius: 6px; font-size: 15px; font-weight: bold;
+            text-align: center; border: 2px solid #feb2b2; display: none;
+            line-height: 1.4;
         }
 
         .auto-links { margin: 10px 0; font-size: 14px; color: #666; display: none; }
@@ -74,8 +76,10 @@
     <div class="image-container" id="wrapper">
         <img id="vliegtuig-beeld" src="" alt="Aircraft Plate" onclick="handleImageClick(event)">
         <div id="dots-layer"></div>
-        <div id="display-warning"></div>
     </div>
+    
+    <!-- De waarschuwing staat nu hier, buiten de image-container -->
+    <div id="display-warning"></div>
 
     <div class="admin-panel">
         <button id="auth-btn" onclick="authenticateEditor()" style="background:#6c757d; color:white; border:none; cursor:pointer;">Editor Login</button>
@@ -118,7 +122,6 @@
     let localData = JSON.parse(localStorage.getItem('aircraftDB')) || {};
     let aircraftData = {};
     
-    // Functie voor natuurlijke sortering (Mi-2 voor Mi-14)
     const naturalSort = (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
 
     function mergeData() {
@@ -168,7 +171,7 @@
         document.getElementById('new-image').value = "";
         document.getElementById('new-warning').value = "";
 
-        alert("Saved successfully! Numerical order updated.");
+        alert("Saved successfully!");
     }
 
     function generateFinalCode() {
@@ -236,7 +239,7 @@
                 wrap.style.display = "block"; 
                 renderDots(); 
                 
-                if(aircraftData[f][t].warning) {
+                if(aircraftData[f][t].warning && aircraftData[f][t].warning.trim() !== "") {
                     warnDiv.innerText = aircraftData[f][t].warning;
                     warnDiv.style.display = "block";
                 } else {
@@ -246,6 +249,7 @@
             };
         } else {
             wrap.style.display = "none";
+            warnDiv.style.display = "none";
             linksDiv.style.display = "none";
         }
         checkDotEditorVisibility();
