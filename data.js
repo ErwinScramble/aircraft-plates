@@ -554,6 +554,17 @@ const permanentData = {
         }
       ],
       "warning": ""
+    },
+    "Mi-14": {
+      "img": "Mil-14.png",
+      "dots": [
+        {
+          "x": 43.75,
+          "y": 59.16875206637391,
+          "info": "Inside the pneumatic system filling hatch (right side, above the rear wheel bay)."
+        }
+      ],
+      "warning": ""
     }
   }
 };
