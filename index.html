@@ -83,9 +83,9 @@
         <div id="admin-controls" class="hidden">
             <div class="admin-box">
                 <h3>Editor Menu</h3>
-                <input type="text" id="new-fabrikant" placeholder="Manufacturer (e.g. Antonov)">
-                <input type="text" id="new-type" placeholder="Type (e.g. An-2)">
-                <input type="text" id="new-image" placeholder="Filename (e.g. an2.jpg)">
+                <input type="text" id="new-fabrikant" placeholder="Manufacturer (e.g. Mil)">
+                <input type="text" id="new-type" placeholder="Type (e.g. Mi-2)">
+                <input type="text" id="new-image" placeholder="Filename (e.g. mi2.jpg)">
                 <textarea id="new-warning" placeholder="Optional Warning Text"></textarea>
                 <button class="btn-save" onclick="addEntry()">Save / Update Aircraft</button>
                 
@@ -118,6 +118,9 @@
     let localData = JSON.parse(localStorage.getItem('aircraftDB')) || {};
     let aircraftData = {};
     
+    // Functie voor natuurlijke sortering (Mi-2 voor Mi-14)
+    const naturalSort = (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+
     function mergeData() {
         aircraftData = JSON.parse(JSON.stringify(githubData));
         for (let f in localData) {
@@ -165,7 +168,7 @@
         document.getElementById('new-image').value = "";
         document.getElementById('new-warning').value = "";
 
-        alert("Saved successfully! Fields cleared for next entry.");
+        alert("Saved successfully! Numerical order updated.");
     }
 
     function generateFinalCode() {
@@ -183,7 +186,7 @@
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        alert("File 'data.js' downloaded. Now upload it to GitHub.");
+        alert("File 'data.js' downloaded.");
     }
 
     function copyToClipboard() {
@@ -191,14 +194,14 @@
         area.value = generateFinalCode();
         area.select();
         document.execCommand('copy');
-        alert("Code copied to clipboard!");
+        alert("Code copied!");
     }
 
     function loadManufacturers() {
         const sel = document.getElementById('select-fabrikant');
         const currentVal = sel.value;
         sel.innerHTML = '<option value="">-- Select Manufacturer --</option>';
-        Object.keys(aircraftData).sort().forEach(f => {
+        Object.keys(aircraftData).sort(naturalSort).forEach(f => {
             let opt = document.createElement('option');
             opt.value = f; opt.text = f; sel.add(opt);
         });
@@ -210,7 +213,7 @@
         const sel = document.getElementById('select-type');
         sel.innerHTML = '<option value="">-- Select Type --</option>';
         if(aircraftData[fab]) {
-            Object.keys(aircraftData[fab]).sort().forEach(t => {
+            Object.keys(aircraftData[fab]).sort(naturalSort).forEach(t => {
                 let opt = document.createElement('option');
                 opt.value = t; opt.text = t; sel.add(opt);
             });
