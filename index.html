@@ -14,50 +14,12 @@
         .image-container { position: relative; width: 100%; margin-top: 20px; display: none; line-height: 0; border-radius: 8px; background: #eee; border: 1px solid #ddd; }
         #vliegtuig-beeld { width: 100%; height: auto; display: block; cursor: crosshair; }
 
-        .dot {
-            position: absolute;
-            width: 18px; height: 18px;
-            background: #ff0000;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            cursor: pointer;
-            box-shadow: 0 0 8px rgba(0,0,0,0.5);
-            z-index: 10;
-        }
+        /* Links voor gedeelde afbeeldingen */
+        #shared-links { margin-top: 10px; font-size: 0.9em; color: #666; display: none; }
+        .shared-link { color: #1a73e8; cursor: pointer; text-decoration: underline; margin-right: 10px; }
 
-        .dot .tooltip-text {
-            visibility: hidden;
-            width: 160px;
-            background-color: #222;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 8px;
-            position: absolute;
-            z-index: 100;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            font-size: 13px;
-            line-height: 1.4;
-            white-space: normal;
-            word-wrap: break-word;
-            border: 1px solid #444;
-        }
-
-        .dot .tooltip-text::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #222 transparent transparent transparent;
-        }
-
+        .dot { position: absolute; width: 18px; height: 18px; background: #ff0000; border: 2px solid #fff; border-radius: 50%; transform: translate(-50%, -50%); cursor: pointer; box-shadow: 0 0 8px rgba(0,0,0,0.5); z-index: 10; }
+        .dot .tooltip-text { visibility: hidden; width: 160px; background-color: #222; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 100; bottom: 125%; left: 50%; transform: translateX(-50%); box-shadow: 0 4px 10px rgba(0,0,0,0.4); font-size: 13px; line-height: 1.4; white-space: normal; word-wrap: break-word; border: 1px solid #444; }
         .dot:hover { z-index: 1000; }
         .dot:hover .tooltip-text { visibility: visible; }
 
@@ -70,8 +32,7 @@
         .admin-box { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef; margin-top: 10px; }
         .hidden { display: none; }
         .dot-item { background: white; margin-bottom: 5px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
-        
-        .btn-download { background: #17a2b8; color: white; font-weight: bold; border: none; cursor: pointer; }
+        .btn-danger { background: #dc3545 !important; color: white !important; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -93,13 +54,13 @@
         <img id="vliegtuig-beeld" src="" alt="Aircraft Plate" onclick="handleImageClick(event)">
         <div id="dots-layer"></div>
     </div>
+    <div id="shared-links"></div>
 
     <div id="detail-view">
         <h3 id="detail-title">Plate Location Details</h3>
         <p id="detail-text" style="font-size: 1.1em; margin-bottom: 15px;"></p>
         <button id="load-photo-btn" class="action-btn" onclick="loadPlatePhoto()">Show me how this location looks like</button>
-        <img id="detail-img" src="" alt="Detail View">
-        <br>
+        <img id="detail-img" src="" alt="Detail View"><br>
         <button class="close-btn" onclick="closeDetail()">Close Detail View</button>
     </div>
 
@@ -107,21 +68,20 @@
         <button id="auth-btn" onclick="authenticateEditor()" style="background:#6c757d; color:white; border:none; cursor:pointer;">Editor Login</button>
         <div id="admin-controls" class="hidden">
             <div class="admin-box">
-                <h3>Editor Menu</h3>
+                <h3 id="editor-title">Add New Aircraft</h3>
                 <input type="text" id="new-fabrikant" placeholder="Manufacturer">
                 <input type="text" id="new-type" placeholder="Type">
                 <input type="text" id="new-image" placeholder="Silhouette Filename">
-                <button onclick="addEntry()" style="background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer;">Save Aircraft</button>
+                <button onclick="addEntry()" id="btn-save-main" style="background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer;">Save Aircraft</button>
+                <button onclick="deleteAircraft()" id="btn-delete-ac" class="btn-danger hidden">Delete Selected Aircraft</button>
+                
                 <div id="dot-editor" class="hidden">
                     <hr>
                     <h4>Manage Dots</h4>
                     <ul id="current-dots" style="list-style:none; padding:0;"></ul>
                 </div>
                 <hr>
-                <h4>Backup & Publish</h4>
-                <p><small>Click below to generate and download the new <b>data.js</b> file. Upload this file to your server to update the database for everyone.</small></p>
-                <button onclick="exportAndDownload()" class="btn-download">Generate & Download data.js</button>
-                <textarea id="export-area" style="width:100%; height:80px; margin-top:10px; font-size:10px; font-family:monospace;" readonly></textarea>
+                <button onclick="exportAndDownload()" style="background: #17a2b8; color: white; border: none; font-weight: bold; cursor: pointer;">Generate & Download data.js</button>
             </div>
         </div>
     </div>
@@ -132,13 +92,9 @@
     let githubData = (typeof permanentData !== 'undefined') ? permanentData : {};
     let localData = JSON.parse(localStorage.getItem('aircraftDB')) || {};
     let aircraftData = JSON.parse(JSON.stringify(githubData));
-    for (let f in localData) {
-        if (!aircraftData[f]) aircraftData[f] = {};
-        for (let t in localData[f]) { aircraftData[f][t] = localData[f][t]; }
-    }
-
-    let isEditor = false;
-    let currentActiveDot = null;
+    for (let f in localData) { if (!aircraftData[f]) aircraftData[f] = {}; for (let t in localData[f]) { aircraftData[f][t] = localData[f][t]; } }
+    
+    let isEditor = false, currentActiveDot = null;
     const naturalSort = (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
 
     function authenticateEditor() {
@@ -155,65 +111,29 @@
         const type = document.getElementById('new-type').value.trim();
         const img = document.getElementById('new-image').value.trim();
         if(!fab || !type || !img) return alert('Fill all fields');
+        
+        // Verwijder oude entry als de naam veranderd is tijdens edit
+        const oldFab = document.getElementById('select-fabrikant').value;
+        const oldType = document.getElementById('select-type').value;
+        if(oldFab && oldType && (oldFab !== fab || oldType !== type)) {
+            delete aircraftData[oldFab][oldType];
+            if(Object.keys(aircraftData[oldFab]).length === 0) delete aircraftData[oldFab];
+        }
+
         if(!aircraftData[fab]) aircraftData[fab] = {};
-        const dots = aircraftData[fab][type] ? aircraftData[fab][type].dots : [];
-        aircraftData[fab][type] = { img: img, dots: dots };
+        aircraftData[fab][type] = { img: img, dots: (aircraftData[fab][type] ? aircraftData[fab][type].dots : []) };
         localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
         location.reload();
     }
 
-    function handleImageClick(event) {
-        if(!isEditor) return;
+    function deleteAircraft() {
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
-        const rect = event.target.getBoundingClientRect();
-        const x = ((event.clientX - rect.left) / rect.width) * 100;
-        const y = ((event.clientY - rect.top) / rect.height) * 100;
-        const info = prompt("Description:");
-        const cnImg = prompt("Detail photo filename (optional):");
-        if(info) {
-            aircraftData[f][t].dots.push({ x, y, info, cnImg });
+        if(confirm(`Are you sure you want to delete ${f} ${t}?`)) {
+            delete aircraftData[f][t];
+            if(Object.keys(aircraftData[f]).length === 0) delete aircraftData[f];
             localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
-            renderDots(); renderDotList();
-        }
-    }
-
-    function openDetailFrame(dot) {
-        currentActiveDot = dot;
-        document.getElementById('detail-text').innerText = dot.info;
-        document.getElementById('detail-img').style.display = "none";
-        document.getElementById('load-photo-btn').style.display = dot.cnImg ? "inline-block" : "none";
-        document.getElementById('detail-view').style.display = "block";
-        document.getElementById('detail-view').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function loadPlatePhoto() {
-        if(currentActiveDot && currentActiveDot.cnImg) {
-            const img = document.getElementById('detail-img');
-            img.src = "cnlocimages/" + currentActiveDot.cnImg;
-            img.style.display = "block";
-            document.getElementById('load-photo-btn').style.display = "none";
-        }
-    }
-
-    function closeDetail() { document.getElementById('detail-view').style.display = "none"; }
-
-    function renderDots() {
-        const f = document.getElementById('select-fabrikant').value;
-        const t = document.getElementById('select-type').value;
-        const layer = document.getElementById('dots-layer');
-        layer.innerHTML = "";
-        if(aircraftData[f] && aircraftData[f][t]) {
-            aircraftData[f][t].dots.forEach(dot => {
-                const d = document.createElement('div');
-                d.className = 'dot'; d.style.left = dot.x + "%"; d.style.top = dot.y + "%";
-                const tooltip = document.createElement('span');
-                tooltip.className = 'tooltip-text';
-                tooltip.innerText = dot.info;
-                d.appendChild(tooltip);
-                d.onclick = (e) => { e.stopPropagation(); openDetailFrame(dot); };
-                layer.appendChild(d);
-            });
+            location.reload();
         }
     }
 
@@ -221,106 +141,101 @@
         const f = document.getElementById('select-fabrikant').value;
         const t = document.getElementById('select-type').value;
         const wrap = document.getElementById('wrapper');
-        const img = document.getElementById('vliegtuig-beeld');
+        const imgTag = document.getElementById('vliegtuig-beeld');
+        const sharedDiv = document.getElementById('shared-links');
+
         if(f && t && aircraftData[f][t]) {
-            img.src = "Images/" + aircraftData[f][t].img;
-            img.onload = () => { wrap.style.display = "block"; renderDots(); };
-        } else { wrap.style.display = "none"; }
-        closeDetail();
-        if(isEditor) checkDotEditorVisibility();
-    }
+            const currentImg = aircraftData[f][t].img;
+            imgTag.src = "Images/" + currentImg;
+            imgTag.onload = () => { wrap.style.display = "block"; renderDots(); };
+            
+            // Gedeelde afbeeldingen zoeken
+            let shared = [];
+            for(let fab in aircraftData) {
+                for(let typ in aircraftData[fab]) {
+                    if(aircraftData[fab][typ].img === currentImg && (fab !== f || typ !== t)) {
+                        shared.push({fab, typ});
+                    }
+                }
+            }
+            if(shared.length > 0) {
+                sharedDiv.innerHTML = "This image is also used for: " + shared.map(s => `<span class="shared-link" onclick="jumpTo('${s.fab}', '${s.typ}')">${s.fab} ${s.typ}</span>`).join("");
+                sharedDiv.style.display = "block";
+            } else { sharedDiv.style.display = "none"; }
 
-    function renderDotList() {
-        const f = document.getElementById('select-fabrikant').value;
-        const t = document.getElementById('select-type').value;
-        const list = document.getElementById('current-dots');
-        list.innerHTML = "";
-        if(aircraftData[f] && aircraftData[f][t]) {
-            aircraftData[f][t].dots.forEach((dot, i) => {
-                const li = document.createElement('li');
-                li.className = 'dot-item';
-                li.innerHTML = `<span>${dot.info}</span> 
-                <div>
-                    <button onclick="editDot(${i})" style="width:auto; background:orange; color:white; border:none; padding:4px 8px; margin-right:4px;">Edit</button>
-                    <button onclick="deleteDot(${i})" style="width:auto; background:red; color:white; border:none; padding:4px 8px;">Del</button>
-                </div>`;
-                list.appendChild(li);
-            });
+            // Editor velden vullen
+            if(isEditor) {
+                document.getElementById('editor-title').innerText = "Edit Selected Aircraft";
+                document.getElementById('new-fabrikant').value = f;
+                document.getElementById('new-type').value = t;
+                document.getElementById('new-image').value = currentImg;
+                document.getElementById('btn-delete-ac').classList.remove('hidden');
+                checkDotEditorVisibility();
+            }
+        } else { 
+            wrap.style.display = "none"; 
+            sharedDiv.style.display = "none";
+            if(isEditor) resetEditorFields();
         }
     }
 
-    function editDot(i) {
-        const f = document.getElementById('select-fabrikant').value;
-        const t = document.getElementById('select-type').value;
-        const dot = aircraftData[f][t].dots[i];
-        const newInfo = prompt("Update description:", dot.info);
-        const newImg = prompt("Update photo filename:", dot.cnImg || "");
-        if(newInfo !== null) {
-            dot.info = newInfo; dot.cnImg = newImg;
-            localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
-            renderDots(); renderDotList();
-        }
-    }
-
-    function deleteDot(i) {
-        const f = document.getElementById('select-fabrikant').value;
-        const t = document.getElementById('select-type').value;
-        aircraftData[f][t].dots.splice(i, 1);
-        localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
-        renderDots(); renderDotList();
-    }
-
-    function checkDotEditorVisibility() {
-        const type = document.getElementById('select-type').value;
-        document.getElementById('dot-editor').classList.toggle('hidden', !type);
-        if(type) renderDotList();
-    }
-
-    function exportAndDownload() {
-        const dataStr = "const permanentData = " + JSON.stringify(aircraftData, null, 2) + ";";
-        document.getElementById('export-area').value = dataStr;
-        
-        // Maak een blob van de data
-        const blob = new Blob([dataStr], { type: "text/javascript" });
-        const url = URL.createObjectURL(blob);
-        
-        // Maak een onzichtbaar link element om de download te forceren
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "data.js";
-        document.body.appendChild(a);
-        a.click();
-        
-        // Ruim op
-        setTimeout(() => {
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        }, 0);
-        
-        alert("Success! The file 'data.js' has been downloaded. Now upload it to your server folder to overwrite the old one.");
-    }
-
-    function updateTypes() {
-        const f = document.getElementById('select-fabrikant').value;
-        const sel = document.getElementById('select-type');
-        sel.innerHTML = '<option value="">-- Select Type --</option>';
-        if(aircraftData[f]) {
-            Object.keys(aircraftData[f]).sort(naturalSort).forEach(type => {
-                let opt = document.createElement('option');
-                opt.value = type; opt.innerHTML = type; sel.appendChild(opt);
-            });
-        }
+    function jumpTo(f, t) {
+        document.getElementById('select-fabrikant').value = f;
+        updateTypes();
+        document.getElementById('select-type').value = t;
         showImage();
     }
 
-    function loadManufacturers() {
-        const sel = document.getElementById('select-fabrikant');
-        Object.keys(aircraftData).sort().forEach(fab => {
-            let opt = document.createElement('option');
-            opt.value = fab; opt.innerHTML = fab; sel.appendChild(opt);
-        });
+    function resetEditorFields() {
+        document.getElementById('editor-title').innerText = "Add New Aircraft";
+        document.getElementById('new-fabrikant').value = "";
+        document.getElementById('new-type').value = "";
+        document.getElementById('new-image').value = "";
+        document.getElementById('btn-delete-ac').classList.add('hidden');
     }
 
+    // --- Overige functies blijven gelijk ---
+    function renderDots() {
+        const f = document.getElementById('select-fabrikant').value, t = document.getElementById('select-type').value, layer = document.getElementById('dots-layer');
+        layer.innerHTML = "";
+        if(aircraftData[f] && aircraftData[f][t]) { aircraftData[f][t].dots.forEach(dot => {
+            const d = document.createElement('div'); d.className = 'dot'; d.style.left = dot.x + "%"; d.style.top = dot.y + "%";
+            const tooltip = document.createElement('span'); tooltip.className = 'tooltip-text'; tooltip.innerText = dot.info;
+            d.appendChild(tooltip); d.onclick = (e) => { e.stopPropagation(); openDetailFrame(dot); }; layer.appendChild(d);
+        });}
+    }
+    function handleImageClick(event) {
+        if(!isEditor) return;
+        const f = document.getElementById('select-fabrikant').value, t = document.getElementById('select-type').value, rect = event.target.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width) * 100, y = ((event.clientY - rect.top) / rect.height) * 100;
+        const info = prompt("Description:"), cnImg = prompt("Detail photo filename (optional):");
+        if(info) { aircraftData[f][t].dots.push({ x, y, info, cnImg }); localStorage.setItem('aircraftDB', JSON.stringify(aircraftData)); renderDots(); renderDotList(); }
+    }
+    function openDetailFrame(dot) { currentActiveDot = dot; document.getElementById('detail-text').innerText = dot.info; document.getElementById('detail-img').style.display = "none"; document.getElementById('load-photo-btn').style.display = dot.cnImg ? "inline-block" : "none"; document.getElementById('detail-view').style.display = "block"; document.getElementById('detail-view').scrollIntoView({ behavior: 'smooth' }); }
+    function loadPlatePhoto() { if(currentActiveDot && currentActiveDot.cnImg) { const img = document.getElementById('detail-img'); img.src = "cnlocimages/" + currentActiveDot.cnImg; img.style.display = "block"; document.getElementById('load-photo-btn').style.display = "none"; } }
+    function closeDetail() { document.getElementById('detail-view').style.display = "none"; }
+    function renderDotList() {
+        const f = document.getElementById('select-fabrikant').value, t = document.getElementById('select-type').value, list = document.getElementById('current-dots');
+        list.innerHTML = "";
+        if(aircraftData[f] && aircraftData[f][t]) { aircraftData[f][t].dots.forEach((dot, i) => {
+            const li = document.createElement('li'); li.className = 'dot-item';
+            li.innerHTML = `<span>${dot.info}</span><div><button onclick="editDot(${i})" style="width:auto; background:orange; color:white; border:none; padding:4px 8px; margin-right:4px;">Edit</button><button onclick="deleteDot(${i})" style="width:auto; background:red; color:white; border:none; padding:4px 8px;">Del</button></div>`;
+            list.appendChild(li);
+        });}
+    }
+    function editDot(i) {
+        const f = document.getElementById('select-fabrikant').value, t = document.getElementById('select-type').value, dot = aircraftData[f][t].dots[i];
+        const newInfo = prompt("Update description:", dot.info), newImg = prompt("Update photo filename:", dot.cnImg || "");
+        if(newInfo !== null) { dot.info = newInfo; dot.cnImg = newImg; localStorage.setItem('aircraftDB', JSON.stringify(aircraftData)); renderDots(); renderDotList(); }
+    }
+    function deleteDot(i) {
+        const f = document.getElementById('select-fabrikant').value, t = document.getElementById('select-type').value;
+        if (confirm("Delete this dot?")) { aircraftData[f][t].dots.splice(i, 1); localStorage.setItem('aircraftDB', JSON.stringify(aircraftData)); renderDots(); renderDotList(); }
+    }
+    function checkDotEditorVisibility() { const type = document.getElementById('select-type').value; document.getElementById('dot-editor').classList.toggle('hidden', !type); if(type) renderDotList(); }
+    function exportAndDownload() { const dataStr = "const permanentData = " + JSON.stringify(aircraftData, null, 2) + ";"; const blob = new Blob([dataStr], { type: "text/javascript" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "data.js"; document.body.appendChild(a); a.click(); setTimeout(() => { document.body.removeChild(a); window.URL.revokeObjectURL(url); }, 0); }
+    function updateTypes() { const f = document.getElementById('select-fabrikant').value, sel = document.getElementById('select-type'); sel.innerHTML = '<option value="">-- Select Type --</option>'; if(aircraftData[f]) { Object.keys(aircraftData[f]).sort(naturalSort).forEach(type => { let opt = document.createElement('option'); opt.value = type; opt.innerHTML = type; sel.appendChild(opt); }); } showImage(); }
+    function loadManufacturers() { const sel = document.getElementById('select-fabrikant'); Object.keys(aircraftData).sort().forEach(fab => { let opt = document.createElement('option'); opt.value = fab; opt.innerHTML = fab; sel.appendChild(opt); }); }
     loadManufacturers();
 </script>
 </body>
