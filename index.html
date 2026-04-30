@@ -161,7 +161,7 @@
         updateTypes();
         document.getElementById('select-type').value = type;
         showImage();
-        alert("Saved to browser! Download data.js to make it permanent.");
+        alert("Saved! Download data.js to make it permanent.");
     }
 
     function deleteAircraft() {
@@ -175,7 +175,7 @@
             loadManufacturers();
             updateTypes();
             resetEditorFields();
-            alert("Deleted from browser! Download data.js to make it permanent.");
+            alert("Deleted! Download data.js to make it permanent.");
         }
     }
 
@@ -185,6 +185,9 @@
         const wrap = document.getElementById('wrapper');
         const imgTag = document.getElementById('vliegtuig-beeld');
         const sharedDiv = document.getElementById('shared-links');
+
+        // SLUIT AUTOMATISCH DE FOTO DETAIL VIEW BIJ WISSELING
+        closeDetail();
 
         if(f && t && aircraftData[f][t]) {
             const currentImg = aircraftData[f][t].img;
@@ -265,7 +268,11 @@
     }
 
     function loadPlatePhoto() { if(currentActiveDot && currentActiveDot.cnImg) { const img = document.getElementById('detail-img'); img.src = "cnlocimages/" + currentActiveDot.cnImg; img.style.display = "block"; document.getElementById('load-photo-btn').style.display = "none"; } }
-    function closeDetail() { document.getElementById('detail-view').style.display = "none"; }
+    
+    function closeDetail() { 
+        document.getElementById('detail-view').style.display = "none"; 
+        document.getElementById('detail-img').src = ""; // Reset src om dubbel laden te voorkomen
+    }
 
     function renderDotList() {
         const f = document.getElementById('select-fabrikant').value, t = document.getElementById('select-type').value, list = document.getElementById('current-dots');
