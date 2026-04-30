@@ -376,7 +376,8 @@ const permanentData = {
         {
           "x": 14.875,
           "y": 63.74329764058137,
-          "info": "Cockpit, center console (left side, near floor)."
+          "info": "Cockpit, center console (left side, near floor).",
+          "cnImg": "UH-1-loc1.jpg"
         }
       ]
     }
