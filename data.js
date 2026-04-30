@@ -626,5 +626,40 @@ const permanentData = {
       ],
       "warning": ""
     }
+  },
+  "RotorWay": {
+    "Exec": {
+      "img": "Rotorway Exec.png",
+      "dots": [
+        {
+          "x": 72,
+          "y": 68.16875240969668,
+          "info": "Cabin floor, right side, door opening.",
+          "cnImg": "Exec-loc2.jpg"
+        }
+      ]
+    },
+    "Exec 90": {
+      "img": "Rotorway Exec.png",
+      "dots": [
+        {
+          "x": 73.875,
+          "y": 66.48124948430059,
+          "info": "Cabin floor, right side, door opening.",
+          "cnImg": "Exec-loc2.jpg"
+        }
+      ]
+    },
+    "Exec 162": {
+      "img": "Rotorway Exec.png",
+      "dots": [
+        {
+          "x": 80.125,
+          "y": 60.66875212359436,
+          "info": "Cockpit, center console (right side).",
+          "cnImg": "Exec-loc1.jpg"
+        }
+      ]
+    }
   }
 };
