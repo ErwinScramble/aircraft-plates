@@ -26,7 +26,6 @@
             z-index: 10;
         }
 
-        /* Nieuwe Tooltip Stijl */
         .dot .tooltip-text {
             visibility: hidden;
             width: 160px;
@@ -37,18 +36,17 @@
             padding: 8px;
             position: absolute;
             z-index: 100;
-            bottom: 125%; /* Boven de stip */
+            bottom: 125%;
             left: 50%;
             transform: translateX(-50%);
             box-shadow: 0 4px 10px rgba(0,0,0,0.4);
             font-size: 13px;
             line-height: 1.4;
-            white-space: normal; /* Belangrijk voor meerdere regels! */
+            white-space: normal;
             word-wrap: break-word;
             border: 1px solid #444;
         }
 
-        /* Tooltip pijltje */
         .dot .tooltip-text::after {
             content: "";
             position: absolute;
@@ -60,7 +58,6 @@
             border-color: #222 transparent transparent transparent;
         }
 
-        /* Toon tooltip bij hover */
         .dot:hover { z-index: 1000; }
         .dot:hover .tooltip-text { visibility: visible; }
 
@@ -73,6 +70,8 @@
         .admin-box { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef; margin-top: 10px; }
         .hidden { display: none; }
         .dot-item { background: white; margin-bottom: 5px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .btn-download { background: #17a2b8; color: white; font-weight: bold; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -119,7 +118,9 @@
                     <ul id="current-dots" style="list-style:none; padding:0;"></ul>
                 </div>
                 <hr>
-                <button onclick="exportData()" style="background: #17a2b8; color: white; border: none; cursor: pointer;">Generate Backup Code</button>
+                <h4>Backup & Publish</h4>
+                <p><small>Click below to generate and download the new <b>data.js</b> file. Upload this file to your server to update the database for everyone.</small></p>
+                <button onclick="exportAndDownload()" class="btn-download">Generate & Download data.js</button>
                 <textarea id="export-area" style="width:100%; height:80px; margin-top:10px; font-size:10px; font-family:monospace;" readonly></textarea>
             </div>
         </div>
@@ -206,13 +207,10 @@
             aircraftData[f][t].dots.forEach(dot => {
                 const d = document.createElement('div');
                 d.className = 'dot'; d.style.left = dot.x + "%"; d.style.top = dot.y + "%";
-                
-                // NIEUW: Echte Tooltip HTML
                 const tooltip = document.createElement('span');
                 tooltip.className = 'tooltip-text';
                 tooltip.innerText = dot.info;
                 d.appendChild(tooltip);
-
                 d.onclick = (e) => { e.stopPropagation(); openDetailFrame(dot); };
                 layer.appendChild(d);
             });
@@ -278,11 +276,28 @@
         if(type) renderDotList();
     }
 
-    function exportData() {
+    function exportAndDownload() {
         const dataStr = "const permanentData = " + JSON.stringify(aircraftData, null, 2) + ";";
         document.getElementById('export-area').value = dataStr;
-        document.getElementById('export-area').select();
-        alert("Backup code generated!");
+        
+        // Maak een blob van de data
+        const blob = new Blob([dataStr], { type: "text/javascript" });
+        const url = URL.createObjectURL(blob);
+        
+        // Maak een onzichtbaar link element om de download te forceren
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "data.js";
+        document.body.appendChild(a);
+        a.click();
+        
+        // Ruim op
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 0);
+        
+        alert("Success! The file 'data.js' has been downloaded. Now upload it to your server folder to overwrite the old one.");
     }
 
     function updateTypes() {
