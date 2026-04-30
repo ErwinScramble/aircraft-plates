@@ -11,7 +11,7 @@
         label { font-weight: bold; display: block; margin-top: 15px; }
         select, input, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
         
-        .image-container { position: relative; width: 100%; margin-top: 20px; display: none; line-height: 0; overflow: hidden; border-radius: 8px; background: #eee; border: 1px solid #ddd; }
+        .image-container { position: relative; width: 100%; margin-top: 20px; display: none; line-height: 0; border-radius: 8px; background: #eee; border: 1px solid #ddd; }
         #vliegtuig-beeld { width: 100%; height: auto; display: block; cursor: crosshair; }
 
         .dot {
@@ -26,28 +26,32 @@
             z-index: 5;
         }
 
-        /* Hover tekstballon behouden */
+        /* Hover tekst verbeteringen */
         .dot::after {
             content: attr(data-info);
             position: absolute;
             bottom: 25px; left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.9);
             color: white;
-            padding: 6px 12px;
-            border-radius: 4px;
+            padding: 8px 12px;
+            border-radius: 6px;
             font-size: 13px;
-            white-space: nowrap;
             display: none;
-            z-index: 10;
+            z-index: 100; /* Altijd bovenop */
+            width: 160px; /* Forceert tekst om af te breken */
+            white-space: normal; /* Zorgt voor meerdere regels */
+            text-align: center;
             pointer-events: none;
         }
+        .dot:hover { z-index: 101; }
         .dot:hover::after { display: block; }
 
-        /* Foto sectie onder de plaat */
-        #detail-view { display: none; margin-top: 20px; padding: 15px; border: 2px solid #1a73e8; border-radius: 8px; background: #fff; text-align: center; }
-        #detail-img { width: 100%; border-radius: 6px; margin-top: 10px; border: 1px solid #ddd; }
-        .close-btn { background: #6c757d; color: white; border: none; padding: 8px; margin-top: 10px; width: auto; cursor: pointer; border-radius: 4px; }
+        /* Detail sectie */
+        #detail-view { display: none; margin-top: 20px; padding: 20px; border: 2px solid #1a73e8; border-radius: 8px; background: #fff; text-align: center; }
+        #detail-img { width: 100%; border-radius: 6px; margin-top: 15px; border: 1px solid #ddd; display: none; }
+        .action-btn { background: #1a73e8; color: white; border: none; padding: 10px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .close-btn { background: #6c757d; color: white; border: none; padding: 10px; margin-top: 10px; cursor: pointer; border-radius: 4px; }
 
         .admin-panel { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; }
         .admin-box { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef; margin-top: 10px; }
@@ -75,28 +79,28 @@
         <div id="dots-layer"></div>
     </div>
 
-    <!-- Foto Detail Sectie -->
+    <!-- Detail View -->
     <div id="detail-view">
-        <h3 id="detail-title">Plate Location Detail</h3>
-        <p id="detail-text" style="font-weight: bold;"></p>
+        <h3 id="detail-title">Plate Location Details</h3>
+        <p id="detail-text" style="font-size: 1.1em; margin-bottom: 15px;"></p>
+        <button id="load-photo-btn" class="action-btn" onclick="loadPlatePhoto()">Show me how this location looks like</button>
         <img id="detail-img" src="" alt="Detail View">
-        <button class="close-btn" onclick="closeDetail()">Close Photo</button>
+        <br>
+        <button class="close-btn" onclick="closeDetail()">Close Detail View</button>
     </div>
 
     <div class="admin-panel">
         <button id="auth-btn" onclick="authenticateEditor()" style="background:#6c757d; color:white; border:none; cursor:pointer;">Editor Login</button>
-        
         <div id="admin-controls" class="hidden">
             <div class="admin-box">
                 <h3>Editor Menu</h3>
                 <input type="text" id="new-fabrikant" placeholder="Manufacturer">
                 <input type="text" id="new-type" placeholder="Type">
-                <input type="text" id="new-image" placeholder="Silhouette Filename (e.g. b737.jpg)">
+                <input type="text" id="new-image" placeholder="Silhouette Filename">
                 <button onclick="addEntry()" style="background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer;">Save Aircraft</button>
-                
                 <div id="dot-editor" class="hidden">
                     <hr>
-                    <h4>Manage Dots (Click main image to add)</h4>
+                    <h4>Manage Dots</h4>
                     <ul id="current-dots" style="list-style:none; padding:0;"></ul>
                 </div>
                 <hr>
@@ -108,7 +112,6 @@
 </div>
 
 <script src="data.js"></script>
-
 <script>
     let githubData = (typeof permanentData !== 'undefined') ? permanentData : {};
     let localData = JSON.parse(localStorage.getItem('aircraftDB')) || {};
@@ -119,6 +122,7 @@
     }
 
     let isEditor = false;
+    let currentActiveDot = null;
 
     function authenticateEditor() {
         if(prompt("Enter Access Key:") === "Scr@mble-Pl@tes") { 
@@ -157,12 +161,22 @@
         }
     }
 
-    function openPhoto(dot) {
-        if(!dot.cnImg) return;
+    function openDetailFrame(dot) {
+        currentActiveDot = dot;
         document.getElementById('detail-text').innerText = dot.info;
-        document.getElementById('detail-img').src = "cnlocimages/" + dot.cnImg;
+        document.getElementById('detail-img').style.display = "none";
+        document.getElementById('load-photo-btn').style.display = dot.cnImg ? "inline-block" : "none";
         document.getElementById('detail-view').style.display = "block";
         document.getElementById('detail-view').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function loadPlatePhoto() {
+        if(currentActiveDot && currentActiveDot.cnImg) {
+            const img = document.getElementById('detail-img');
+            img.src = "cnlocimages/" + currentActiveDot.cnImg;
+            img.style.display = "block";
+            document.getElementById('load-photo-btn').style.display = "none";
+        }
     }
 
     function closeDetail() { document.getElementById('detail-view').style.display = "none"; }
@@ -177,7 +191,7 @@
                 const d = document.createElement('div');
                 d.className = 'dot'; d.style.left = dot.x + "%"; d.style.top = dot.y + "%";
                 d.setAttribute('data-info', dot.info);
-                d.onclick = (e) => { e.stopPropagation(); openPhoto(dot); };
+                d.onclick = (e) => { e.stopPropagation(); openDetailFrame(dot); };
                 layer.appendChild(d);
             });
         }
@@ -222,8 +236,7 @@
         const newInfo = prompt("Update description:", dot.info);
         const newImg = prompt("Update photo filename:", dot.cnImg || "");
         if(newInfo !== null) {
-            dot.info = newInfo;
-            dot.cnImg = newImg;
+            dot.info = newInfo; dot.cnImg = newImg;
             localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
             renderDots(); renderDotList();
         }
