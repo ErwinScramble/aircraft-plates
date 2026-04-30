@@ -72,12 +72,14 @@ const permanentData = {
         {
           "x": 38.375,
           "y": 63.68416900506371,
-          "info": "Air intake (painted)."
+          "info": "Air intake (painted).",
+          "cnImg": "L-29-loc2.jpg"
         },
         {
           "x": 21.5,
           "y": 73.60077905452873,
-          "info": "Nosewheel door (painted)."
+          "info": "Nosewheel door (painted).",
+          "cnImg": "L-29-loc1.jpg"
         },
         {
           "x": 74.125,
@@ -107,7 +109,8 @@ const permanentData = {
         {
           "x": 37.5,
           "y": 47.231611422996735,
-          "info": "Ejection seats, sides (painted)."
+          "info": "Ejection seats, sides (painted).",
+          "cnImg": "L-39-loc1.jpg"
         },
         {
           "x": 47.25,
@@ -166,7 +169,8 @@ const permanentData = {
         {
           "x": 76.75,
           "y": 59.089873516186884,
-          "info": "Fuselage, left side below the horizontal stabilizer (painted)."
+          "info": "Fuselage, left side below the horizontal stabilizer (painted).",
+          "cnImg": "An-2-loc1.jpg"
         }
       ]
     },
@@ -394,7 +398,8 @@ const permanentData = {
         {
           "x": 37.75,
           "y": 70.1694129549353,
-          "info": "Fuselage, left side below the pilot door."
+          "info": "Fuselage, left side below the pilot door.",
+          "cnImg": "Ka-26-loc1.jpg"
         }
       ]
     }
@@ -504,7 +509,8 @@ const permanentData = {
         {
           "x": 63.125,
           "y": 41.73125140118604,
-          "info": "Inside air intakes (Painted)."
+          "info": "Inside air intakes (Painted).",
+          "cnImg": "Mi-24-loc1.jpg"
         }
       ],
       "warning": ""
@@ -515,7 +521,8 @@ const permanentData = {
         {
           "x": 46.75,
           "y": 57.29375199484833,
-          "info": "Rear bulkhead (engine/luggage partition), accessible via left-side hatch."
+          "info": "Rear bulkhead (engine/luggage partition), accessible via left-side hatch.",
+          "cnImg": "Mi-1-loc1.jpg"
         }
       ],
       "warning": ""
@@ -553,7 +560,8 @@ const permanentData = {
         {
           "x": 57.49999999999999,
           "y": 54.7227316353354,
-          "info": "On the inside of the fuel filler lid and is visible only when opened. (Painted)"
+          "info": "On the inside of the fuel filler lid and is visible only when opened. (Painted)",
+          "cnImg": "Mi-8-loc1.jpg"
         }
       ],
       "warning": ""
