@@ -23,34 +23,46 @@
             transform: translate(-50%, -50%);
             cursor: pointer;
             box-shadow: 0 0 8px rgba(0,0,0,0.5);
-            z-index: 5;
+            z-index: 10;
         }
 
-        /* Verbeterde Tooltip */
-        .dot::after {
-            content: attr(data-info);
-            position: absolute;
-            bottom: 25px; left: 50%;
-            transform: translateX(-50%);
-            background: #222;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            display: none;
-            z-index: 999; /* Zeer hoog voor voorgrond */
-            min-width: 120px;
-            max-width: 200px; /* Voorkomt te brede regels */
-            white-space: normal; /* Forceert wrapping */
+        /* Nieuwe Tooltip Stijl */
+        .dot .tooltip-text {
+            visibility: hidden;
+            width: 160px;
+            background-color: #222;
+            color: #fff;
             text-align: center;
-            pointer-events: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%; /* Boven de stip */
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            font-size: 13px;
+            line-height: 1.4;
+            white-space: normal; /* Belangrijk voor meerdere regels! */
+            word-wrap: break-word;
+            border: 1px solid #444;
         }
-        
-        /* Zorgt dat actieve stip bovenop ligt */
+
+        /* Tooltip pijltje */
+        .dot .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #222 transparent transparent transparent;
+        }
+
+        /* Toon tooltip bij hover */
         .dot:hover { z-index: 1000; }
-        .dot:hover::after { display: block; }
+        .dot:hover .tooltip-text { visibility: visible; }
 
         #detail-view { display: none; margin-top: 20px; padding: 20px; border: 2px solid #1a73e8; border-radius: 8px; background: #fff; text-align: center; }
         #detail-img { width: 100%; border-radius: 6px; margin-top: 15px; border: 1px solid #ddd; display: none; }
@@ -126,8 +138,6 @@
 
     let isEditor = false;
     let currentActiveDot = null;
-
-    // Helper voor natuurlijke sortering (Mi-1, Mi-2, Mi-14)
     const naturalSort = (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
 
     function authenticateEditor() {
@@ -196,7 +206,13 @@
             aircraftData[f][t].dots.forEach(dot => {
                 const d = document.createElement('div');
                 d.className = 'dot'; d.style.left = dot.x + "%"; d.style.top = dot.y + "%";
-                d.setAttribute('data-info', dot.info);
+                
+                // NIEUW: Echte Tooltip HTML
+                const tooltip = document.createElement('span');
+                tooltip.className = 'tooltip-text';
+                tooltip.innerText = dot.info;
+                d.appendChild(tooltip);
+
                 d.onclick = (e) => { e.stopPropagation(); openDetailFrame(dot); };
                 layer.appendChild(d);
             });
@@ -274,7 +290,6 @@
         const sel = document.getElementById('select-type');
         sel.innerHTML = '<option value="">-- Select Type --</option>';
         if(aircraftData[f]) {
-            // Natuurlijke sortering toepassen op types
             Object.keys(aircraftData[f]).sort(naturalSort).forEach(type => {
                 let opt = document.createElement('option');
                 opt.value = type; opt.innerHTML = type; sel.appendChild(opt);
