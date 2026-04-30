@@ -628,17 +628,6 @@ const permanentData = {
     }
   },
   "RotorWay": {
-    "Exec": {
-      "img": "Rotorway Exec.png",
-      "dots": [
-        {
-          "x": 72,
-          "y": 68.16875240969668,
-          "info": "Cabin floor, right side, door opening.",
-          "cnImg": "Exec-loc2.jpg"
-        }
-      ]
-    },
     "Exec 90": {
       "img": "Rotorway Exec.png",
       "dots": [
