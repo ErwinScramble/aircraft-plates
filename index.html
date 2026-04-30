@@ -26,28 +26,32 @@
             z-index: 5;
         }
 
-        /* Hover tekst verbeteringen */
+        /* Verbeterde Tooltip */
         .dot::after {
             content: attr(data-info);
             position: absolute;
             bottom: 25px; left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.9);
+            background: #222;
             color: white;
             padding: 8px 12px;
             border-radius: 6px;
             font-size: 13px;
             display: none;
-            z-index: 100; /* Altijd bovenop */
-            width: 160px; /* Forceert tekst om af te breken */
-            white-space: normal; /* Zorgt voor meerdere regels */
+            z-index: 999; /* Zeer hoog voor voorgrond */
+            min-width: 120px;
+            max-width: 200px; /* Voorkomt te brede regels */
+            white-space: normal; /* Forceert wrapping */
             text-align: center;
             pointer-events: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
         }
-        .dot:hover { z-index: 101; }
+        
+        /* Zorgt dat actieve stip bovenop ligt */
+        .dot:hover { z-index: 1000; }
         .dot:hover::after { display: block; }
 
-        /* Detail sectie */
         #detail-view { display: none; margin-top: 20px; padding: 20px; border: 2px solid #1a73e8; border-radius: 8px; background: #fff; text-align: center; }
         #detail-img { width: 100%; border-radius: 6px; margin-top: 15px; border: 1px solid #ddd; display: none; }
         .action-btn { background: #1a73e8; color: white; border: none; padding: 10px; cursor: pointer; border-radius: 4px; font-weight: bold; }
@@ -79,7 +83,6 @@
         <div id="dots-layer"></div>
     </div>
 
-    <!-- Detail View -->
     <div id="detail-view">
         <h3 id="detail-title">Plate Location Details</h3>
         <p id="detail-text" style="font-size: 1.1em; margin-bottom: 15px;"></p>
@@ -123,6 +126,9 @@
 
     let isEditor = false;
     let currentActiveDot = null;
+
+    // Helper voor natuurlijke sortering (Mi-1, Mi-2, Mi-14)
+    const naturalSort = (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
 
     function authenticateEditor() {
         if(prompt("Enter Access Key:") === "Scr@mble-Pl@tes") { 
@@ -268,7 +274,8 @@
         const sel = document.getElementById('select-type');
         sel.innerHTML = '<option value="">-- Select Type --</option>';
         if(aircraftData[f]) {
-            Object.keys(aircraftData[f]).sort().forEach(type => {
+            // Natuurlijke sortering toepassen op types
+            Object.keys(aircraftData[f]).sort(naturalSort).forEach(type => {
                 let opt = document.createElement('option');
                 opt.value = type; opt.innerHTML = type; sel.appendChild(opt);
             });
