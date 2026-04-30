@@ -446,12 +446,14 @@ const permanentData = {
         {
           "x": 68.375,
           "y": 60.816334372842775,
-          "info": "Right-hand control panel, visible through lower cockpit glazing."
+          "info": "Right-hand control panel, visible through lower cockpit glazing.",
+          "cnImg": "Mi-2-loc1.jpg"
         },
         {
           "x": 30.75,
           "y": 47.6999452644985,
-          "info": "Both sides of the tail (painted; mispaints possible)."
+          "info": "Both sides of the tail (painted; mispaints possible).",
+          "cnImg": "Mi-2-loc2.jpg"
         }
       ]
     },
