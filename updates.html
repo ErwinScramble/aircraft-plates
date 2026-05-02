@@ -16,6 +16,8 @@
         button { width: 100%; padding: 14px; margin-top: 20px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; background: #28a745; color: white; transition: background 0.2s; }
         button:hover { background: #218838; }
         .back-link { display: block; text-align: center; margin-top: 20px; color: #1a73e8; text-decoration: none; font-size: 14px; }
+        .preview-wrapper { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        .preview-item { width: 80px; height: 80px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; }
     </style>
 </head>
 <body>
@@ -24,7 +26,6 @@
     <h1>Submit Updates</h1>
     <p class="subtitle">Help us improve the database by submitting new details or photos.</p>
     
-    <!-- Het formulier stuurt de data naar send_mail.php op jullie server -->
     <form action="send_mail.php" method="POST" enctype="multipart/form-data">
 
         <label for="name">Name <span>*</span></label>
@@ -40,14 +41,35 @@
         <textarea id="locations" name="locations" placeholder="Describe where the construction numbers can be found..."></textarea>
 
         <label for="photos">Attach Photos (Optional)</label>
-        <!-- De [] achter de naam zorgt ervoor dat gebruikers meerdere foto's tegelijk kunnen selecteren -->
-        <input type="file" id="photos" name="photos[]" accept="image/*" multiple>
+        <input type="file" id="photos" name="photos[]" accept="image/*" multiple onchange="previewImages(event)">
+        
+        <div class="preview-wrapper" id="image-preview"></div>
 
         <button type="submit">Send Update</button>
     </form>
 
     <a href="index.html" class="back-link">← Back to Database</a>
 </div>
+
+<script>
+    function previewImages(event) {
+        const previewContainer = document.getElementById('image-preview');
+        previewContainer.innerHTML = '';
+        const files = event.target.files;
+        if (files) {
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview-item';
+                    previewContainer.appendChild(img);
+                }
+                reader.readAsDataURL(file);
+            });
+        }
+    }
+</script>
 
 </body>
 </html>
