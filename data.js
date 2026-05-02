@@ -687,7 +687,14 @@ const permanentData = {
     "CM175 Zéphyr": {
       "img": "CM170.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 65.25,
+          "y": 36.81185167100695,
+          "info": "Central bar between seats, on top or left side.",
+          "cnImg": ""
+        }
+      ]
     }
   }
 };
