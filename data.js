@@ -680,7 +680,7 @@ const permanentData = {
           "x": 65.5,
           "y": 36.72296278211806,
           "info": "Central bar between seats, on top or left side.",
-          "cnImg": ""
+          "cnImg": "CM170-loc1.jpg"
         }
       ]
     },
