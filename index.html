@@ -33,6 +33,9 @@
         .image-container { position: relative; width: 100%; margin-top: 20px; display: none; line-height: 0; border-radius: 8px; background: #eee; border: 1px solid #ddd; }
         #vliegtuig-beeld { width: 100%; height: auto; display: block; cursor: crosshair; }
 
+        /* Optionele waarschuwingstekst onder de afbeelding */
+        #image-warning { margin-top: 10px; font-size: 0.95em; color: #d93025; font-weight: bold; text-align: center; display: none; }
+
         #shared-links { margin-top: 10px; font-size: 0.9em; color: #666; display: none; }
         .shared-link { color: #1a73e8; cursor: pointer; text-decoration: underline; margin-right: 10px; }
 
@@ -104,6 +107,10 @@
         <img id="vliegtuig-beeld" src="" alt="Aircraft Plate" onclick="handleImageClick(event)">
         <div id="dots-layer"></div>
     </div>
+    
+    <!-- Het veld voor de optionele waarschuwingstekst -->
+    <div id="image-warning"></div>
+    
     <div id="shared-links"></div>
 
     <div id="detail-view">
@@ -184,6 +191,11 @@
         document.getElementById('select-type').value = type;
         showImage();
         alert("Saved! Download data.js to make it permanent.");
+
+        // MAAKT DE VELDEN LEEG OM DIRECT HET VOLGENDE VLIEGTUIG TOE TE VOEGEN
+        document.getElementById('new-fabrikant').value = "";
+        document.getElementById('new-type').value = "";
+        document.getElementById('new-image').value = "";
     }
 
     function deleteAircraft() {
@@ -207,8 +219,11 @@
         const wrap = document.getElementById('wrapper');
         const imgTag = document.getElementById('vliegtuig-beeld');
         const sharedDiv = document.getElementById('shared-links');
+        const warningDiv = document.getElementById('image-warning');
 
         closeDetail();
+        warningDiv.style.display = "none";
+        warningDiv.innerText = "";
 
         if(f && t && aircraftData[f][t]) {
             const currentImg = aircraftData[f][t].img;
@@ -286,6 +301,15 @@
         document.getElementById('load-photo-btn').style.display = dot.cnImg ? "inline-block" : "none"; 
         document.getElementById('detail-view').style.display = "block"; 
         document.getElementById('detail-view').scrollIntoView({ behavior: 'smooth' }); 
+        
+        // TOONT DE WAARSCHUWINGSTEKST ALS DE INFO HET WOORD 'WARNING' OF 'LET OP' BEVAT
+        const warningDiv = document.getElementById('image-warning');
+        if(dot.info.toLowerCase().includes('warning') || dot.info.toLowerCase().includes('let op')) {
+            warningDiv.innerText = dot.info;
+            warningDiv.style.display = "block";
+        } else {
+            warningDiv.style.display = "none";
+        }
     }
 
     function loadPlatePhoto() { if(currentActiveDot && currentActiveDot.cnImg) { const img = document.getElementById('detail-img'); img.src = "cnlocimages/" + currentActiveDot.cnImg; img.style.display = "block"; document.getElementById('load-photo-btn').style.display = "none"; } }
