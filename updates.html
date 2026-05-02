@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Aircraft Updates</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; padding: 20px; background: #f0f2f5; color: #333; margin: 0; }
+        .container { max-width: 600px; margin: 20px auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #1a73e8; margin-top: 0; }
+        p.subtitle { text-align: center; color: #666; margin-bottom: 20px; }
+        label { font-weight: bold; display: block; margin-top: 15px; }
+        label span { color: red; }
+        input[type="text"], input[type="email"], textarea, input[type="file"] { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        textarea { height: 100px; resize: vertical; }
+        button { width: 100%; padding: 14px; margin-top: 20px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; background: #28a745; color: white; transition: background 0.2s; }
+        button:hover { background: #218838; }
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #1a73e8; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Submit Updates</h1>
+    <p class="subtitle">Help us improve the database by submitting new details or photos.</p>
+    
+    <!-- Het formulier stuurt de data naar send_mail.php op jullie server -->
+    <form action="send_mail.php" method="POST" enctype="multipart/form-data">
+
+        <label for="name">Name <span>*</span></label>
+        <input type="text" id="name" name="name" placeholder="Your full name" required>
+
+        <label for="email">Email Address <span>*</span></label>
+        <input type="email" id="email" name="email" placeholder="yourname@example.com" required>
+
+        <label for="type">Aircraft Type</label>
+        <input type="text" id="type" name="type" placeholder="e.g. Boeing 737-800">
+
+        <label for="locations">c/n locations</label>
+        <textarea id="locations" name="locations" placeholder="Describe where the construction numbers can be found..."></textarea>
+
+        <label for="photos">Attach Photos (Optional)</label>
+        <!-- De [] achter de naam zorgt ervoor dat gebruikers meerdere foto's tegelijk kunnen selecteren -->
+        <input type="file" id="photos" name="photos[]" accept="image/*" multiple>
+
+        <button type="submit">Send Update</button>
+    </form>
+
+    <a href="index.html" class="back-link">← Back to Database</a>
+</div>
+
+</body>
+</html>
