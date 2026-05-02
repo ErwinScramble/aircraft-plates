@@ -166,9 +166,14 @@
  
  const oldFab = document.getElementById('select-fabrikant').value;
  const oldType = document.getElementById('select-type').value;
- if(oldFab && oldType && (oldFab !== fab || oldType !== type)) {
- delete aircraftData[oldFab][oldType];
- if(Object.keys(aircraftData[oldFab]).length === 0) delete aircraftData[oldFab];
+
+ // VERBETERD: We verwijderen het oude type alleen als we een bestaand vliegtuig aan het bewerken waren
+ const editorTitle = document.getElementById('editor-title').innerText;
+ if(editorTitle === "Edit Selected Aircraft" && oldFab && oldType && (oldFab !== fab || oldType !== type)) {
+     if(aircraftData[oldFab] && aircraftData[oldFab][oldType]) {
+         delete aircraftData[oldFab][oldType];
+         if(Object.keys(aircraftData[oldFab]).length === 0) delete aircraftData[oldFab];
+     }
  }
  
  // VERBETERD: We maken de fabrikant alleen aan als deze nog niet bestond
@@ -177,7 +182,7 @@
  aircraftData[fab][type] = { 
  img: img, 
  warning: warning, 
- dots: (aircraftData[fab][type] ? aircraftData[fab][type].dots : []) 
+ dots: (aircraftData[fab] && aircraftData[fab][type] ? aircraftData[fab][type].dots : []) 
  };
  localStorage.setItem('aircraftDB', JSON.stringify(aircraftData));
  
@@ -189,6 +194,9 @@
  alert("Saved! Download data.js to make it permanent.");
 
  // Maakt het waarschuwingsveld weer leeg na het opslaan
+ document.getElementById('new-fabrikant').value = "";
+ document.getElementById('new-type').value = "";
+ document.getElementById('new-image').value = "";
  document.getElementById('new-warning').value = "";
  }
  function deleteAircraft() {
