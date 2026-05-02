@@ -11,6 +11,25 @@
         label { font-weight: bold; display: block; margin-top: 15px; }
         select, input, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
         
+        /* Knop voor het sturen van updates (onderaan) */
+        .submit-update-btn {
+            display: block;
+            width: fit-content;
+            margin: 30px auto 10px auto;
+            padding: 12px 24px;
+            background-color: #1a73e8;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 15px;
+            transition: background 0.2s ease;
+            text-align: center;
+        }
+        .submit-update-btn:hover {
+            background-color: #1557b0;
+        }
+
         .image-container { position: relative; width: 100%; margin-top: 20px; display: none; line-height: 0; border-radius: 8px; background: #eee; border: 1px solid #ddd; }
         #vliegtuig-beeld { width: 100%; height: auto; display: block; cursor: crosshair; }
 
@@ -58,7 +77,7 @@
         .action-btn { background: #1a73e8; color: white; border: none; padding: 10px; cursor: pointer; border-radius: 4px; font-weight: bold; }
         .close-btn { background: #6c757d; color: white; border: none; padding: 10px; margin-top: 10px; cursor: pointer; border-radius: 4px; }
 
-        .admin-panel { margin-top: 40px; padding-top: 20px; border-top: 2px dashed #ccc; }
+        .admin-panel { margin-top: 20px; padding-top: 10px; border-top: 2px dashed #ccc; }
         .admin-box { background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef; margin-top: 10px; }
         .hidden { display: none; }
         .dot-item { background: white; margin-bottom: 5px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
@@ -94,6 +113,9 @@
         <img id="detail-img" src="" alt="Detail View"><br>
         <button class="close-btn" onclick="closeDetail()">Close Detail View</button>
     </div>
+
+    <!-- Knop naar de updates pagina (onderaan geplaatst) -->
+    <a href="updates.html" class="submit-update-btn">Submit Updates</a>
 
     <div class="admin-panel">
         <button id="auth-btn" onclick="authenticateEditor()" style="background:#6c757d; color:white; border:none; cursor:pointer;">Editor Login</button>
@@ -186,7 +208,6 @@
         const imgTag = document.getElementById('vliegtuig-beeld');
         const sharedDiv = document.getElementById('shared-links');
 
-        // SLUIT AUTOMATISCH DE FOTO DETAIL VIEW BIJ WISSELING
         closeDetail();
 
         if(f && t && aircraftData[f][t]) {
@@ -271,7 +292,7 @@
     
     function closeDetail() { 
         document.getElementById('detail-view').style.display = "none"; 
-        document.getElementById('detail-img').src = ""; // Reset src om dubbel laden te voorkomen
+        document.getElementById('detail-img').src = ""; 
     }
 
     function renderDotList() {
