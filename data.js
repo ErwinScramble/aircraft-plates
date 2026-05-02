@@ -355,10 +355,21 @@ const permanentData = {
         {
           "x": 28.125,
           "y": 58.00568181038415,
-          "info": "Positions to check:      Foremost strut (left): Small plate (4-5 digits).     Top of wheel cavity: Punched 4-digit number.     Forward bulkhead: Small plate (4-digit number).     Side panels (both): Long painted number."
+          "info": "Positions to check:      Foremost strut (left): Small plate (4-5 digits).     Top of wheel cavity: Punched 4-digit number.     Forward bulkhead: Small plate (4-digit number).     Side panels (both): Long painted number.",
+          "cnImg": null
         }
       ],
       "warning": "Multiple locations possible; check all combinations. Placement varies by sub-type and factory."
+    },
+    "MiG-27": {
+      "img": "MiG-23.png",
+      "warning": "Multiple locations possible; check all combinations. Placement varies by sub-type and factory.",
+      "dots": []
+    },
+    "MiG-23": {
+      "img": "MiG-23.png",
+      "warning": "Multiple locations possible; check all combinations. Placement varies by sub-type and factory.",
+      "dots": []
     }
   },
   "Harbin": {
@@ -411,7 +422,8 @@ const permanentData = {
         {
           "x": 17.5,
           "y": 42.31597789445129,
-          "info": "Door frame (left-hand front), top edge."
+          "info": "Door frame (left-hand front), top edge.",
+          "cnImg": null
         }
       ]
     }
@@ -657,6 +669,25 @@ const permanentData = {
           "cnImg": "Exec-loc1.jpg"
         }
       ]
+    }
+  },
+  "Fouga": {
+    "CM170 Magister": {
+      "img": "CM170.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 65.5,
+          "y": 36.72296278211806,
+          "info": "Central bar between seats, on top or left side.",
+          "cnImg": ""
+        }
+      ]
+    },
+    "CM175 Zéphyr": {
+      "img": "CM170.png",
+      "warning": "",
+      "dots": []
     }
   }
 };
