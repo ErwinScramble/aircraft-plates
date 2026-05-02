@@ -32,7 +32,7 @@
  .image-container { position: relative; width: 100%; margin-top: 20px; display: none; line-height: 0; border-radius: 8px; background: #eee; border: 1px solid #ddd; }
  #vliegtuig-beeld { width: 100%; height: auto; display: block; cursor: crosshair; }
 
- /* NIEUW: Styling voor de waarschuwingstekst onder de afbeelding */
+ /* Waarschuwingstekst onder de afbeelding */
  #image-warning { margin-top: 15px; font-size: 1.1em; color: #d93025; font-weight: bold; text-align: center; display: none; }
 
  #shared-links { margin-top: 10px; font-size: 0.9em; color: #666; display: none; }
@@ -99,7 +99,7 @@
  <div id="dots-layer"></div>
  </div>
 
- <!-- NIEUW: Dit is het element waar de waarschuwingstekst getoond wordt -->
+ <!-- Het element waar de waarschuwingstekst getoond wordt -->
  <div id="image-warning"></div>
 
  <div id="shared-links"></div>
@@ -121,7 +121,7 @@
  <input type="text" id="new-type" placeholder="Type">
  <input type="text" id="new-image" placeholder="Silhouette Filename">
 
- <!-- NIEUW: Het invoerveld in het admin menu -->
+ <!-- Het invoerveld in het admin menu -->
  <input type="text" id="new-warning" placeholder="Optional Warning Text (Visible below image)">
 
  <button onclick="addEntry()" id="btn-save-main" style="background: #28a745; color: white; border: none; font-weight: bold; cursor: pointer;">Save Aircraft</button>
@@ -161,7 +161,7 @@
  const fab = document.getElementById('new-fabrikant').value.trim();
  const type = document.getElementById('new-type').value.trim();
  const img = document.getElementById('new-image').value.trim();
- const warning = document.getElementById('new-warning').value.trim(); // NIEUW
+ const warning = document.getElementById('new-warning').value.trim();
  if(!fab || !type || !img) return alert('Fill all fields');
  
  const oldFab = document.getElementById('select-fabrikant').value;
@@ -170,9 +170,10 @@
  delete aircraftData[oldFab][oldType];
  if(Object.keys(aircraftData[oldFab]).length === 0) delete aircraftData[oldFab];
  }
+ 
+ // VERBETERD: We maken de fabrikant alleen aan als deze nog niet bestond
  if(!aircraftData[fab]) aircraftData[fab] = {};
 
- // NIEUW: Slaat de waarschuwingstekst nu ook daadwerkelijk op
  aircraftData[fab][type] = { 
  img: img, 
  warning: warning, 
@@ -187,7 +188,7 @@
  showImage();
  alert("Saved! Download data.js to make it permanent.");
 
- // NIEUW: Maakt het waarschuwingsveld weer leeg na het opslaan
+ // Maakt het waarschuwingsveld weer leeg na het opslaan
  document.getElementById('new-warning').value = "";
  }
  function deleteAircraft() {
@@ -210,22 +211,22 @@
  const wrap = document.getElementById('wrapper');
  const imgTag = document.getElementById('vliegtuig-beeld');
  const sharedDiv = document.getElementById('shared-links');
- const warningDiv = document.getElementById('image-warning'); // NIEUW
+ const warningDiv = document.getElementById('image-warning');
  
  closeDetail();
 
- // NIEUW: Verbergt de waarschuwing standaard bij het wisselen
+ // Verbergt de waarschuwing standaard bij het wisselen
  warningDiv.style.display = "none";
  warningDiv.innerText = "";
 
  if(f && t && aircraftData[f][t]) {
  const currentImg = aircraftData[f][t].img;
- const currentWarning = aircraftData[f][t].warning; // NIEUW
+ const currentWarning = aircraftData[f][t].warning;
 
  imgTag.src = "Images/" + currentImg;
  imgTag.onload = () => { wrap.style.display = "block"; renderDots(); };
  
- // NIEUW: Toont de waarschuwingstekst als deze is ingevuld bij dit vliegtuig
+ // Toont de waarschuwingstekst als deze is ingevuld bij dit vliegtuig
  if(currentWarning) {
  warningDiv.innerText = currentWarning;
  warningDiv.style.display = "block";
@@ -248,7 +249,7 @@
  document.getElementById('new-fabrikant').value = f;
  document.getElementById('new-type').value = t;
  document.getElementById('new-image').value = currentImg;
- document.getElementById('new-warning').value = currentWarning || ""; // NIEUW: Vult de waarschuwing in bij bewerken
+ document.getElementById('new-warning').value = currentWarning || "";
  document.getElementById('btn-delete-ac').classList.remove('hidden');
  checkDotEditorVisibility();
  }
@@ -269,7 +270,7 @@
  document.getElementById('new-fabrikant').value = "";
  document.getElementById('new-type').value = "";
  document.getElementById('new-image').value = "";
- document.getElementById('new-warning').value = ""; // NIEUW
+ document.getElementById('new-warning').value = "";
  document.getElementById('btn-delete-ac').classList.add('hidden');
  document.getElementById('dot-editor').classList.add('hidden');
  }
