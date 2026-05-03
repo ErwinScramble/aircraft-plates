@@ -183,6 +183,84 @@ const permanentData = {
           "info": "Fuselage, left side below the horizontal stabilizer."
         }
       ]
+    },
+    "An-12": {
+      "img": "An-12.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 79.5,
+          "y": 38.68367580250517,
+          "info": "Aircraft tail (often right side only) (Painted)",
+          "cnImg": ""
+        },
+        {
+          "x": 16.625,
+          "y": 53.072644318525086,
+          "info": "Aircraft nose (military aircraft) (Painted)",
+          "cnImg": ""
+        },
+        {
+          "x": 45.875,
+          "y": 46.87739398523873,
+          "info": "Under the wing leading edge at the roots (grey military An-12s) (Painted)",
+          "cnImg": "An-12-loc1.png"
+        },
+        {
+          "x": 37.75,
+          "y": 52.073407344381536,
+          "info": "Rafter at the right side of the main door (Factory 84 aircraft)",
+          "cnImg": ""
+        }
+      ]
+    },
+    "An-10": {
+      "img": "An-12.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 80,
+          "y": 37.28474830789212,
+          "info": "Vertical stabilizer (Painted)",
+          "cnImg": "An-10-loc1.png"
+        },
+        {
+          "x": 95.875,
+          "y": 46.078003796039916,
+          "info": "Outer faces of both ventral fins (for the An-10A)",
+          "cnImg": ""
+        },
+        {
+          "x": 82.25,
+          "y": 51.274023254022595,
+          "info": "Ventral fin (for the standard 'straight' An-10)",
+          "cnImg": ""
+        }
+      ]
+    },
+    "An-8": {
+      "img": "An-8.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 83.125,
+          "y": 38.61145719782724,
+          "info": "Tail (Painted)",
+          "cnImg": ""
+        },
+        {
+          "x": 22.125,
+          "y": 52.136217741837676,
+          "info": "Right side of the fuselage, behind the flight deck (Painted)",
+          "cnImg": ""
+        },
+        {
+          "x": 17.875,
+          "y": 46.102093806817635,
+          "info": "Between cockpit roof windows, above the flight engineer’s seat",
+          "cnImg": "An-8-loc1.png"
+        }
+      ]
     }
   },
   "Nanchang/Shijiazhuang": {
@@ -693,6 +771,26 @@ const permanentData = {
           "y": 36.81185167100695,
           "info": "Central bar between seats, on top or left side.",
           "cnImg": ""
+        }
+      ]
+    }
+  },
+  "Shaanxhi": {
+    "Y8, Y9 & KJ200": {
+      "img": "An-12.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 79.5,
+          "y": 36.68520795305796,
+          "info": "Tail",
+          "cnImg": ""
+        },
+        {
+          "x": 45.5,
+          "y": 47.07724077018345,
+          "info": "Under the right wing, near the wing root",
+          "cnImg": "Y8-loc1.png"
         }
       ]
     }
