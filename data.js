@@ -261,6 +261,29 @@ const permanentData = {
           "cnImg": "An-8-loc1.png"
         }
       ]
+    },
+    "An-28": {
+      "img": "An-14.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 66.375,
+          "y": 49.5959803439882,
+          "info": "Inside of both vertical stabilizers (Painted)",
+          "cnImg": ""
+        },
+        {
+          "x": 86,
+          "y": 48.94081549575766,
+          "info": "Inside of both vertical stabilizers (Painted)",
+          "cnImg": ""
+        }
+      ]
+    },
+    "An-14": {
+      "img": "An-14.png",
+      "warning": "",
+      "dots": []
     }
   },
   "Nanchang/Shijiazhuang": {
@@ -791,6 +814,32 @@ const permanentData = {
           "y": 47.07724077018345,
           "info": "Under the right wing, near the wing root",
           "cnImg": "Y8-loc1.png"
+        }
+      ]
+    }
+  },
+  "PZL": {
+    "M28": {
+      "img": "An-14.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 75.25,
+          "y": 44.01979757095004,
+          "info": "Under the horizontal tailplane, on the left side",
+          "cnImg": "M28-loc1.png"
+        },
+        {
+          "x": 65.875,
+          "y": 50.13466989530517,
+          "info": "Inside of both vertical stabilizers (Painted)",
+          "cnImg": "M28-loc2.png"
+        },
+        {
+          "x": 86.125,
+          "y": 51.00822308449877,
+          "info": "Inside of both vertical stabilizers (Painted)",
+          "cnImg": "M28-loc2.png"
         }
       ]
     }
