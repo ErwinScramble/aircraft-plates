@@ -284,6 +284,24 @@ const permanentData = {
       "img": "An-14.png",
       "warning": "",
       "dots": []
+    },
+    "An-124": {
+      "img": "An-124.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 45.625,
+          "y": 56.20217550192417,
+          "info": "No exterior c/n; line numbers occasionally marked in wheel bays.",
+          "cnImg": ""
+        },
+        {
+          "x": 42.875,
+          "y": 60.275244125573025,
+          "info": "No exterior c/n; line numbers occasionally marked in wheel bays.",
+          "cnImg": ""
+        }
+      ]
     }
   },
   "Nanchang/Shijiazhuang": {
@@ -471,6 +489,120 @@ const permanentData = {
       "img": "MiG-23.png",
       "warning": "Multiple locations possible; check all combinations. Placement varies by sub-type and factory.",
       "dots": []
+    },
+    "MiG-15": {
+      "img": "MiG-15.png",
+      "warning": "Wing numbers may differ due to parts swapping; always verify with paperwork for accuracy.",
+      "dots": [
+        {
+          "x": 17.5,
+          "y": 56.51594195043293,
+          "info": "Often on the nosewheel door. (Painted)",
+          "cnImg": ""
+        },
+        {
+          "x": 53.5,
+          "y": 53.851840810851094,
+          "info": "Plate in the left main wheel bay.",
+          "cnImg": "MiG-15-loc1.jpg"
+        }
+      ]
+    },
+    "MiG-17": {
+      "img": "MiG-17.png",
+      "warning": "Wing numbers may differ due to parts swapping; always verify with paperwork for accuracy.",
+      "dots": [
+        {
+          "x": 47.375,
+          "y": 52.39746453857913,
+          "info": "Inside the left main wheel bay",
+          "cnImg": "MiG-17-loc1.jpg"
+        }
+      ]
+    },
+    "MiG-19": {
+      "img": "MiG-19.png",
+      "warning": "Wing numbers may differ due to parts swapping; always verify with paperwork for accuracy.",
+      "dots": [
+        {
+          "x": 51.24999999999999,
+          "y": 55.66013502052448,
+          "info": "Inside both main wheel bays",
+          "cnImg": ""
+        }
+      ]
+    },
+    "MiG-25": {
+      "img": "MiG-25.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 30.375000000000004,
+          "y": 47.03745971435357,
+          "info": "Plate on the forward bulkhead, nose-wheel bay",
+          "cnImg": "MiG-25-loc1.jpg"
+        },
+        {
+          "x": 32.5,
+          "y": 49.48308511721003,
+          "info": "Painted inside the nose-wheel bay",
+          "cnImg": "MiG-25-loc3.jpg"
+        },
+        {
+          "x": 51.24999999999999,
+          "y": 56.597621874681955,
+          "info": "Painted in the main wheel bays.",
+          "cnImg": ""
+        },
+        {
+          "x": 42.5,
+          "y": 59.26557315873393,
+          "info": "Painted in the main wheel bays.",
+          "cnImg": ""
+        },
+        {
+          "x": 30,
+          "y": 28.361804118465244,
+          "info": "On the edge of the right-hand cockpit frame",
+          "cnImg": "MiG-25-loc2.jpg"
+        }
+      ]
+    },
+    "MiG-29": {
+      "img": "MiG-29.png",
+      "warning": "Check all plates to ensure accuracy",
+      "dots": [
+        {
+          "x": 25.374999999999996,
+          "y": 46.303557636282335,
+          "info": "Inside, looking forward/up to the right, a metal plate shows the 4-digit factory line-number.",
+          "cnImg": ""
+        },
+        {
+          "x": 39.125,
+          "y": 63.84222347186276,
+          "info": "Plates are also located in both main wheel wells.",
+          "cnImg": ""
+        },
+        {
+          "x": 49,
+          "y": 62.51017290207185,
+          "info": "Plates are also located in both main wheel wells.",
+          "cnImg": ""
+        },
+        {
+          "x": 30.5,
+          "y": 33.87108565156709,
+          "info": "A 5-digit number (last five of the Russian serial) is often painted on the underside, behind the ejection seat.",
+          "cnImg": "MiG-29-loc1.jpg"
+        },
+        {
+          "x": 62.25000000000001,
+          "y": 55.84992005311725,
+          "info": "Occasionally painted on the missile pylons",
+          "cnImg": "MiG-29-loc2.jpg"
+        }
+      ]
     }
   },
   "Harbin": {
@@ -842,6 +974,26 @@ const permanentData = {
           "y": 51.00822308449877,
           "info": "Inside of both vertical stabilizers (Painted)",
           "cnImg": "M28-loc2.png"
+        }
+      ]
+    }
+  },
+  "Ilyushin": {
+    "Il-18, Il-20, Il-22 & Il-38": {
+      "img": "Il-18.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 86.375,
+          "y": 32.6744468488016,
+          "info": "Often on the tail. (Painted)",
+          "cnImg": "Il-18-loc1.png"
+        },
+        {
+          "x": 37.5,
+          "y": 54.88830176001166,
+          "info": "Forward lower wing, near the fuselage.",
+          "cnImg": "Il-18-loc2.png"
         }
       ]
     }
