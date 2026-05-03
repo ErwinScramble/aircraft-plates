@@ -532,6 +532,7 @@ const permanentData = {
   "Yakovlev": {
     "Yak-52": {
       "img": "Yak-52.png",
+      "warning": "",
       "dots": [
         {
           "x": 88.25,
@@ -541,7 +542,8 @@ const permanentData = {
         {
           "x": 82.5,
           "y": 48.636827545887016,
-          "info": "Fuselage, below the horizontal stabilizer (stencilled)."
+          "info": "Fuselage, below the horizontal stabilizer (stencilled).",
+          "cnImg": "Yak-52-loc1.jpg"
         }
       ]
     }
