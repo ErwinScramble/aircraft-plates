@@ -302,6 +302,11 @@ const permanentData = {
           "cnImg": ""
         }
       ]
+    },
+    "An-22": {
+      "img": "An-22.png",
+      "warning": "",
+      "dots": []
     }
   },
   "Nanchang/Shijiazhuang": {
@@ -996,6 +1001,115 @@ const permanentData = {
           "cnImg": "Il-18-loc2.png"
         }
       ]
+    }
+  },
+  "General Dynamics": {
+    "F-16 Fighting Falcon": {
+      "img": "F-16.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Grumman": {
+    "F9F Panther": {
+      "img": "F-9.png",
+      "warning": "",
+      "dots": []
+    },
+    "F-14 Tomcat": {
+      "img": "F-14.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Lockheed Martin": {
+    "F-22 Raptor": {
+      "img": "F-22.png",
+      "warning": "",
+      "dots": []
+    },
+    "F-35 Lightning II": {
+      "img": "F-35.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "McDonnell Douglas": {
+    "F-15 Eagle": {
+      "img": "F-15.png",
+      "warning": "",
+      "dots": []
+    },
+    "F/A-18 Hornet": {
+      "img": "F-18.png",
+      "warning": "",
+      "dots": []
+    },
+    "F-4 Phantom II": {
+      "img": "F-4.png",
+      "warning": "",
+      "dots": []
+    },
+    "DC-10": {
+      "img": "DC-10.png",
+      "warning": "",
+      "dots": []
+    },
+    "MD-11": {
+      "img": "DC-10.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "MBB": {
+    "Bo105": {
+      "img": "Bo105.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Vought": {
+    "F-8 Crusader": {
+      "img": "F-8.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Douglas": {
+    "DC-5": {
+      "img": "DC-5.png",
+      "warning": "",
+      "dots": []
+    },
+    "DC-4": {
+      "img": "DC-6.png",
+      "warning": "",
+      "dots": []
+    },
+    "DC-6": {
+      "img": "DC-6.png",
+      "warning": "",
+      "dots": []
+    },
+    "DC-7": {
+      "img": "DC-6.png",
+      "warning": "",
+      "dots": []
+    },
+    "DC-8": {
+      "img": "DC-8.png",
+      "warning": "",
+      "dots": []
+    },
+    "DC-9": {
+      "img": "DC-9.png",
+      "warning": "",
+      "dots": []
+    },
+    "DC-3": {
+      "img": "DC-3.png",
+      "warning": "",
+      "dots": []
     }
   }
 };
