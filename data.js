@@ -429,6 +429,16 @@ const permanentData = {
           "cnImg": "SE3130-loc1.jpg"
         }
       ]
+    },
+    "Alouette III": {
+      "img": "SA316.png",
+      "warning": "",
+      "dots": []
+    },
+    "SA321 Super Frelon": {
+      "img": "SA321.png",
+      "warning": "",
+      "dots": []
     }
   },
   "Lockheed": {
@@ -451,6 +461,11 @@ const permanentData = {
           "info": "Cockpit, right side of the rear bench. Accessible via cockpit stairs; not visible from the outside."
         }
       ]
+    },
+    "F-117 Nighthawk": {
+      "img": "F-117.png",
+      "warning": "",
+      "dots": []
     }
   },
   "Cessna": {
@@ -669,6 +684,31 @@ const permanentData = {
           "cnImg": "Ka-26-loc1.jpg"
         }
       ]
+    },
+    "Ka-15": {
+      "img": "Ka-15.png",
+      "warning": "",
+      "dots": []
+    },
+    "Ka-25": {
+      "img": "Ka-25.png",
+      "warning": "",
+      "dots": []
+    },
+    "Ka-27": {
+      "img": "Ka-27.png",
+      "warning": "",
+      "dots": []
+    },
+    "Ka-32": {
+      "img": "Ka-32.png",
+      "warning": "",
+      "dots": []
+    },
+    "Ka-50": {
+      "img": "Ka-50.png",
+      "warning": "",
+      "dots": []
     }
   },
   "Boeing": {
@@ -682,6 +722,11 @@ const permanentData = {
           "cnImg": null
         }
       ]
+    },
+    "B-52 Stratofortress": {
+      "img": "B-52.png",
+      "warning": "",
+      "dots": []
     }
   },
   "Yakovlev": {
@@ -1026,6 +1071,11 @@ const permanentData = {
       "img": "F-16.png",
       "warning": "",
       "dots": []
+    },
+    "F-111": {
+      "img": "F-111.png",
+      "warning": "",
+      "dots": []
     }
   },
   "Grumman": {
@@ -1133,6 +1183,32 @@ const permanentData = {
     },
     "DC-3": {
       "img": "DC-3.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Ka-15.png": {
+    "Ka-25": {
+      "img": "Ka-25.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Republic": {
+    "F-84 Thunderjet": {
+      "img": "F-84.png",
+      "warning": "",
+      "dots": []
+    },
+    "F-84F Thunderstreak": {
+      "img": "F-84F.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "North American": {
+    "F-86 Sabre": {
+      "img": "F-86.png",
       "warning": "",
       "dots": []
     }
