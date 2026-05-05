@@ -411,6 +411,24 @@ const permanentData = {
           "info": "Tail fin (painted)."
         }
       ]
+    },
+    "Alouette II": {
+      "img": "SE3130.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 84,
+          "y": 57.856252016306,
+          "info": "Cockpit console, right-hand side.",
+          "cnImg": "SE3130-loc2.jpg"
+        },
+        {
+          "x": 55.625,
+          "y": 54.481251887559964,
+          "info": "Airframe, left side under the engine.",
+          "cnImg": "SE3130-loc1.jpg"
+        }
+      ]
     }
   },
   "Lockheed": {
