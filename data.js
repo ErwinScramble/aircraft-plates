@@ -1187,13 +1187,6 @@ const permanentData = {
       "dots": []
     }
   },
-  "Ka-15.png": {
-    "Ka-25": {
-      "img": "Ka-25.png",
-      "warning": "",
-      "dots": []
-    }
-  },
   "Republic": {
     "F-84 Thunderjet": {
       "img": "F-84.png",
@@ -1209,6 +1202,79 @@ const permanentData = {
   "North American": {
     "F-86 Sabre": {
       "img": "F-86.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Fokker": {
+    "F-27 Friendship & Troopship": {
+      "img": "F27.png",
+      "warning": "",
+      "dots": []
+    },
+    "Fokker 50": {
+      "img": "F27.png",
+      "warning": "",
+      "dots": []
+    },
+    "F-28 Fellowship": {
+      "img": "F28.png",
+      "warning": "",
+      "dots": []
+    },
+    "Fokker 100": {
+      "img": "F100.png",
+      "warning": "",
+      "dots": []
+    },
+    "S-11 Instructor": {
+      "img": "S11.png",
+      "warning": "",
+      "dots": []
+    },
+    "S-14 Machtrainer": {
+      "img": "S14.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Sikorsky": {
+    "S-61 / H-3 Sea King": {
+      "img": "S-61.png",
+      "warning": "",
+      "dots": []
+    },
+    "S-55 / H-19 Chickasaw": {
+      "img": "S-55.png",
+      "warning": "",
+      "dots": []
+    },
+    "S-58 / H-34": {
+      "img": "S-58.png",
+      "warning": "",
+      "dots": []
+    },
+    "S-70 / H-60 Black Hawk & Sea Hawk": {
+      "img": "S-70.png",
+      "warning": "",
+      "dots": []
+    },
+    "S-64 Skycrane": {
+      "img": "S-64.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "NHIndustries": {
+    "NH90": {
+      "img": "NH90.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Westland": {
+    "Lynx": {
+      "img": "Lynx.png",
       "warning": "",
       "dots": []
     }
