@@ -712,19 +712,43 @@ const permanentData = {
     }
   },
   "Boeing": {
-    "Boeing 747": {
-      "img": "B747.png",
-      "dots": [
-        {
-          "x": 17.5,
-          "y": 42.31597789445129,
-          "info": "Door frame (left-hand front), top edge.",
-          "cnImg": null
-        }
-      ]
-    },
     "B-52 Stratofortress": {
       "img": "B-52.png",
+      "warning": "",
+      "dots": []
+    },
+    "B707": {
+      "img": "B707.png",
+      "warning": "",
+      "dots": []
+    },
+    "B727": {
+      "img": "B727.png",
+      "warning": "",
+      "dots": []
+    },
+    "B747": {
+      "img": "B747.png",
+      "warning": "",
+      "dots": []
+    },
+    "B737": {
+      "img": "B737.png",
+      "warning": "",
+      "dots": []
+    },
+    "B757": {
+      "img": "B757.png",
+      "warning": "",
+      "dots": []
+    },
+    "B767": {
+      "img": "B767.png",
+      "warning": "",
+      "dots": []
+    },
+    "B777": {
+      "img": "B777.png",
       "warning": "",
       "dots": []
     }
@@ -1275,6 +1299,23 @@ const permanentData = {
   "Westland": {
     "Lynx": {
       "img": "Lynx.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Airbus": {
+    "A350": {
+      "img": "A350.png",
+      "warning": "",
+      "dots": []
+    },
+    "A400M Atlas": {
+      "img": "A400.png",
+      "warning": "",
+      "dots": []
+    },
+    "A380": {
+      "img": "A380.png",
       "warning": "",
       "dots": []
     }
