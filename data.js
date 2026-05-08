@@ -1318,6 +1318,31 @@ const permanentData = {
       "img": "A380.png",
       "warning": "",
       "dots": []
+    },
+    "A300": {
+      "img": "A300.png",
+      "warning": "",
+      "dots": []
+    },
+    "A310": {
+      "img": "A310.png",
+      "warning": "",
+      "dots": []
+    },
+    "A318/A319/A320/A321": {
+      "img": "A320.png",
+      "warning": "",
+      "dots": []
+    },
+    "A330": {
+      "img": "A330.png",
+      "warning": "",
+      "dots": []
+    },
+    "A340": {
+      "img": "A340.png",
+      "warning": "",
+      "dots": []
     }
   }
 };
