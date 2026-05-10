@@ -814,12 +814,13 @@ const permanentData = {
         {
           "x": 88.25,
           "y": 41.703877505927586,
-          "info": "Between the fixed stabilizer and the moving rudder."
+          "info": "Between the fixed stabilizer and the moving rudder.",
+          "cnImg": "Yak-52-loc2.jpg"
         },
         {
           "x": 82.5,
           "y": 48.636827545887016,
-          "info": "Fuselage, below the horizontal stabilizer (stencilled).",
+          "info": "Fuselage, below the horizontal stabilizer (stencilled or painted).",
           "cnImg": "Yak-52-loc1.jpg"
         }
       ]
@@ -1188,12 +1189,26 @@ const permanentData = {
     "F/A-18 Hornet": {
       "img": "F-18.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 33.625,
+          "y": 37.855261170018025,
+          "info": "Canopy, left-hand side under glass behind the ejection seat.",
+          "cnImg": "F-18-loc1.jpg"
+        }
+      ]
     },
     "F-4 Phantom II": {
       "img": "F-4.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 26.375,
+          "y": 56.91874911952015,
+          "info": "Forward cockpit, right-hand side near the pilot's knee.",
+          "cnImg": ""
+        }
+      ]
     },
     "DC-10": {
       "img": "DC-10.png",
@@ -1203,7 +1218,14 @@ const permanentData = {
     "MD-11": {
       "img": "DC-10.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 14.875,
+          "y": 36.16501741072319,
+          "info": "Left door, behind cockpit (look up on entry).",
+          "cnImg": "MD-11-loc1.jpg"
+        }
+      ]
     }
   },
   "MBB": {
@@ -1287,12 +1309,26 @@ const permanentData = {
     "F-27 Friendship & Troopship": {
       "img": "F27.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 20.125,
+          "y": 52.606248955011324,
+          "info": "Cockpit corridor, left-hand wall.",
+          "cnImg": ""
+        }
+      ]
     },
     "Fokker 50": {
       "img": "F27.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 20.375,
+          "y": 53.168748976469004,
+          "info": "Cockpit corridor, right-hand wall.",
+          "cnImg": ""
+        }
+      ]
     },
     "F-28 Fellowship": {
       "img": "F28.png",
@@ -1313,13 +1349,32 @@ const permanentData = {
       "img": "S14.png",
       "warning": "",
       "dots": []
+    },
+    "Fokker 70 & Fokker 100": {
+      "img": "F100.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 10,
+          "y": 48.10098062487401,
+          "info": "Cockpit, left-hand bulkhead behind the captain's seat.",
+          "cnImg": ""
+        }
+      ]
     }
   },
   "Sikorsky": {
     "S-61 / H-3 Sea King": {
       "img": "S-61.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 73.625,
+          "y": 51.377234169813754,
+          "info": "Cockpit, center console right-hand side.",
+          "cnImg": ""
+        }
+      ]
     },
     "S-55 / H-19 Chickasaw": {
       "img": "S-55.png",
@@ -1353,7 +1408,20 @@ const permanentData = {
     "Lynx": {
       "img": "Lynx.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 60.12499999999999,
+          "y": 45.4697512870489,
+          "info": "Cockpit, left and right beams between the doors, next to the seats.",
+          "cnImg": "Lynx-loc1.jpg"
+        },
+        {
+          "x": 76.625,
+          "y": 42.866875886817766,
+          "info": "Cockpit, left and right beams between the doors, next to the seats.",
+          "cnImg": "Lynx-loc1.jpg"
+        }
+      ]
     }
   },
   "Airbus": {
