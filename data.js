@@ -1322,27 +1322,62 @@ const permanentData = {
     "A300": {
       "img": "A300.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 13.750000000000002,
+          "y": 38.16875126528745,
+          "info": "Forward passenger door-frame, right-hand side (mounted high).",
+          "cnImg": ""
+        }
+      ]
     },
     "A310": {
       "img": "A310.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 13.625000000000002,
+          "y": 45.85625155854231,
+          "info": "Forward passenger door-frame, right-hand side (mounted high).",
+          "cnImg": ""
+        }
+      ]
     },
     "A318/A319/A320/A321": {
       "img": "A320.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 13.375,
+          "y": 46.23124871182437,
+          "info": "Forward passenger door-frame, right-hand side (mounted high).",
+          "cnImg": ""
+        }
+      ]
     },
     "A330": {
       "img": "A330.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 12.375,
+          "y": 45.93088393378492,
+          "info": "Forward passenger door-frame, right-hand side (mounted high).",
+          "cnImg": ""
+        }
+      ]
     },
     "A340": {
       "img": "A340.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 10.125,
+          "y": 49.87479559107164,
+          "info": "Forward passenger door-frame, right-hand side (mounted high).",
+          "cnImg": ""
+        }
+      ]
     }
   }
 };
