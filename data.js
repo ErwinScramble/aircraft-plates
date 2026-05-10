@@ -325,6 +325,21 @@ const permanentData = {
           "cnImg": ""
         }
       ]
+    },
+    "An-24": {
+      "img": "An-26.png",
+      "warning": "",
+      "dots": []
+    },
+    "An-26": {
+      "img": "An-26.png",
+      "warning": "",
+      "dots": []
+    },
+    "An-225": {
+      "img": "An-225.png",
+      "warning": "",
+      "dots": []
     }
   },
   "Nanchang/Shijiazhuang": {
