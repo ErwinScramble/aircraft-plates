@@ -307,6 +307,24 @@ const permanentData = {
       "img": "An-22.png",
       "warning": "",
       "dots": []
+    },
+    "An-32": {
+      "img": "An-32.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 63.625,
+          "y": 47.3875767239111,
+          "info": "Cabin, left-hand side above the last window.",
+          "cnImg": "An-32-loc1.jpg"
+        },
+        {
+          "x": 81.875,
+          "y": 44.79316906800159,
+          "info": "Fuselage, left side below the horizontal stabilizer (often painted).",
+          "cnImg": ""
+        }
+      ]
     }
   },
   "Nanchang/Shijiazhuang": {
@@ -354,11 +372,13 @@ const permanentData = {
     },
     "AS350 Écureuil & AS550 Fennec": {
       "img": "AS350.png",
+      "warning": "",
       "dots": [
         {
           "x": 28.000000000000004,
           "y": 61.606252159357155,
-          "info": "Floor, behind or below the right pilot seat. May require moving the seat forward or lifting the carpet."
+          "info": "Floor, behind or below the right pilot seat. May require moving the seat forward or lifting the carpet.",
+          "cnImg": "AS350-loc1.jpg"
         },
         {
           "x": 71.75,
@@ -433,7 +453,20 @@ const permanentData = {
     "Alouette III": {
       "img": "SA316.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 19.875,
+          "y": 54.569925104889606,
+          "info": "Cockpit console, right-hand side.",
+          "cnImg": "SA316-loc1.jpg"
+        },
+        {
+          "x": 50.24999999999999,
+          "y": 49.12357486886077,
+          "info": "Outside frame, left-hand side below engine (early production samples only). Do not confuse with the engine plate mounted in the same area.",
+          "cnImg": ""
+        }
+      ]
     },
     "SA321 Super Frelon": {
       "img": "SA321.png",
