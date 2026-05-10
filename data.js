@@ -90,12 +90,13 @@ const permanentData = {
     },
     "Ae-45 & Ae-145": {
       "img": "Ae-45.png",
+      "warning": "",
       "dots": [
         {
           "x": 29.625,
           "y": 57.199197632627666,
           "info": "Lower fuselage, left side in front of the wing root.",
-          "cnImg": "Ae-45.png"
+          "cnImg": "Ae-45-loc1.jpg"
         }
       ]
     },
@@ -146,16 +147,19 @@ const permanentData = {
   "Antonov": {
     "An-2": {
       "img": "An-2.png",
+      "warning": "",
       "dots": [
         {
           "x": 40.75,
           "y": 44.12275609643343,
-          "info": "Cabin, second joist behind the cockpit."
+          "info": "Cabin, second joist behind the cockpit.",
+          "cnImg": "An-2-loc3.jpg"
         },
         {
           "x": 16.5,
           "y": 47.52437369183194,
-          "info": "Engine bulkhead, behind the engine (accessible via cowlings)."
+          "info": "Engine bulkhead, behind the engine (accessible via cowlings).",
+          "cnImg": "An-2-loc2.jpg"
         },
         {
           "x": 68.625,
@@ -1425,6 +1429,20 @@ const permanentData = {
           "y": 49.87479559107164,
           "info": "Forward passenger door-frame, right-hand side (mounted high).",
           "cnImg": ""
+        }
+      ]
+    }
+  },
+  "AeroVolga": {
+    "LA-8": {
+      "img": "AeroVolga LA-8.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 60.75000000000001,
+          "y": 51.18942898926103,
+          "info": "Cockpit, right side behind the pilot's seat.",
+          "cnImg": "AeroVolga La-8-loc1.jpg"
         }
       ]
     }
