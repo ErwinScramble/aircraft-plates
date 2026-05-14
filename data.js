@@ -497,11 +497,13 @@ const permanentData = {
   "Lockheed": {
     "C-130A to C-130H Hercules": {
       "img": "C-130.png",
+      "warning": "",
       "dots": [
         {
           "x": 24.5,
           "y": 65.19529058980886,
-          "info": "Cockpit ceiling, rear of the flight engineer's overhead panel. Internal location, not visible from the outside."
+          "info": "Cockpit ceiling, rear of the flight engineer's overhead panel. Internal location, not visible from the outside.",
+          "cnImg": "C-130-loc1.jpg"
         }
       ]
     },
@@ -1332,11 +1334,6 @@ const permanentData = {
     },
     "F-28 Fellowship": {
       "img": "F28.png",
-      "warning": "",
-      "dots": []
-    },
-    "Fokker 100": {
-      "img": "F100.png",
       "warning": "",
       "dots": []
     },
