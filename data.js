@@ -339,7 +339,44 @@ const permanentData = {
     "An-26": {
       "img": "An-26.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 10.125,
+          "y": 52.459729110429855,
+          "info": "Front bulkhead (front side, behind the nose cone), or attached panel.",
+          "cnImg": "An-26-loc2.png"
+        },
+        {
+          "x": 83.125,
+          "y": 44.015632482055665,
+          "info": "Fuselage, below the horizontal stabilizer (left and/or right) (painted)",
+          "cnImg": "An-26-loc1.png"
+        },
+        {
+          "x": 24.625,
+          "y": 48.95074128077274,
+          "info": "Fuselage, forward right side, crew entry door frame, between hinges.",
+          "cnImg": ""
+        },
+        {
+          "x": 35.375,
+          "y": 44.82251626245647,
+          "info": "Right-hand engine, inside cowling doors.",
+          "cnImg": ""
+        },
+        {
+          "x": 14.374999999999998,
+          "y": 57.957777684371884,
+          "info": "Nose-wheel bay.",
+          "cnImg": ""
+        },
+        {
+          "x": 47.625,
+          "y": 45.94839581290636,
+          "info": "Left-hand undercarriage bay.",
+          "cnImg": ""
+        }
+      ]
     },
     "An-225": {
       "img": "An-225.png",
@@ -519,6 +556,23 @@ const permanentData = {
     },
     "F-117 Nighthawk": {
       "img": "F-117.png",
+      "warning": "",
+      "dots": []
+    },
+    "P-3 Orion": {
+      "img": "P-3.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 76.875,
+          "y": 65.64744124784471,
+          "info": "Instrument panel, right side, behind left-hand seat, above circuit breaker panel.",
+          "cnImg": "P-3-loc1.jpg"
+        }
+      ]
+    },
+    "L-188 Electra": {
+      "img": "P-3.png",
       "warning": "",
       "dots": []
     }
@@ -1508,6 +1562,46 @@ const permanentData = {
           "y": 51.18942898926103,
           "info": "Cockpit, right side behind the pilot's seat.",
           "cnImg": "AeroVolga La-8-loc1.jpg"
+        }
+      ]
+    }
+  },
+  "Pilatus": {
+    "PC-9": {
+      "img": "T-6-texan2.png",
+      "warning": "",
+      "dots": []
+    },
+    "PC-7": {
+      "img": "T-6-texan2.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Beechcraft": {
+    "T-6 Texan II": {
+      "img": "T-6-texan2.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 80.875,
+          "y": 53.87576401830485,
+          "info": "Fuselage, below the horizontal stabilizer",
+          "cnImg": "T-6-Texan2-loc1.jpg"
+        }
+      ]
+    }
+  },
+  "SOCATA": {
+    "Rallye": {
+      "img": "Rallye.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 76.25,
+          "y": 52.98733580393088,
+          "info": "Fuselage, below the horizontal stabilizer",
+          "cnImg": "Rallye-loc1.jpg"
         }
       ]
     }
