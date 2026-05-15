@@ -775,6 +775,30 @@ const permanentData = {
           "cnImg": "UH-1-loc1.jpg"
         }
       ]
+    },
+    "Bell 47": {
+      "img": "Bell 47.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 77,
+          "y": 64.41875226664551,
+          "info": "Cockpit centre console, right side.",
+          "cnImg": "Bell 47-loc2.jpg"
+        }
+      ]
+    },
+    "H-13 Sioux": {
+      "img": "Bell 47.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 76.875,
+          "y": 64.0437522523404,
+          "info": "Cockpit centre console, right side.",
+          "cnImg": "Bell 47-loc1.jpg"
+        }
+      ]
     }
   },
   "Kamov": {
@@ -1602,6 +1626,34 @@ const permanentData = {
           "y": 52.98733580393088,
           "info": "Fuselage, below the horizontal stabilizer",
           "cnImg": "Rallye-loc1.jpg"
+        }
+      ]
+    }
+  },
+  "Kawasaki": {
+    "KH-4": {
+      "img": "Bell 47.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 77.125,
+          "y": 64.41874940562245,
+          "info": "Cockpit centre console, right side.",
+          "cnImg": "KH-4-loc1.jpg"
+        }
+      ]
+    }
+  },
+  "RFB (Rhein-Flugzeugbau)": {
+    "Fantrainer": {
+      "img": "Fantrainer.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 75.875,
+          "y": 56.985262768613765,
+          "info": "Rear fuselage, left side.",
+          "cnImg": "Fantrainer-loc1.jpg"
         }
       ]
     }
