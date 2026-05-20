@@ -21,7 +21,8 @@ const permanentData = {
         {
           "x": 44.625,
           "y": 40.20073822551446,
-          "info": "Bulkhead behind rear seat, above the data acquisition box."
+          "info": "Bulkhead behind rear seat, above the data acquisition box.",
+          "cnImg": "MB339-loc1.jpg"
         }
       ]
     }
@@ -50,7 +51,8 @@ const permanentData = {
         {
           "x": 45.375,
           "y": 39.48900024609684,
-          "info": "Cockpit bulkhead, behind the rear seat."
+          "info": "Cockpit bulkhead, behind the rear seat.",
+          "cnImg": "Impala-loc1.jpg"
         },
         {
           "x": 81.75,
@@ -391,7 +393,8 @@ const permanentData = {
         {
           "x": 81.875,
           "y": 58.863102470131345,
-          "info": "Horizontal stabilizer struts, top side (both sides)."
+          "info": "Horizontal stabilizer struts, top side (both sides).",
+          "cnImg": "Y5-loc1.jpg"
         }
       ]
     }
@@ -643,6 +646,12 @@ const permanentData = {
           "y": 56.26635178843451,
           "info": "The MSN plate is attached to the forward edge of the left front door frame.",
           "cnImg": "Cessna 172-loc1.jpg"
+        },
+        {
+          "x": 76.125,
+          "y": 59.87041912272474,
+          "info": "LH rear fuselage, below tailplane.",
+          "cnImg": "Cessna 172-loc2.jpg"
         }
       ]
     },
@@ -890,6 +899,18 @@ const permanentData = {
           "cnImg": "Bell 47-loc1.jpg"
         }
       ]
+    },
+    "Bell 412": {
+      "img": "UH-1.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 86.375,
+          "y": 49.0396028279925,
+          "info": "Tailfin",
+          "cnImg": "Bell 412-loc1.jpg"
+        }
+      ]
     }
   },
   "Kamov": {
@@ -912,7 +933,20 @@ const permanentData = {
     "Ka-15": {
       "img": "Ka-15.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 86.625,
+          "y": 63.064980516341194,
+          "info": "Fins, outer surfaces.",
+          "cnImg": ""
+        },
+        {
+          "x": 34.125,
+          "y": 65.46314193567785,
+          "info": "Forward fuselage, below cabin doors.",
+          "cnImg": ""
+        }
+      ]
     },
     "Ka-25": {
       "img": "Ka-25.png",
@@ -954,27 +988,67 @@ const permanentData = {
     "B747": {
       "img": "B747.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 18,
+          "y": 41.51650333696712,
+          "info": "Left front door frame, top section.",
+          "cnImg": ""
+        }
+      ]
     },
     "B737": {
       "img": "B737.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 18.375,
+          "y": 49.055160953215065,
+          "info": "Left front door frame, top section.",
+          "cnImg": "B737-loc1.jpg"
+        }
+      ]
     },
     "B757": {
       "img": "B757.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 14.000000000000002,
+          "y": 37.95633694378735,
+          "info": "Left front door frame, top section.",
+          "cnImg": ""
+        }
+      ]
     },
     "B767": {
       "img": "B767.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 14.875,
+          "y": 39.26797614053643,
+          "info": "Left front door frame, top section.",
+          "cnImg": ""
+        }
+      ]
     },
     "B777": {
       "img": "B777.png",
       "warning": "",
       "dots": []
+    },
+    "B717": {
+      "img": "DC-9.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 13.5,
+          "y": 48.23204516679957,
+          "info": "On the left side at eye level when boarding.",
+          "cnImg": ""
+        }
+      ]
     }
   },
   "Yakovlev": {
@@ -1319,7 +1393,14 @@ const permanentData = {
     "F-16 Fighting Falcon": {
       "img": "F-16.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 23.25,
+          "y": 46.606248726129486,
+          "info": "Cockpit bulkhead behind radar, LH side. WWSN (World Wide Sequence Number) only.",
+          "cnImg": "F-16-loc1.jpg"
+        }
+      ]
     },
     "F-111": {
       "img": "F-111.png",
@@ -1336,7 +1417,14 @@ const permanentData = {
     "F-14 Tomcat": {
       "img": "F-14.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 21.875,
+          "y": 38.28150704462203,
+          "info": "Forward cockpit, RH side canopy sub-frame.",
+          "cnImg": ""
+        }
+      ]
     }
   },
   "Lockheed Martin": {
@@ -1384,7 +1472,14 @@ const permanentData = {
     "DC-10": {
       "img": "DC-10.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 14.625,
+          "y": 35.41379382283268,
+          "info": "LH forward door frame, top section.",
+          "cnImg": ""
+        }
+      ]
     },
     "MD-11": {
       "img": "DC-10.png",
@@ -1434,27 +1529,62 @@ const permanentData = {
     "DC-6": {
       "img": "DC-6.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 20,
+          "y": 45.29374867606158,
+          "info": "RH forward galley doorstep.",
+          "cnImg": ""
+        }
+      ]
     },
     "DC-7": {
       "img": "DC-6.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 20,
+          "y": 45.856248697519256,
+          "info": "RH forward galley doorstep.",
+          "cnImg": ""
+        }
+      ]
     },
     "DC-8": {
       "img": "DC-8.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 10.75,
+          "y": 46.68210465599579,
+          "info": "Cockpit door.",
+          "cnImg": ""
+        }
+      ]
     },
     "DC-9": {
       "img": "DC-9.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 14.625,
+          "y": 45.50920395274587,
+          "info": "LH forward door frame, top section.",
+          "cnImg": ""
+        }
+      ]
     },
     "DC-3": {
       "img": "DC-3.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 16.375,
+          "y": 34.60625112938885,
+          "info": "Cockpit corridor, RH wall.",
+          "cnImg": "DC3-loc1.jpg"
+        }
+      ]
     }
   },
   "Republic": {
