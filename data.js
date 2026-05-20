@@ -578,16 +578,6 @@ const permanentData = {
     }
   },
   "Cessna": {
-    "Single-engined Cessna's (Cessna 150, 152, 172, 206 etc.)": {
-      "img": "Cessna single engine.png",
-      "dots": [
-        {
-          "x": 40.875,
-          "y": 51.47380374947068,
-          "info": "Door frame (left-hand foremost), forward edge."
-        }
-      ]
-    },
     "T-37 Tweet (Cessna 318)": {
       "img": "A-37.png",
       "dots": [
@@ -605,6 +595,107 @@ const permanentData = {
           "x": 47,
           "y": 46.76306012396345,
           "info": "Bulkhead behind ejection seats (visible only with canopy open)."
+        }
+      ]
+    },
+    "Ce.150": {
+      "img": "Ce172.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 40.375,
+          "y": 53.43458459720648,
+          "info": "The MSN plate is attached to the forward edge of the left front door frame.",
+          "cnImg": "Cessna 172-loc1.jpg"
+        }
+      ]
+    },
+    "Ce.182": {
+      "img": "Ce172.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 40.25,
+          "y": 56.26635178843451,
+          "info": "The MSN plate is attached to the forward edge of the left front door frame.",
+          "cnImg": "Cessna 172-loc1.jpg"
+        }
+      ]
+    },
+    "Ce.175 Skylark": {
+      "img": "Ce172.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 40.125,
+          "y": 56.26635178843451,
+          "info": "The MSN plate is attached to the forward edge of the left front door frame.",
+          "cnImg": "Cessna 172-loc1.jpg"
+        }
+      ]
+    },
+    "Ce.172 Skyhawk": {
+      "img": "Ce172.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 40.25,
+          "y": 56.26635178843451,
+          "info": "The MSN plate is attached to the forward edge of the left front door frame.",
+          "cnImg": "Cessna 172-loc1.jpg"
+        }
+      ]
+    },
+    "Ce.305": {
+      "img": "Ce170.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 69,
+          "y": 47.65676651768702,
+          "info": "Right front door frame, forward edge.",
+          "cnImg": "Cessna 305-loc1.jpg"
+        }
+      ]
+    },
+    "O-1 Bird Dog": {
+      "img": "Ce170.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 69,
+          "y": 48.100984013958694,
+          "info": "Right front door frame, forward edge.",
+          "cnImg": "Cessna 305-loc1.jpg"
+        }
+      ]
+    },
+    "Ce.188": {
+      "img": "Ce188.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 50.125,
+          "y": 45.213588928158586,
+          "info": "Inside the cockpit, on the rear bulkhead between the seat and the right sidewall.",
+          "cnImg": ""
+        }
+      ]
+    },
+    "Ce.170": {
+      "img": "Ce170.png",
+      "warning": "",
+      "dots": []
+    },
+    "Ce.404 Titan": {
+      "img": "Ce404.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 58.12500000000001,
+          "y": 46.546231249719554,
+          "info": "The plate is located on the forward edge of the left main door fuselage frame.",
+          "cnImg": ""
         }
       ]
     }
@@ -1656,6 +1747,13 @@ const permanentData = {
           "cnImg": "Fantrainer-loc1.jpg"
         }
       ]
+    }
+  },
+  "SIAI-Marchetti": {
+    "SM.1019": {
+      "img": "Ce170.png",
+      "warning": "",
+      "dots": []
     }
   }
 };
