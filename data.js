@@ -707,6 +707,24 @@ const permanentData = {
           "cnImg": ""
         }
       ]
+    },
+    "Ce.310": {
+      "img": "Ce310.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 17,
+          "y": 58.76211919736172,
+          "info": "Inside the nose-wheel bay.",
+          "cnImg": ""
+        },
+        {
+          "x": 75,
+          "y": 47.878873571280515,
+          "info": "On the LH rear fuselage, below the tailplane.",
+          "cnImg": ""
+        }
+      ]
     }
   },
   "Mikoyan Gurevich (MiG)": {
@@ -730,7 +748,14 @@ const permanentData = {
     "MiG-27": {
       "img": "MiG-23.png",
       "warning": "Multiple locations possible; check all combinations. Placement varies by sub-type and factory.",
-      "dots": []
+      "dots": [
+        {
+          "x": 57.99999999999999,
+          "y": 60.357479770729746,
+          "info": "On both sides of the landing gear (sometimes last five numbers only).",
+          "cnImg": "MiG-27-loc1.jpg"
+        }
+      ]
     },
     "MiG-23": {
       "img": "MiG-23.png",
@@ -956,17 +981,50 @@ const permanentData = {
     "Ka-27": {
       "img": "Ka-27.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 8.625,
+          "y": 59.91044877570443,
+          "info": "On the outer edge of the horizontal tailplane.",
+          "cnImg": "Ka-27-loc1.jpg"
+        }
+      ]
     },
     "Ka-32": {
       "img": "Ka-32.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 66.875,
+          "y": 50.16874886202808,
+          "info": "In the cockpit, on the bulkhead behind and above the pilot’s seat.",
+          "cnImg": "Ka-32-loc1.jpg"
+        }
+      ]
     },
     "Ka-50": {
       "img": "Ka-50.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 76.875,
+          "y": 54.93512200625178,
+          "info": "left-hand side of the tail boom, near the horizontal stabilizer.",
+          "cnImg": "Ka-50-loc1.jpg"
+        },
+        {
+          "x": 79,
+          "y": 51.26689303697969,
+          "info": "Underneath the horizontal stabilizer.",
+          "cnImg": "Ka-50-loc2.jpg"
+        },
+        {
+          "x": 85.875,
+          "y": 45.764549583071556,
+          "info": "Left-hand side of the rudder.",
+          "cnImg": "Ka-50-loc1.jpg"
+        }
+      ]
     }
   },
   "Boeing": {
@@ -1884,6 +1942,20 @@ const permanentData = {
       "img": "Ce170.png",
       "warning": "",
       "dots": []
+    }
+  },
+  "Junkers": {
+    "Ju.87 Stuka": {
+      "img": "Ju-87.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 83.5,
+          "y": 34.33034330207739,
+          "info": "A plate attached just above the tail fin.",
+          "cnImg": "Ju-87-loc1.jpg"
+        }
+      ]
     }
   }
 };
