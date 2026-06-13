@@ -1107,6 +1107,18 @@ const permanentData = {
           "cnImg": ""
         }
       ]
+    },
+    "B787": {
+      "img": "B787.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 12,
+          "y": 49.57371268642207,
+          "info": "Left front door frame, top section.",
+          "cnImg": ""
+        }
+      ]
     }
   },
   "Yakovlev": {
