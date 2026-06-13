@@ -42,6 +42,18 @@ const permanentData = {
           "info": "Fuselage, left side below the stabilizer."
         }
       ]
+    },
+    "E-Jet family (ERJ.170, ERJ.175, ERJ.190, ERJ.195 & E2 versions)": {
+      "img": "ERJ170-195.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 16.75,
+          "y": 56.16875195193298,
+          "info": "Underside, tail right side.",
+          "cnImg": "Erj170-195-loc1.png"
+        }
+      ]
     }
   },
   "Atlas Aircraft Corporation": {
