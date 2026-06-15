@@ -54,6 +54,16 @@ const permanentData = {
           "cnImg": "Erj170-195-loc1.png"
         }
       ]
+    },
+    "Emb.710/711/712": {
+      "img": "Pa-28.png",
+      "warning": "",
+      "dots": []
+    },
+    "Emb.720/721": {
+      "img": "Pa-28.png",
+      "warning": "",
+      "dots": []
     }
   },
   "Atlas Aircraft Corporation": {
@@ -1106,7 +1116,14 @@ const permanentData = {
     "B777": {
       "img": "B777.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 14.249999999999998,
+          "y": 38.91874843287462,
+          "info": "Left front door frame, top section.",
+          "cnImg": ""
+        }
+      ]
     },
     "B717": {
       "img": "DC-9.png",
@@ -1980,6 +1997,93 @@ const permanentData = {
           "cnImg": "Ju-87-loc1.jpg"
         }
       ]
+    }
+  },
+  "Sukhoi": {
+    "Su-27": {
+      "img": "Su-27.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 28.125,
+          "y": 32.89716004404458,
+          "info": "Ejection seat, left side (last 5 digits).",
+          "cnImg": "Su-27-loc1.jpg"
+        },
+        {
+          "x": 26.875,
+          "y": 47.137814180177465,
+          "info": "Nose-wheel bay, forward bulkhead bottom.",
+          "cnImg": ""
+        },
+        {
+          "x": 55.375,
+          "y": 54.445518276350924,
+          "info": "Main wheel bay, left side.",
+          "cnImg": "Su-27-loc2.jpg"
+        }
+      ]
+    },
+    "Su-30": {
+      "img": "Su-27.png",
+      "warning": "",
+      "dots": []
+    },
+    "Su-33": {
+      "img": "Su-27.png",
+      "warning": "",
+      "dots": []
+    },
+    "Su-34": {
+      "img": "Su-27.png",
+      "warning": "",
+      "dots": []
+    },
+    "Su-35": {
+      "img": "Su-27.png",
+      "warning": "",
+      "dots": []
+    },
+    "Su-37": {
+      "img": "Su-27.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Shenyang": {
+    "J-11": {
+      "img": "Su-27.png",
+      "warning": "",
+      "dots": []
+    },
+    "J-15": {
+      "img": "Su-27.png",
+      "warning": "",
+      "dots": []
+    },
+    "J-16": {
+      "img": "Su-27.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Piper": {
+    "Pa-28": {
+      "img": "Pa-28.png",
+      "warning": "",
+      "dots": [
+        {
+          "x": 82.75,
+          "y": 59.731249226808515,
+          "info": "Fuselage, left side below tailplane.",
+          "cnImg": "Pa-28-loc1.jpg"
+        }
+      ]
+    },
+    "Pa-32": {
+      "img": "Pa-28.png",
+      "warning": "",
+      "dots": []
     }
   }
 };
