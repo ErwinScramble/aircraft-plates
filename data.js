@@ -1494,13 +1494,45 @@ const permanentData = {
     },
     "Il-28": {
       "img": "Il-28.png",
-      "warning": "",
-      "dots": []
+      "warning": "Also be found at several other locations on the airframe.",
+      "dots": [
+        {
+          "x": 46.5,
+          "y": 60.59444427490235,
+          "info": "Inside the bomb bay.",
+          "cnImg": ""
+        },
+        {
+          "x": 51.24999999999999,
+          "y": 51.09444427490234,
+          "info": "In the wheel wells.",
+          "cnImg": ""
+        },
+        {
+          "x": 34.375,
+          "y": 72.92777760823567,
+          "info": "In the wheel wells.",
+          "cnImg": ""
+        },
+        {
+          "x": 83.25,
+          "y": 54.42777760823567,
+          "info": "On bulkhead # 42 inside the rear fuselage",
+          "cnImg": ""
+        }
+      ]
     },
     "Il-14": {
       "img": "Il-14.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 27.125,
+          "y": 43.150077324632804,
+          "info": "Nose exterior, left side. (VEB-14 only)",
+          "cnImg": "Il-14-loc1.jpg"
+        }
+      ]
     },
     "Il-103": {
       "img": "Il-103.png",
@@ -1510,7 +1542,14 @@ const permanentData = {
     "Il-62": {
       "img": "Il-62.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 43.125,
+          "y": 55.32114296142085,
+          "info": "Main undercarriage housing, rear bulkhead.",
+          "cnImg": ""
+        }
+      ]
     },
     "Il-12": {
       "img": "Il-14.png",
@@ -1520,17 +1559,44 @@ const permanentData = {
     "Il-76 & Il-78": {
       "img": "Il-76.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 68.25,
+          "y": 53.068000566300654,
+          "info": "Rear cargo-hold pressure bulkhead.",
+          "cnImg": "Il-76-loc1.png"
+        },
+        {
+          "x": 18.125,
+          "y": 51.11386078092478,
+          "info": "Cockpit doors, cargo-bay side (last 5 digits).",
+          "cnImg": ""
+        }
+      ]
     },
     "Il-86 & Il-80": {
       "img": "Il-86.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 17.5,
+          "y": 55.13504652976462,
+          "info": "Lower deck catering doors, rear side.",
+          "cnImg": ""
+        }
+      ]
     },
     "Il-96": {
       "img": "Il-86.png",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 17.375,
+          "y": 54.890617476513206,
+          "info": "Lower deck catering doors, rear side.",
+          "cnImg": ""
+        }
+      ]
     }
   },
   "General Dynamics": {
