@@ -1486,6 +1486,51 @@ const permanentData = {
           "cnImg": "Il-18-loc2.png"
         }
       ]
+    },
+    "Il-2": {
+      "img": "Il-2.png",
+      "warning": "",
+      "dots": []
+    },
+    "Il-28": {
+      "img": "Il-28.png",
+      "warning": "",
+      "dots": []
+    },
+    "Il-14": {
+      "img": "Il-14.png",
+      "warning": "",
+      "dots": []
+    },
+    "Il-103": {
+      "img": "Il-103.png",
+      "warning": "",
+      "dots": []
+    },
+    "Il-62": {
+      "img": "Il-62.png",
+      "warning": "",
+      "dots": []
+    },
+    "Il-12": {
+      "img": "Il-14.png",
+      "warning": "",
+      "dots": []
+    },
+    "Il-76 & Il-78": {
+      "img": "Il-76.png",
+      "warning": "",
+      "dots": []
+    },
+    "Il-86 & Il-80": {
+      "img": "Il-86.png",
+      "warning": "",
+      "dots": []
+    },
+    "Il-96": {
+      "img": "Il-86.png",
+      "warning": "",
+      "dots": []
     }
   },
   "General Dynamics": {
@@ -2082,6 +2127,20 @@ const permanentData = {
     },
     "Pa-32": {
       "img": "Pa-28.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Shaanxi": {
+    "KJ-2000": {
+      "img": "Il-76.png",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Beriev": {
+    "A-50 / A-60 & A-100": {
+      "img": "Il-76.png",
       "warning": "",
       "dots": []
     }
