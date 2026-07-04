@@ -815,7 +815,7 @@ const permanentData = {
       ]
     },
     "MiG-19": {
-      "img": "MiG-19.png",
+      "img": "MiG-19.jpeg",
       "warning": "Wing numbers may differ due to parts swapping; always verify with paperwork for accuracy.",
       "dots": [
         {
@@ -924,7 +924,7 @@ const permanentData = {
       ]
     },
     "Bell 47": {
-      "img": "Bell 47.png",
+      "img": "Bell 47.jpeg",
       "warning": "",
       "dots": [
         {
@@ -936,7 +936,7 @@ const permanentData = {
       ]
     },
     "H-13 Sioux": {
-      "img": "Bell 47.png",
+      "img": "Bell 47.jpeg",
       "warning": "",
       "dots": [
         {
@@ -978,7 +978,7 @@ const permanentData = {
       ]
     },
     "Ka-15": {
-      "img": "Ka-15.png",
+      "img": "Ka-15.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1013,7 +1013,7 @@ const permanentData = {
       ]
     },
     "Ka-32": {
-      "img": "Ka-32.png",
+      "img": "Ka-32.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1025,7 +1025,7 @@ const permanentData = {
       ]
     },
     "Ka-50": {
-      "img": "Ka-50.png",
+      "img": "Ka-50.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1201,7 +1201,8 @@ const permanentData = {
       ]
     },
     "Mi-24": {
-      "img": "Mil-24.png",
+      "img": "Mil-24.jpeg",
+      "warning": "",
       "dots": [
         {
           "x": 63,
@@ -1249,8 +1250,7 @@ const permanentData = {
           "info": "Inside air intakes (Painted).",
           "cnImg": "Mi-24-loc1.jpg"
         }
-      ],
-      "warning": ""
+      ]
     },
     "Mi-1": {
       "img": "Mil-1.png",
@@ -1374,7 +1374,8 @@ const permanentData = {
   },
   "RotorWay": {
     "Exec 90": {
-      "img": "Rotorway Exec.png",
+      "img": "Rotorway Exec.jpeg",
+      "warning": "",
       "dots": [
         {
           "x": 73.875,
@@ -1385,7 +1386,8 @@ const permanentData = {
       ]
     },
     "Exec 162": {
-      "img": "Rotorway Exec.png",
+      "img": "Rotorway Exec.jpeg",
+      "warning": "",
       "dots": [
         {
           "x": 80.125,
@@ -1597,11 +1599,41 @@ const permanentData = {
           "cnImg": ""
         }
       ]
+    },
+    "Il-114": {
+      "img": "Il-114.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 73.75,
+          "y": 51.247433783614284,
+          "info": "Fuselage, left side below rear entry door.",
+          "cnImg": "Il-114-loc1.jpg"
+        },
+        {
+          "x": 59,
+          "y": 58.32763063025397,
+          "info": "Main gear doors interior, trailing edge.",
+          "cnImg": ""
+        },
+        {
+          "x": 39,
+          "y": 59.63416955637166,
+          "info": "Main gear doors interior, trailing edge.",
+          "cnImg": ""
+        },
+        {
+          "x": 14.75,
+          "y": 59.63416955637166,
+          "info": "Nose gear doors interior.",
+          "cnImg": ""
+        }
+      ]
     }
   },
   "General Dynamics": {
     "F-16 Fighting Falcon": {
-      "img": "F-16.png",
+      "img": "F-16.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1651,7 +1683,7 @@ const permanentData = {
   },
   "McDonnell Douglas": {
     "F-15 Eagle": {
-      "img": "F-15.png",
+      "img": "F-15.jpeg",
       "warning": "",
       "dots": []
     },
@@ -1668,7 +1700,7 @@ const permanentData = {
       ]
     },
     "F-4 Phantom II": {
-      "img": "F-4.png",
+      "img": "F-4.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1706,7 +1738,7 @@ const permanentData = {
   },
   "MBB": {
     "Bo105": {
-      "img": "Bo105.png",
+      "img": "Bo105.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1785,7 +1817,7 @@ const permanentData = {
       ]
     },
     "DC-3": {
-      "img": "DC-3.png",
+      "img": "DC-3.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1893,7 +1925,7 @@ const permanentData = {
       "dots": []
     },
     "S-70 / H-60 Black Hawk & Sea Hawk": {
-      "img": "S-70.png",
+      "img": "S-70.jpeg",
       "warning": "",
       "dots": []
     },
@@ -2063,7 +2095,7 @@ const permanentData = {
   },
   "Kawasaki": {
     "KH-4": {
-      "img": "Bell 47.png",
+      "img": "Bell 47.jpeg",
       "warning": "",
       "dots": [
         {
