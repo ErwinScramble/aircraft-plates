@@ -44,7 +44,7 @@ const permanentData = {
       ]
     },
     "E-Jet family (ERJ.170, ERJ.175, ERJ.190, ERJ.195 & E2 versions)": {
-      "img": "ERJ170-195.png",
+      "img": "ERJ170-195.jpeg",
       "warning": "",
       "dots": [
         {
@@ -56,12 +56,12 @@ const permanentData = {
       ]
     },
     "Emb.710/711/712": {
-      "img": "Pa-28.png",
+      "img": "Pa-28.jpeg",
       "warning": "",
       "dots": []
     },
     "Emb.720/721": {
-      "img": "Pa-28.png",
+      "img": "Pa-28.jpeg",
       "warning": "",
       "dots": []
     }
@@ -515,7 +515,7 @@ const permanentData = {
       ]
     },
     "Alouette II": {
-      "img": "SE3130.png",
+      "img": "SE3130.jpeg",
       "warning": "",
       "dots": [
         {
@@ -551,7 +551,7 @@ const permanentData = {
       ]
     },
     "SA321 Super Frelon": {
-      "img": "SA321.png",
+      "img": "SA321.jpeg",
       "warning": "",
       "dots": []
     }
@@ -827,7 +827,7 @@ const permanentData = {
       ]
     },
     "MiG-25": {
-      "img": "MiG-25.png",
+      "img": "MiG-25.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1056,7 +1056,7 @@ const permanentData = {
       "dots": []
     },
     "B707": {
-      "img": "B707.png",
+      "img": "B707.jpeg",
       "warning": "",
       "dots": []
     },
@@ -1114,7 +1114,7 @@ const permanentData = {
       ]
     },
     "B777": {
-      "img": "B777.png",
+      "img": "B777.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1253,7 +1253,8 @@ const permanentData = {
       ]
     },
     "Mi-1": {
-      "img": "Mil-1.png",
+      "img": "Mil-1.jpeg",
+      "warning": "",
       "dots": [
         {
           "x": 46.75,
@@ -1261,8 +1262,7 @@ const permanentData = {
           "info": "Rear bulkhead (engine/luggage partition), accessible via left-side hatch.",
           "cnImg": "Mi-1-loc1.jpg"
         }
-      ],
-      "warning": ""
+      ]
     },
     "Mi-4": {
       "img": "Mil-4.png",
@@ -1276,15 +1276,15 @@ const permanentData = {
       "warning": "May be covered or hidden."
     },
     "Mi-6": {
-      "img": "Mil-6.png",
+      "img": "Mil-6.jpeg",
+      "warning": "",
       "dots": [
         {
           "x": 80,
           "y": 64.79374941992756,
           "info": "Tail boom, left side. (Painted)"
         }
-      ],
-      "warning": ""
+      ]
     },
     "Mi-8": {
       "img": "Mil-8.png",
@@ -1304,15 +1304,15 @@ const permanentData = {
       "warning": ""
     },
     "Mi-14": {
-      "img": "Mil-14.png",
+      "img": "Mil-14.jpeg",
+      "warning": "",
       "dots": [
         {
           "x": 43.75,
           "y": 59.16875206637391,
           "info": "Inside the pneumatic system filling hatch (right side, above the rear wheel bay)."
         }
-      ],
-      "warning": ""
+      ]
     },
     "Mi-26": {
       "img": "Mil-26.png",
@@ -1645,7 +1645,7 @@ const permanentData = {
       ]
     },
     "F-111": {
-      "img": "F-111.png",
+      "img": "F-111.jpeg",
       "warning": "",
       "dots": []
     }
@@ -1752,7 +1752,7 @@ const permanentData = {
   },
   "Vought": {
     "F-8 Crusader": {
-      "img": "F-8.png",
+      "img": "F-8.jpeg",
       "warning": "",
       "dots": []
     }
@@ -1764,12 +1764,12 @@ const permanentData = {
       "dots": []
     },
     "DC-4": {
-      "img": "DC-6.png",
+      "img": "DC-6.jpeg",
       "warning": "",
       "dots": []
     },
     "DC-6": {
-      "img": "DC-6.png",
+      "img": "DC-6.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1781,7 +1781,7 @@ const permanentData = {
       ]
     },
     "DC-7": {
-      "img": "DC-6.png",
+      "img": "DC-6.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1850,7 +1850,7 @@ const permanentData = {
   },
   "Fokker": {
     "F-27 Friendship & Troopship": {
-      "img": "F27.png",
+      "img": "F27.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1862,7 +1862,7 @@ const permanentData = {
       ]
     },
     "Fokker 50": {
-      "img": "F27.png",
+      "img": "F27.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1879,12 +1879,12 @@ const permanentData = {
       "dots": []
     },
     "S-11 Instructor": {
-      "img": "S11.png",
+      "img": "S11.jpeg",
       "warning": "",
       "dots": []
     },
     "S-14 Machtrainer": {
-      "img": "S14.png",
+      "img": "S14.jpeg",
       "warning": "",
       "dots": []
     },
@@ -1920,7 +1920,7 @@ const permanentData = {
       "dots": []
     },
     "S-58 / H-34": {
-      "img": "S-58.png",
+      "img": "S-58.jpeg",
       "warning": "",
       "dots": []
     },
@@ -1964,22 +1964,22 @@ const permanentData = {
   },
   "Airbus": {
     "A350": {
-      "img": "A350.png",
+      "img": "A350.jpeg",
       "warning": "",
       "dots": []
     },
     "A400M Atlas": {
-      "img": "A400.png",
+      "img": "A400.jpeg",
       "warning": "",
       "dots": []
     },
     "A380": {
-      "img": "A380.png",
+      "img": "A380.jpeg",
       "warning": "",
       "dots": []
     },
     "A300": {
-      "img": "A300.png",
+      "img": "A300.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1991,7 +1991,7 @@ const permanentData = {
       ]
     },
     "A310": {
-      "img": "A310.png",
+      "img": "A310.jpeg",
       "warning": "",
       "dots": [
         {
@@ -2003,7 +2003,7 @@ const permanentData = {
       ]
     },
     "A318/A319/A320/A321": {
-      "img": "A320.png",
+      "img": "A320.jpeg",
       "warning": "",
       "dots": [
         {
@@ -2212,7 +2212,7 @@ const permanentData = {
   },
   "Piper": {
     "Pa-28": {
-      "img": "Pa-28.png",
+      "img": "Pa-28.jpeg",
       "warning": "",
       "dots": [
         {
@@ -2224,7 +2224,7 @@ const permanentData = {
       ]
     },
     "Pa-32": {
-      "img": "Pa-28.png",
+      "img": "Pa-28.jpeg",
       "warning": "",
       "dots": []
     }
