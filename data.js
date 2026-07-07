@@ -585,7 +585,7 @@ const permanentData = {
       "dots": []
     },
     "P-3 Orion": {
-      "img": "P-3.png",
+      "img": "P-3.jpeg",
       "warning": "",
       "dots": [
         {
@@ -597,7 +597,7 @@ const permanentData = {
       ]
     },
     "L-188 Electra": {
-      "img": "P-3.png",
+      "img": "P-3.jpeg",
       "warning": "",
       "dots": []
     }
@@ -996,12 +996,12 @@ const permanentData = {
       ]
     },
     "Ka-25": {
-      "img": "Ka-25.png",
+      "img": "Ka-25.jpeg",
       "warning": "",
       "dots": []
     },
     "Ka-27": {
-      "img": "Ka-27.png",
+      "img": "Ka-27.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1657,7 +1657,7 @@ const permanentData = {
       "dots": []
     },
     "F-14 Tomcat": {
-      "img": "F-14.png",
+      "img": "F-14.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1671,7 +1671,7 @@ const permanentData = {
   },
   "Lockheed Martin": {
     "F-22 Raptor": {
-      "img": "F-22.png",
+      "img": "F-22.jpeg",
       "warning": "",
       "dots": []
     },
@@ -1688,7 +1688,7 @@ const permanentData = {
       "dots": []
     },
     "F/A-18 Hornet": {
-      "img": "F-18.png",
+      "img": "F-18.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1836,7 +1836,7 @@ const permanentData = {
       "dots": []
     },
     "F-84F Thunderstreak": {
-      "img": "F-84F.png",
+      "img": "F-84F.jpeg",
       "warning": "",
       "dots": []
     }
@@ -1930,7 +1930,7 @@ const permanentData = {
       "dots": []
     },
     "S-64 Skycrane": {
-      "img": "S-64.png",
+      "img": "S-64.jpeg",
       "warning": "",
       "dots": []
     }
@@ -1944,7 +1944,7 @@ const permanentData = {
   },
   "Westland": {
     "Lynx": {
-      "img": "Lynx.png",
+      "img": "Lynx.jpeg",
       "warning": "",
       "dots": [
         {
