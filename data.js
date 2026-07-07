@@ -2077,6 +2077,31 @@ const permanentData = {
           "cnImg": "T-6-Texan2-loc1.jpg"
         }
       ]
+    },
+    "Model 18": {
+      "img": "Beechcraft Model 18.jpeg",
+      "warning": "",
+      "dots": []
+    },
+    "Model 23 Musketeer": {
+      "img": "Beechcraft Musketeer.jpeg",
+      "warning": "",
+      "dots": []
+    },
+    "Models 33, 35 and 36 \"Bonanza\" & \"Debonair\"": {
+      "img": "Beechcraft Bonanza.jpeg",
+      "warning": "",
+      "dots": []
+    },
+    "Model 45 / T-34 Mentor": {
+      "img": "Beechcraft Model 45.jpeg",
+      "warning": "",
+      "dots": []
+    },
+    "Models 55, 56 and 58 \"Baron\"": {
+      "img": "Beechcraft Baron.jpeg",
+      "warning": "",
+      "dots": []
     }
   },
   "SOCATA": {
