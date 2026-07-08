@@ -2080,28 +2080,81 @@ const permanentData = {
     },
     "Model 18": {
       "img": "Beechcraft Model 18.jpeg",
-      "warning": "",
-      "dots": []
+      "warning": "All major components have their own data plate. Because these components were not always attached to the airframe they were originally intended for, the c/n on these plates may differ slightly from the official serial number. This gap between the component c/n and the official serial number (the one belonging to the cabin section) can be even larger if the component was replaced later.Components known to have these alternative serial numbers include: -The empennage (the plate is located in the center on top of the horizontal stabilizer) -The center section spar -The left and right wings -The elevators -The rudders -The landing gear -The pilot's floor structure -The engine cowlings. Any construction number found on these components should therefore be treated as unverified, unless it has been cross-checked with the data plate on the cabin section or the aircraft paperwork.",
+      "dots": [
+        {
+          "x": 72.375,
+          "y": 40.427775065104164,
+          "info": "Pre-war civil versions (Models 18 to C18): On a cockpit sub-panel.",
+          "cnImg": ""
+        },
+        {
+          "x": 49.25,
+          "y": 43.094441731770836,
+          "info": "Post-war model D18S: Usually on the forward frame of the oval passenger door at the rear of the aircraft, but sometimes in the center of the door between the passenger cabin and the cockpit.",
+          "cnImg": ""
+        },
+        {
+          "x": 23,
+          "y": 44.42777506510417,
+          "info": "Post-war \"Super 18s\" (Models E18 to H18): On the right side of the fuselage, below the horizontal stabilizer.",
+          "cnImg": ""
+        },
+        {
+          "x": 75.125,
+          "y": 37.92777506510417,
+          "info": "Military versions (C-45, AT-7, AT-11, JRB, SNB): On the cockpit sub-panel, or sometimes on the bulkhead behind the cockpit. Later, these may have been supplemented by plates on the right side of the fuselage (similar to the Super 18s) to comply with FAA regulations when sold on the civil market or during an overhaul.",
+          "cnImg": ""
+        }
+      ]
     },
     "Model 23 Musketeer": {
       "img": "Beechcraft Musketeer.jpeg",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 80.375,
+          "y": 53.65766811995256,
+          "info": "Left side of the rear fuselage, below the tailplane.",
+          "cnImg": ""
+        }
+      ]
     },
     "Models 33, 35 and 36 \"Bonanza\" & \"Debonair\"": {
       "img": "Beechcraft Bonanza.jpeg",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 47,
+          "y": 55.67916116215418,
+          "info": "Lower right fuselage, just behind the wing (sometimes partly obscured by the flaps)",
+          "cnImg": ""
+        }
+      ]
     },
     "Model 45 / T-34 Mentor": {
       "img": "Beechcraft Model 45.jpeg",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 81.625,
+          "y": 48.56015646152298,
+          "info": "Left fuselage, just below the horizontal stabilizer.",
+          "cnImg": ""
+        }
+      ]
     },
     "Models 55, 56 and 58 \"Baron\"": {
       "img": "Beechcraft Baron.jpeg",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 47.25,
+          "y": 55.41874906229969,
+          "info": "On the lower right fuselage, just behind the wing, sometimes partly obscured by the flaps.",
+          "cnImg": ""
+        }
+      ]
     }
   },
   "SOCATA": {
