@@ -2286,6 +2286,18 @@ const permanentData = {
       "img": "Su-27.png",
       "warning": "",
       "dots": []
+    },
+    "J-6": {
+      "img": "MiG-19.jpeg",
+      "warning": "Wing numbers may differ due to parts swapping; always verify with paperwork for accuracy.",
+      "dots": [
+        {
+          "x": 46.25,
+          "y": 55.70830477999797,
+          "info": "Inside both main wheel bays",
+          "cnImg": "J-6-loc-1.JPG"
+        }
+      ]
     }
   },
   "Piper": {
