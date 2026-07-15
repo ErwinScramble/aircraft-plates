@@ -2269,6 +2269,58 @@ const permanentData = {
       "img": "Su-27.png",
       "warning": "",
       "dots": []
+    },
+    "Su-22": {
+      "img": "Su-22.jpeg",
+      "warning": "Wing numbers may differ due to parts swapping.",
+      "dots": [
+        {
+          "x": 23.375,
+          "y": 53.61450174985124,
+          "info": "Nosewheel bay",
+          "cnImg": ""
+        },
+        {
+          "x": 65.5,
+          "y": 57.88448444200225,
+          "info": "Often painted on the wing pylons.",
+          "cnImg": ""
+        },
+        {
+          "x": 31.25,
+          "y": 61.70499527182156,
+          "info": "Often painted on the wing pylons.",
+          "cnImg": ""
+        },
+        {
+          "x": 30.875000000000004,
+          "y": 33.16353201375959,
+          "info": "Inside the plating just behind the cockpit (accessible only when forward section is separated).",
+          "cnImg": "Su-22-loc1.jpg"
+        },
+        {
+          "x": 56.875,
+          "y": 54.96291390764812,
+          "info": "Left main wheel bay.",
+          "cnImg": "Su-22-loc2.png"
+        },
+        {
+          "x": 35.625,
+          "y": 59.23289659979913,
+          "info": "Right main wheel bay.",
+          "cnImg": "Su-22-loc3.png"
+        }
+      ]
+    },
+    "Su-20": {
+      "img": "Su-22.jpeg",
+      "warning": "Wing numbers may differ due to parts swapping.",
+      "dots": []
+    },
+    "Su-17": {
+      "img": "Su-22.jpeg",
+      "warning": "Wing numbers may differ due to parts swapping.",
+      "dots": []
     }
   },
   "Shenyang": {
