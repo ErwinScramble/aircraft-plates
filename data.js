@@ -761,8 +761,14 @@ const permanentData = {
         {
           "x": 28.125,
           "y": 58.00568181038415,
-          "info": "Positions to check:      Foremost strut (left): Small plate (4-5 digits).     Top of wheel cavity: Punched 4-digit number.     Forward bulkhead: Small plate (4-digit number).     Side panels (both): Long painted number.",
-          "cnImg": null
+          "info": "Nose-wheel bay, left forward bulkhead.",
+          "cnImg": "MiG-21-loc1.jpeg"
+        },
+        {
+          "x": 29.875,
+          "y": 57.81830478227713,
+          "info": "Nose-wheel bay, top of the wheel well curve (Gorki-built MiG-21: line number, 2 or 4 digits).",
+          "cnImg": "MiG-21-Gorki-ln-Loc1.jpg"
         }
       ],
       "warning": "Multiple locations possible; check all combinations. Placement varies by sub-type and factory."
