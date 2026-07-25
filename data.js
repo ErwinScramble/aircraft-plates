@@ -753,44 +753,52 @@ const permanentData = {
   },
   "Mikoyan Gurevich (MiG)": {
     "MiG-21": {
-      "img": "MiG-21.png",
+      "img": "MiG-21.jpeg",
+      "warning": "Multiple locations possible; check all combinations. Placement varies by sub-type and factory.",
       "dots": [
         {
-          "x": 57.75,
-          "y": 56.31928855742105,
-          "info": "Main wheel bays (left and right). Plates are part of the wing section. Note: Wings are interchangeable; always cross-check with the nose wheel bay for accuracy."
-        },
-        {
-          "x": 28.125,
-          "y": 58.00568181038415,
+          "x": 26.25,
+          "y": 63.6051316190958,
           "info": "Nose-wheel bay, left forward bulkhead.",
           "cnImg": "MiG-21-loc1.jpeg"
         },
         {
-          "x": 29.875,
-          "y": 57.81830478227713,
-          "info": "Nose-wheel bay, top of the wheel well curve (Gorki-built MiG-21: line number, 2 or 4 digits).",
+          "x": 28.999999999999996,
+          "y": 63.33655768819932,
+          "info": "Gorki-built MiG-21: line number, 2 or 4 digits in the ose-wheel bay, top of the wheel well curve. ",
           "cnImg": "MiG-21-Gorki-ln-Loc1.jpg"
+        },
+        {
+          "x": 53.75,
+          "y": 60.33852523848713,
+          "info": "Main wheel bays (left and right). Plates are part of the wing section. Note: Wings are interchangeable; always cross-check with the nose wheel bay for accuracy.",
+          "cnImg": ""
         }
-      ],
-      "warning": "Multiple locations possible; check all combinations. Placement varies by sub-type and factory."
+      ]
     },
     "MiG-27": {
-      "img": "MiG-23.png",
+      "img": "MiG-23.jpeg",
       "warning": "Multiple locations possible; check all combinations. Placement varies by sub-type and factory.",
       "dots": [
         {
-          "x": 57.99999999999999,
-          "y": 60.357479770729746,
+          "x": 36.25,
+          "y": 52.64999655532863,
           "info": "On both sides of the landing gear (sometimes last five numbers only).",
           "cnImg": "MiG-27-loc1.jpg"
         }
       ]
     },
     "MiG-23": {
-      "img": "MiG-23.png",
+      "img": "MiG-23.jpeg",
       "warning": "Multiple locations possible; check all combinations. Placement varies by sub-type and factory.",
-      "dots": []
+      "dots": [
+        {
+          "x": 37,
+          "y": 53.73125185894973,
+          "info": "Main wheel bay interior (Single-seat variants: painted last 5 digits of 10-digit serial)",
+          "cnImg": "MiG-23-loc1.jpg"
+        }
+      ]
     },
     "MiG-15": {
       "img": "MiG-15.png",
