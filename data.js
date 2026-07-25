@@ -214,7 +214,7 @@ const permanentData = {
       ]
     },
     "An-12": {
-      "img": "An-12.png",
+      "img": "An-12.jpeg",
       "warning": "",
       "dots": [
         {
@@ -244,7 +244,7 @@ const permanentData = {
       ]
     },
     "An-10": {
-      "img": "An-12.png",
+      "img": "An-12.jpeg",
       "warning": "",
       "dots": [
         {
@@ -292,7 +292,7 @@ const permanentData = {
       ]
     },
     "An-28": {
-      "img": "An-14.png",
+      "img": "An-14.jpeg",
       "warning": "",
       "dots": [
         {
@@ -310,7 +310,7 @@ const permanentData = {
       ]
     },
     "An-14": {
-      "img": "An-14.png",
+      "img": "An-14.jpeg",
       "warning": "",
       "dots": []
     },
@@ -604,7 +604,8 @@ const permanentData = {
   },
   "Cessna": {
     "T-37 Tweet (Cessna 318)": {
-      "img": "A-37.png",
+      "img": "A-37.jpeg",
+      "warning": "",
       "dots": [
         {
           "x": 47.5,
@@ -614,7 +615,8 @@ const permanentData = {
       ]
     },
     "A-37 Dragonfly": {
-      "img": "A-37.png",
+      "img": "A-37.jpeg",
+      "warning": "",
       "dots": [
         {
           "x": 47,
@@ -678,7 +680,7 @@ const permanentData = {
       ]
     },
     "Ce.305": {
-      "img": "Ce170.png",
+      "img": "Ce170.jpeg",
       "warning": "",
       "dots": [
         {
@@ -690,7 +692,7 @@ const permanentData = {
       ]
     },
     "O-1 Bird Dog": {
-      "img": "Ce170.png",
+      "img": "Ce170.jpeg",
       "warning": "",
       "dots": [
         {
@@ -702,7 +704,7 @@ const permanentData = {
       ]
     },
     "Ce.188": {
-      "img": "Ce188.png",
+      "img": "Ce188.jpeg",
       "warning": "",
       "dots": [
         {
@@ -714,7 +716,7 @@ const permanentData = {
       ]
     },
     "Ce.170": {
-      "img": "Ce170.png",
+      "img": "Ce170.jpeg",
       "warning": "",
       "dots": []
     },
@@ -731,7 +733,7 @@ const permanentData = {
       ]
     },
     "Ce.310": {
-      "img": "Ce310.png",
+      "img": "Ce310.jpeg",
       "warning": "",
       "dots": [
         {
@@ -968,7 +970,8 @@ const permanentData = {
   },
   "Kamov": {
     "Ka-26": {
-      "img": "Ka-26.png",
+      "img": "Ka-26.jpeg",
+      "warning": "",
       "dots": [
         {
           "x": 41,
@@ -1057,7 +1060,7 @@ const permanentData = {
   },
   "Boeing": {
     "B-52 Stratofortress": {
-      "img": "B-52.png",
+      "img": "B-52.jpeg",
       "warning": "",
       "dots": []
     },
@@ -1158,7 +1161,7 @@ const permanentData = {
   },
   "Yakovlev": {
     "Yak-52": {
-      "img": "Yak-52.png",
+      "img": "Yak-52.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1190,7 +1193,8 @@ const permanentData = {
   },
   "Mil": {
     "Mi-2": {
-      "img": "Mil-2.png",
+      "img": "Mil-2.jpeg",
+      "warning": "",
       "dots": [
         {
           "x": 68.375,
@@ -1271,15 +1275,15 @@ const permanentData = {
       ]
     },
     "Mi-4": {
-      "img": "Mil-4.png",
+      "img": "Mil-4.jpeg",
+      "warning": "May be covered or hidden.",
       "dots": [
         {
           "x": 63.5,
           "y": 37.680081564933865,
           "info": "Cockpit bulkhead (rear side), right of the corridor."
         }
-      ],
-      "warning": "May be covered or hidden."
+      ]
     },
     "Mi-6": {
       "img": "Mil-6.jpeg",
@@ -1293,7 +1297,8 @@ const permanentData = {
       ]
     },
     "Mi-8": {
-      "img": "Mil-8.png",
+      "img": "Mil-8.jpeg",
+      "warning": "",
       "dots": [
         {
           "x": 81.5,
@@ -1306,8 +1311,7 @@ const permanentData = {
           "info": "On the inside of the fuel filler lid and is visible only when opened. (Painted)",
           "cnImg": "Mi-8-loc1.jpg"
         }
-      ],
-      "warning": ""
+      ]
     },
     "Mi-14": {
       "img": "Mil-14.jpeg",
@@ -1430,29 +1434,9 @@ const permanentData = {
       ]
     }
   },
-  "Shaanxhi": {
-    "Y8, Y9 & KJ200": {
-      "img": "An-12.png",
-      "warning": "",
-      "dots": [
-        {
-          "x": 79.5,
-          "y": 36.68520795305796,
-          "info": "Tail",
-          "cnImg": ""
-        },
-        {
-          "x": 45.5,
-          "y": 47.07724077018345,
-          "info": "Under the right wing, near the wing root",
-          "cnImg": "Y8-loc1.png"
-        }
-      ]
-    }
-  },
   "PZL": {
     "M28": {
-      "img": "An-14.png",
+      "img": "An-14.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1531,7 +1515,7 @@ const permanentData = {
       ]
     },
     "Il-14": {
-      "img": "Il-14.png",
+      "img": "Il-14.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1560,7 +1544,7 @@ const permanentData = {
       ]
     },
     "Il-12": {
-      "img": "Il-14.png",
+      "img": "Il-14.jpeg",
       "warning": "",
       "dots": []
     },
@@ -1583,7 +1567,7 @@ const permanentData = {
       ]
     },
     "Il-86 & Il-80": {
-      "img": "Il-86.png",
+      "img": "Il-86.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1595,7 +1579,7 @@ const permanentData = {
       ]
     },
     "Il-96": {
-      "img": "Il-86.png",
+      "img": "Il-86.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1658,7 +1642,7 @@ const permanentData = {
   },
   "Grumman": {
     "F9F Panther": {
-      "img": "F-9.png",
+      "img": "F-9.jpeg",
       "warning": "",
       "dots": []
     },
@@ -1682,7 +1666,7 @@ const permanentData = {
       "dots": []
     },
     "F-35 Lightning II": {
-      "img": "F-35.png",
+      "img": "F-35.jpeg",
       "warning": "",
       "dots": []
     }
@@ -1718,7 +1702,7 @@ const permanentData = {
       ]
     },
     "DC-10": {
-      "img": "DC-10.png",
+      "img": "DC-10.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1730,7 +1714,7 @@ const permanentData = {
       ]
     },
     "MD-11": {
-      "img": "DC-10.png",
+      "img": "DC-10.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1837,7 +1821,7 @@ const permanentData = {
   },
   "Republic": {
     "F-84 Thunderjet": {
-      "img": "F-84.png",
+      "img": "F-84.jpeg",
       "warning": "",
       "dots": []
     },
@@ -1849,7 +1833,7 @@ const permanentData = {
   },
   "North American": {
     "F-86 Sabre": {
-      "img": "F-86.png",
+      "img": "F-86.jpeg",
       "warning": "",
       "dots": []
     }
@@ -1909,7 +1893,7 @@ const permanentData = {
   },
   "Sikorsky": {
     "S-61 / H-3 Sea King": {
-      "img": "S-61.png",
+      "img": "S-61.jpeg",
       "warning": "",
       "dots": [
         {
@@ -2165,7 +2149,7 @@ const permanentData = {
   },
   "SOCATA": {
     "Rallye": {
-      "img": "Rallye.png",
+      "img": "Rallye.jpeg",
       "warning": "",
       "dots": [
         {
@@ -2193,7 +2177,7 @@ const permanentData = {
   },
   "RFB (Rhein-Flugzeugbau)": {
     "Fantrainer": {
-      "img": "Fantrainer.png",
+      "img": "Fantrainer.jpeg",
       "warning": "",
       "dots": [
         {
@@ -2207,14 +2191,14 @@ const permanentData = {
   },
   "SIAI-Marchetti": {
     "SM.1019": {
-      "img": "Ce170.png",
+      "img": "Ce170.jpeg",
       "warning": "",
       "dots": []
     }
   },
   "Junkers": {
     "Ju.87 Stuka": {
-      "img": "Ju-87.png",
+      "img": "Ju-87.jpeg",
       "warning": "",
       "dots": [
         {
@@ -2228,7 +2212,7 @@ const permanentData = {
   },
   "Sukhoi": {
     "Su-27": {
-      "img": "Su-27.png",
+      "img": "Su-27.jpeg",
       "warning": "",
       "dots": [
         {
@@ -2252,27 +2236,27 @@ const permanentData = {
       ]
     },
     "Su-30": {
-      "img": "Su-27.png",
+      "img": "Su-27.jpeg",
       "warning": "",
       "dots": []
     },
     "Su-33": {
-      "img": "Su-27.png",
+      "img": "Su-27.jpeg",
       "warning": "",
       "dots": []
     },
     "Su-34": {
-      "img": "Su-27.png",
+      "img": "Su-27.jpeg",
       "warning": "",
       "dots": []
     },
     "Su-35": {
-      "img": "Su-27.png",
+      "img": "Su-27.jpeg",
       "warning": "",
       "dots": []
     },
     "Su-37": {
-      "img": "Su-27.png",
+      "img": "Su-27.jpeg",
       "warning": "",
       "dots": []
     },
@@ -2331,17 +2315,17 @@ const permanentData = {
   },
   "Shenyang": {
     "J-11": {
-      "img": "Su-27.png",
+      "img": "Su-27.jpeg",
       "warning": "",
       "dots": []
     },
     "J-15": {
-      "img": "Su-27.png",
+      "img": "Su-27.jpeg",
       "warning": "",
       "dots": []
     },
     "J-16": {
-      "img": "Su-27.png",
+      "img": "Su-27.jpeg",
       "warning": "",
       "dots": []
     },
@@ -2380,6 +2364,11 @@ const permanentData = {
   "Shaanxi": {
     "KJ-2000": {
       "img": "Il-76.png",
+      "warning": "",
+      "dots": []
+    },
+    "Y8, Y9 & KJ200": {
+      "img": "An-12.jpeg",
       "warning": "",
       "dots": []
     }
