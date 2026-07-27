@@ -113,7 +113,7 @@ const permanentData = {
       ]
     },
     "Ae-45 & Ae-145": {
-      "img": "Ae-45.png",
+      "img": "Ae-45.jpeg",
       "warning": "",
       "dots": [
         {
@@ -268,7 +268,7 @@ const permanentData = {
       ]
     },
     "An-8": {
-      "img": "An-8.png",
+      "img": "An-8.jpeg",
       "warning": "",
       "dots": [
         {
@@ -533,7 +533,7 @@ const permanentData = {
       ]
     },
     "Alouette III": {
-      "img": "SA316.png",
+      "img": "SA316.jpeg",
       "warning": "",
       "dots": [
         {
@@ -580,7 +580,7 @@ const permanentData = {
       ]
     },
     "F-117 Nighthawk": {
-      "img": "F-117.png",
+      "img": "F-117.jpeg",
       "warning": "",
       "dots": []
     },
@@ -721,7 +721,7 @@ const permanentData = {
       "dots": []
     },
     "Ce.404 Titan": {
-      "img": "Ce404.png",
+      "img": "Ce404.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1078,12 +1078,12 @@ const permanentData = {
       "dots": []
     },
     "B727": {
-      "img": "B727.png",
+      "img": "B727.jpeg",
       "warning": "",
       "dots": []
     },
     "B747": {
-      "img": "B747.png",
+      "img": "B747.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1095,7 +1095,7 @@ const permanentData = {
       ]
     },
     "B737": {
-      "img": "B737.png",
+      "img": "B737.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1107,7 +1107,7 @@ const permanentData = {
       ]
     },
     "B757": {
-      "img": "B757.png",
+      "img": "B757.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1119,7 +1119,7 @@ const permanentData = {
       ]
     },
     "B767": {
-      "img": "B767.png",
+      "img": "B767.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1155,7 +1155,7 @@ const permanentData = {
       ]
     },
     "B787": {
-      "img": "B787.png",
+      "img": "B787.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1189,7 +1189,8 @@ const permanentData = {
   },
   "Northrop": {
     "F-5 Freedom Fighter": {
-      "img": "F-5.png",
+      "img": "F-5.jpeg",
+      "warning": "",
       "dots": [
         {
           "x": 46,
@@ -1488,12 +1489,12 @@ const permanentData = {
       ]
     },
     "Il-2": {
-      "img": "Il-2.png",
+      "img": "Il-2.jpeg",
       "warning": "",
       "dots": []
     },
     "Il-28": {
-      "img": "Il-28.png",
+      "img": "Il-28.jpeg",
       "warning": "Also be found at several other locations on the airframe.",
       "dots": [
         {
@@ -1535,12 +1536,12 @@ const permanentData = {
       ]
     },
     "Il-103": {
-      "img": "Il-103.png",
+      "img": "Il-103.jpeg",
       "warning": "",
       "dots": []
     },
     "Il-62": {
-      "img": "Il-62.png",
+      "img": "Il-62.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1557,7 +1558,7 @@ const permanentData = {
       "dots": []
     },
     "Il-76 & Il-78": {
-      "img": "Il-76.png",
+      "img": "Il-76.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1676,7 +1677,14 @@ const permanentData = {
     "F-35 Lightning II": {
       "img": "F-35.jpeg",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 20.5,
+          "y": 53.87576401830485,
+          "info": "Nose-wheel bay, left front interior.",
+          "cnImg": "F-35-loc1.jpg"
+        }
+      ]
     }
   },
   "McDonnell Douglas": {
@@ -1762,7 +1770,7 @@ const permanentData = {
       "dots": []
     },
     "DC-4": {
-      "img": "DC-6.jpeg",
+      "img": "DC-4.jpeg",
       "warning": "",
       "dots": []
     },
@@ -1779,19 +1787,19 @@ const permanentData = {
       ]
     },
     "DC-7": {
-      "img": "DC-6.jpeg",
+      "img": "DC-7.jpeg",
       "warning": "",
       "dots": [
         {
-          "x": 20,
-          "y": 45.856248697519256,
+          "x": 30.75,
+          "y": 48.12573780850214,
           "info": "RH forward galley doorstep.",
           "cnImg": ""
         }
       ]
     },
     "DC-8": {
-      "img": "DC-8.png",
+      "img": "DC-8.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1803,7 +1811,7 @@ const permanentData = {
       ]
     },
     "DC-9": {
-      "img": "DC-9.png",
+      "img": "DC-9.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1872,7 +1880,7 @@ const permanentData = {
       ]
     },
     "F-28 Fellowship": {
-      "img": "F28.png",
+      "img": "F28.jpeg",
       "warning": "",
       "dots": []
     },
@@ -1913,7 +1921,7 @@ const permanentData = {
       ]
     },
     "S-55 / H-19 Chickasaw": {
-      "img": "S-55.png",
+      "img": "S-55.jpeg",
       "warning": "",
       "dots": []
     },
@@ -1935,7 +1943,7 @@ const permanentData = {
   },
   "NHIndustries": {
     "NH90": {
-      "img": "NH90.png",
+      "img": "NH90.jpeg",
       "warning": "",
       "dots": []
     }
@@ -2013,7 +2021,7 @@ const permanentData = {
       ]
     },
     "A330": {
-      "img": "A330.png",
+      "img": "A330.jpeg",
       "warning": "",
       "dots": [
         {
@@ -2025,7 +2033,7 @@ const permanentData = {
       ]
     },
     "A340": {
-      "img": "A340.png",
+      "img": "A340.jpeg",
       "warning": "",
       "dots": [
         {
@@ -2039,7 +2047,7 @@ const permanentData = {
   },
   "AeroVolga": {
     "LA-8": {
-      "img": "AeroVolga LA-8.png",
+      "img": "AeroVolga LA-8.jpeg",
       "warning": "",
       "dots": [
         {
@@ -2065,7 +2073,7 @@ const permanentData = {
   },
   "Beechcraft": {
     "T-6 Texan II": {
-      "img": "T-6-texan2.png",
+      "img": "T-6-texan2.jpeg",
       "warning": "",
       "dots": [
         {
@@ -2371,7 +2379,7 @@ const permanentData = {
   },
   "Shaanxi": {
     "KJ-2000": {
-      "img": "Il-76.png",
+      "img": "Il-76.jpeg",
       "warning": "",
       "dots": []
     },
@@ -2383,7 +2391,7 @@ const permanentData = {
   },
   "Beriev": {
     "A-50 / A-60 & A-100": {
-      "img": "Il-76.png",
+      "img": "Il-76.jpeg",
       "warning": "",
       "dots": []
     }
