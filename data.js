@@ -1851,7 +1851,26 @@ const permanentData = {
     "F-86 Sabre": {
       "img": "F-86.jpeg",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 40.25,
+          "y": 37.855261170018025,
+          "info": "Bulkhead behind ejection seat (Visible from exterior).",
+          "cnImg": "F-86-loc1.jpg"
+        }
+      ]
+    },
+    "T-6 Texan / Harvard II": {
+      "img": "T-6-Texan1.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 41,
+          "y": 43.21017939604276,
+          "info": "Front cockpit, left side.",
+          "cnImg": "T-6-Texan1-loc1.jpg"
+        }
+      ]
     }
   },
   "Fokker": {
