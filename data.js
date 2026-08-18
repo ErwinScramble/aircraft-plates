@@ -2428,5 +2428,19 @@ const permanentData = {
         }
       ]
     }
+  },
+  "Kaman": {
+    "H-43 Huskie": {
+      "img": "H-43.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 28.875,
+          "y": 56.16874909090992,
+          "info": "Cockpit, center console (left side).",
+          "cnImg": "h-43-loc1.JPG"
+        }
+      ]
+    }
   }
 };
