@@ -2414,5 +2414,19 @@ const permanentData = {
       "warning": "",
       "dots": []
     }
+  },
+  "Hiller": {
+    "Hiller 360 / H-23 Raven": {
+      "img": "H-23.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 32.875,
+          "y": 63.25223859738047,
+          "info": "Cockpit, center console (left side).",
+          "cnImg": "H-23-loc-1.jpg"
+        }
+      ]
+    }
   }
 };
