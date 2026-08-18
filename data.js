@@ -2442,5 +2442,26 @@ const permanentData = {
         }
       ]
     }
+  },
+  "Industria Aeronautică Română (IAR)": {
+    "IAR-316": {
+      "img": "SA316.jpeg",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Flugzeugwerk (F+W)": {
+    "F+W Alouette IIIS": {
+      "img": "SA316.jpeg",
+      "warning": "Verify airframe; tail may have been swapped.",
+      "dots": [
+        {
+          "x": 53.87499999999999,
+          "y": 49.311380049413486,
+          "info": "Tail, left side under exhaust.",
+          "cnImg": "SA316-loc2.jpg"
+        }
+      ]
+    }
   }
 };
