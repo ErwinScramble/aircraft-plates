@@ -1754,6 +1754,18 @@ const permanentData = {
           "cnImg": "Bo105-loc1.jpg"
         }
       ]
+    },
+    "Bo108": {
+      "img": "EC135.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 63.24999999999999,
+          "y": 52.23124894070621,
+          "info": "Fuselage exterior, right side next to passenger door.",
+          "cnImg": "Bo108-loc1.jpg"
+        }
+      ]
     }
   },
   "Vought": {
@@ -2460,6 +2472,34 @@ const permanentData = {
           "y": 49.311380049413486,
           "info": "Tail, left side under exhaust.",
           "cnImg": "SA316-loc2.jpg"
+        }
+      ]
+    }
+  },
+  "Airbus Helicopters": {
+    "H135": {
+      "img": "EC135.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 62.625,
+          "y": 47.35624875473972,
+          "info": "Fuselage exterior, right side behind aft window.",
+          "cnImg": "EC135-loc1.jpg"
+        }
+      ]
+    }
+  },
+  "Eurocopter": {
+    "EC135": {
+      "img": "EC135.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 62.625,
+          "y": 47.35624875473972,
+          "info": "Fuselage exterior, right side behind aft window.",
+          "cnImg": "EC135-loc1.jpg"
         }
       ]
     }
