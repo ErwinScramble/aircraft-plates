@@ -2488,6 +2488,11 @@ const permanentData = {
           "cnImg": "EC135-loc1.jpg"
         }
       ]
+    },
+    "H145": {
+      "img": "BK117.jpeg",
+      "warning": "",
+      "dots": []
     }
   },
   "Eurocopter": {
@@ -2500,6 +2505,32 @@ const permanentData = {
           "y": 47.35624875473972,
           "info": "Fuselage exterior, right side behind aft window.",
           "cnImg": "EC135-loc1.jpg"
+        }
+      ]
+    },
+    "EC145": {
+      "img": "BK117.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 63.625,
+          "y": 57.86467625396896,
+          "info": "Fuselage exterior, right side below aft window (behind sliding door).",
+          "cnImg": "EC145-Loc1.jpg"
+        }
+      ]
+    }
+  },
+  "MBB/Kawasaki": {
+    "BK117": {
+      "img": "BK117.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 64.25,
+          "y": 57.39929033142693,
+          "info": "Fuselage exterior, right side below aft window (behind sliding door).",
+          "cnImg": "BK117-loc1.JPG"
         }
       ]
     }
