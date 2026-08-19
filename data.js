@@ -991,7 +991,7 @@ const permanentData = {
           "x": 37.75,
           "y": 70.1694129549353,
           "info": "Fuselage, left side below the pilot door.",
-          "cnImg": null
+          "cnImg": "Ka-26-loc1.jpg"
         }
       ]
     },
