@@ -984,13 +984,14 @@ const permanentData = {
         {
           "x": 41,
           "y": 49.587945693854415,
-          "info": "Fuselage, strake above the left-hand door-runner."
+          "info": "Fuselage, strake above the door-runner.",
+          "cnImg": "Ka-26-loc2.jpg"
         },
         {
           "x": 37.75,
           "y": 70.1694129549353,
           "info": "Fuselage, left side below the pilot door.",
-          "cnImg": "Ka-26-loc1.jpg"
+          "cnImg": null
         }
       ]
     },
