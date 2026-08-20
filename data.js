@@ -2520,6 +2520,18 @@ const permanentData = {
           "cnImg": "EC145-Loc1.jpg"
         }
       ]
+    },
+    "EC665 Tiger (German built)": {
+      "img": "EC665.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 68.625,
+          "y": 50.583626670032736,
+          "info": "Fuselage exterior, right side behind aft window.",
+          "cnImg": "EC665-loc1.jpg"
+        }
+      ]
     }
   },
   "MBB/Kawasaki": {
