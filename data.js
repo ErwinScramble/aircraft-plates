@@ -2547,5 +2547,19 @@ const permanentData = {
         }
       ]
     }
+  },
+  "PZL Bielsko": {
+    "SZD-30 Pirat": {
+      "img": "SZD-30.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 40.5,
+          "y": 48.69560243089101,
+          "info": "Cockpit interior, right side next to pilot seat.",
+          "cnImg": "SZD30-loc1.JPG"
+        }
+      ]
+    }
   }
 };
