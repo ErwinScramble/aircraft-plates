@@ -2256,6 +2256,18 @@ const permanentData = {
           "cnImg": "Ju-87-loc1.jpg"
         }
       ]
+    },
+    "Ju.52": {
+      "img": "Ju52.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 16.25,
+          "y": 54.31595802047542,
+          "info": "Nose exterior, left side under cockpit.",
+          "cnImg": "Ju52-loc1.JPG"
+        }
+      ]
     }
   },
   "Sukhoi": {
@@ -2588,6 +2600,20 @@ const permanentData = {
           "cnImg": "N1101-loc1.JPG"
         }
       ]
+    }
+  },
+  "CASA": {
+    "CASA 352": {
+      "img": "Ju52.jpeg",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Amiot": {
+    "A.A.C. 1 Toucan": {
+      "img": "Ju52.jpeg",
+      "warning": "",
+      "dots": []
     }
   }
 };
