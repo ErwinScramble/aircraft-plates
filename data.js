@@ -2561,5 +2561,33 @@ const permanentData = {
         }
       ]
     }
+  },
+  "Messerschmitt": {
+    "Bf.108 Taifun": {
+      "img": "Bf108.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 40.375,
+          "y": 50.06259790594473,
+          "info": "Nose exterior, left side under cockpit.",
+          "cnImg": ""
+        }
+      ]
+    }
+  },
+  "Nord": {
+    "N.1101 Noralpha": {
+      "img": "Bf108.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 40.5,
+          "y": 50.25040308649744,
+          "info": "Nose exterior, left side under cockpit.",
+          "cnImg": "N1101-loc1.JPG"
+        }
+      ]
+    }
   }
 };
