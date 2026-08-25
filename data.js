@@ -112,18 +112,6 @@ const permanentData = {
         }
       ]
     },
-    "Ae-45 & Ae-145": {
-      "img": "Ae-45.jpeg",
-      "warning": "",
-      "dots": [
-        {
-          "x": 29.625,
-          "y": 57.199197632627666,
-          "info": "Lower fuselage, left side in front of the wing root.",
-          "cnImg": "Ae-45-loc1.jpg"
-        }
-      ]
-    },
     "L-39 Albatros": {
       "img": "L-39.png",
       "dots": [
@@ -152,6 +140,30 @@ const permanentData = {
           "x": 40.125,
           "y": 48.1331179885058,
           "info": "Ejection seats, sides (painted)."
+        }
+      ]
+    },
+    "Ae-45": {
+      "img": "Ae-45.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 44.25,
+          "y": 44.229581833921785,
+          "info": "Lower fuselage, left side in front of wing root.",
+          "cnImg": "Ae-45-loc1.jpg"
+        }
+      ]
+    },
+    "Ae-145": {
+      "img": "Ae-45.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 44.625,
+          "y": 44.82708319187941,
+          "info": "Lower fuselage, left side in front of wing root.",
+          "cnImg": ""
         }
       ]
     }
@@ -1531,7 +1543,7 @@ const permanentData = {
         {
           "x": 27.125,
           "y": 43.150077324632804,
-          "info": "Nose exterior, left side. (VEB-14 only)",
+          "info": "Lower fuselage, left side in front of wing root. (VEB-14 only)",
           "cnImg": "Il-14-loc1.jpg"
         }
       ]
