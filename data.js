@@ -1764,7 +1764,7 @@ const permanentData = {
           "x": 57.49999999999999,
           "y": 48.668751665830676,
           "info": "Fuselage, right side behind cockpit, next to passenger door.",
-          "cnImg": "Bo105-loc1.jpg"
+          "cnImg": "Bo105-loc1.JPG"
         }
       ]
     },
