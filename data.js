@@ -941,11 +941,12 @@ const permanentData = {
   },
   "Bell": {
     "Bell 204 and 205 / H-1 Iroquois": {
-      "img": "UH-1.png",
+      "img": "UH-1.jpeg",
+      "warning": "",
       "dots": [
         {
-          "x": 14.875,
-          "y": 63.74329764058137,
+          "x": 27.750000000000004,
+          "y": 68.09189810468534,
           "info": "Cockpit, center console (left side, near floor).",
           "cnImg": "UH-1-loc1.jpg"
         }
@@ -976,12 +977,12 @@ const permanentData = {
       ]
     },
     "Bell 412": {
-      "img": "UH-1.png",
+      "img": "UH-1.jpeg",
       "warning": "",
       "dots": [
         {
-          "x": 86.375,
-          "y": 49.0396028279925,
+          "x": 84.125,
+          "y": 61.330911604787474,
           "info": "Tailfin",
           "cnImg": "Bell 412-loc1.jpg"
         }
@@ -2626,6 +2627,20 @@ const permanentData = {
       "img": "Ju52.jpeg",
       "warning": "",
       "dots": []
+    }
+  },
+  "Dornier": {
+    "UH-1": {
+      "img": "UH-1.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 27,
+          "y": 66.58945379458395,
+          "info": "Cockpit, center console (left side, near floor).",
+          "cnImg": "UH-1-loc2.jpg"
+        }
+      ]
     }
   }
 };
