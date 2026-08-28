@@ -2642,5 +2642,33 @@ const permanentData = {
         }
       ]
     }
+  },
+  "Hughes": {
+    "Model 269 / Model 300 / TH-55 Osage": {
+      "img": "Hughes 269.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 68.25,
+          "y": 61.044556759011826,
+          "info": "Cockpit interior, right seat near floor.",
+          "cnImg": "Hughes269-loc-1.JPG"
+        }
+      ]
+    }
+  },
+  "Schweizer": {
+    "Model 269 / Model 300": {
+      "img": "Hughes 269.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 76.125,
+          "y": 61.044556759011826,
+          "info": "Cockpit interior, floor in front of left seat (May be covered by carpet).",
+          "cnImg": ""
+        }
+      ]
+    }
   }
 };
