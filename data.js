@@ -2670,5 +2670,19 @@ const permanentData = {
         }
       ]
     }
+  },
+  "Zlin": {
+    "Z-37 Čmelák": {
+      "img": "Z-37.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 50.125,
+          "y": 41.66381728040446,
+          "info": "Fuselage, right side behind cockpit.",
+          "cnImg": "Z-37-loc1.jpg"
+        }
+      ]
+    }
   }
 };
