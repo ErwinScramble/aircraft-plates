@@ -2641,6 +2641,18 @@ const permanentData = {
           "cnImg": "UH-1-loc2.jpg"
         }
       ]
+    },
+    "Do-27": {
+      "img": "Do-27.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 37.125,
+          "y": 40.07793044719096,
+          "info": "Fuselage exterior, left side behind cockpit entry door.",
+          "cnImg": "Do-27-loc1.JPG"
+        }
+      ]
     }
   },
   "Hughes": {
