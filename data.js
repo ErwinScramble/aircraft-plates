@@ -2206,6 +2206,18 @@ const permanentData = {
           "cnImg": ""
         }
       ]
+    },
+    "Queen Air": {
+      "img": "Queen Air.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 85,
+          "y": 46.7630572648169,
+          "info": "Fuselage, left side below horizontal stabilizer.",
+          "cnImg": "Queen Air-loc1.JPG"
+        }
+      ]
     }
   },
   "SOCATA": {
