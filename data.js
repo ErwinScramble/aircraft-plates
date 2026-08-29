@@ -2665,6 +2665,18 @@ const permanentData = {
           "cnImg": "Do-27-loc1.JPG"
         }
       ]
+    },
+    "Do-28": {
+      "img": "Do-28.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 34.25,
+          "y": 61.70652196589291,
+          "info": "Fuselage, left side next to main gear.",
+          "cnImg": "Do-28-loc1.JPG"
+        }
+      ]
     }
   },
   "Hughes": {
