@@ -777,7 +777,7 @@ const permanentData = {
         {
           "x": 28.999999999999996,
           "y": 63.33655768819932,
-          "info": "Gorki-built MiG-21: line number, 2 or 4 digits in the ose-wheel bay, top of the wheel well curve. ",
+          "info": "Gorki-built MiG-21: line number, 2 or 4 digits in the nose-wheel bay, top of the wheel well curve. ",
           "cnImg": "MiG-21-Gorki-ln-Loc1.jpg"
         },
         {
@@ -2693,6 +2693,24 @@ const permanentData = {
           "y": 41.66381728040446,
           "info": "Fuselage, right side behind cockpit.",
           "cnImg": "Z-37-loc1.jpg"
+        }
+      ]
+    },
+    "Z-42 / Z-142 / Z-242 / Z-43 / Z-143": {
+      "img": "Z-42.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 50,
+          "y": 49.23997479429339,
+          "info": "Fuselage, right side behind cockpit. (noted on German used airframes)",
+          "cnImg": "Z-42-loc1.JPG"
+        },
+        {
+          "x": 10.875,
+          "y": 23.67411077562771,
+          "info": "Tail (Painted).",
+          "cnImg": "Z-42-loc2.JPG"
         }
       ]
     }
