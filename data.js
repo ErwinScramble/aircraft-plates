@@ -327,7 +327,7 @@ const permanentData = {
       "dots": []
     },
     "An-124": {
-      "img": "An-124.png",
+      "img": "An-124.jpeg",
       "warning": "",
       "dots": [
         {
@@ -350,7 +350,7 @@ const permanentData = {
       "dots": []
     },
     "An-32": {
-      "img": "An-32.png",
+      "img": "An-32.jpeg",
       "warning": "",
       "dots": [
         {
@@ -368,12 +368,12 @@ const permanentData = {
       ]
     },
     "An-24": {
-      "img": "An-26.png",
+      "img": "An-26.jpeg",
       "warning": "",
       "dots": []
     },
     "An-26": {
-      "img": "An-26.png",
+      "img": "An-26.jpeg",
       "warning": "",
       "dots": [
         {
@@ -497,7 +497,8 @@ const permanentData = {
       ]
     },
     "SA341 & SA342 Gazelle": {
-      "img": "SA341.png",
+      "img": "SA341.jpeg",
+      "warning": "",
       "dots": [
         {
           "x": 13,
@@ -507,7 +508,8 @@ const permanentData = {
       ]
     },
     "SA365 Dauphin": {
-      "img": "SA365.png",
+      "img": "SA365.jpeg",
+      "warning": "",
       "dots": [
         {
           "x": 86.125,
@@ -517,7 +519,8 @@ const permanentData = {
       ]
     },
     "AS565 Panther": {
-      "img": "SA365.png",
+      "img": "SA365.jpeg",
+      "warning": "",
       "dots": [
         {
           "x": 86.125,
@@ -813,7 +816,7 @@ const permanentData = {
       ]
     },
     "MiG-15": {
-      "img": "MiG-15.png",
+      "img": "MiG-15.jpeg",
       "warning": "Wing numbers may differ due to parts swapping; always verify with paperwork for accuracy.",
       "dots": [
         {
@@ -831,7 +834,7 @@ const permanentData = {
       ]
     },
     "MiG-17": {
-      "img": "MiG-17.png",
+      "img": "MiG-17.jpeg",
       "warning": "Wing numbers may differ due to parts swapping; always verify with paperwork for accuracy.",
       "dots": [
         {
@@ -891,7 +894,7 @@ const permanentData = {
       ]
     },
     "MiG-29": {
-      "img": "MiG-29.png",
+      "img": "MiG-29.jpeg",
       "warning": "Check all plates to ensure accuracy",
       "dots": [
         {
@@ -929,7 +932,8 @@ const permanentData = {
   },
   "Harbin": {
     "Z9 Haitun": {
-      "img": "SA365.png",
+      "img": "SA365.jpeg",
+      "warning": "",
       "dots": [
         {
           "x": 85.875,
@@ -1485,7 +1489,7 @@ const permanentData = {
   },
   "Ilyushin": {
     "Il-18, Il-20, Il-22 & Il-38": {
-      "img": "Il-18.png",
+      "img": "Il-18.jpeg",
       "warning": "",
       "dots": [
         {
@@ -1791,7 +1795,7 @@ const permanentData = {
   },
   "Douglas": {
     "DC-5": {
-      "img": "DC-5.png",
+      "img": "DC-5.jpeg",
       "warning": "",
       "dots": []
     },
@@ -1952,7 +1956,7 @@ const permanentData = {
       "dots": []
     },
     "Fokker 70 & Fokker 100": {
-      "img": "F100.png",
+      "img": "F100.jpeg",
       "warning": "",
       "dots": [
         {
