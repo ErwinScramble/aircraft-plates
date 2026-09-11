@@ -2775,5 +2775,53 @@ const permanentData = {
         }
       ]
     }
+  },
+  "Air Tractor": {
+    "AT-802": {
+      "img": "AT-802.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 86.125,
+          "y": 53.73124899792667,
+          "info": "Fuselage, left side below stabilizer.",
+          "cnImg": "AT-802-loc1.jpg"
+        }
+      ]
+    }
+  },
+  "Xi'an": {
+    "Y-20": {
+      "img": "Y-20.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 79.25,
+          "y": 46.91592162655739,
+          "info": "Tail, left side (Painted).",
+          "cnImg": "Y-20-loc1.jpg"
+        }
+      ]
+    }
+  },
+  "Hongdu": {
+    "JL-8 / K-8": {
+      "img": "JL-8.jpeg",
+      "warning": "Export (Non-Chinese): L8 (or L8P) + 320 + 4-digit sequence (e.g., L83200316). Domestic (Chinese Air Force): 2-digit batch + 320 + 2-digit sequence (e.g., 0432013).",
+      "dots": [
+        {
+          "x": 68.5,
+          "y": 55.48240156137633,
+          "info": "Left wing flap. (Painted)",
+          "cnImg": "JL-8-loc1.jpg"
+        },
+        {
+          "x": 19.125,
+          "y": 55.0732224703262,
+          "info": "Electronics compartment, nose left side forward bulkhead. Note (K-8): The plate may only show shortened digits (e.g., '3-16'). The full c/n is decoded as follows: 'L8' (Type) + '320' (Factory Code) + '0316' (Production Sequence) = L83200316.",
+          "cnImg": "JL-8-loc2.jpg"
+        }
+      ]
+    }
   }
 };
