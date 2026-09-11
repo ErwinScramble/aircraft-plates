@@ -2017,7 +2017,14 @@ const permanentData = {
     "A350": {
       "img": "A350.jpeg",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 14.124999999999998,
+          "y": 38.73125128674512,
+          "info": "Main entry doorway (Door 1L). The suspension panel near the doorway; it must be held down slightly to view the plate.",
+          "cnImg": "A350-loc1.jpg"
+        }
+      ]
     },
     "A400M Atlas": {
       "img": "A400.jpeg",
@@ -2735,6 +2742,20 @@ const permanentData = {
           "y": 23.67411077562771,
           "info": "Tail (Painted).",
           "cnImg": "Z-42-loc2.JPG"
+        }
+      ]
+    }
+  },
+  "Cirrus": {
+    "SR22": {
+      "img": "SR22.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 77.25,
+          "y": 47.863303255366056,
+          "info": "Fuselage, left side below stabilizer.",
+          "cnImg": "SR22-loc1.jpg"
         }
       ]
     }
