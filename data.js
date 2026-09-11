@@ -1859,6 +1859,18 @@ const permanentData = {
           "cnImg": "DC3-loc1.jpg"
         }
       ]
+    },
+    "A-4 Skyhawk": {
+      "img": "A-4.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 67,
+          "y": 42.08770930523847,
+          "info": "Cockpit interior, rear bulkhead right side.",
+          "cnImg": ""
+        }
+      ]
     }
   },
   "Republic": {
