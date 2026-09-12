@@ -503,7 +503,8 @@ const permanentData = {
         {
           "x": 13,
           "y": 53.4104976871221,
-          "info": "Cockpit, bottom of the center console (left side)."
+          "info": "Cockpit, bottom of the center console (left side).",
+          "cnImg": "SA341-loc1.jpg"
         }
       ]
     },
@@ -1242,50 +1243,22 @@ const permanentData = {
       "warning": "",
       "dots": [
         {
-          "x": 63,
-          "y": 49.606251701593465,
-          "info": "Bulkhead, closest to the cockpit."
-        },
-        {
-          "x": 29.625,
-          "y": 61.043752137899475,
-          "info": "Weapon pylons, outer sides. (Painted)"
-        },
-        {
-          "x": 44.25,
-          "y": 60.66875212359436,
-          "info": "Fuselage, below the weapon pylons. (Painted)"
-        },
-        {
-          "x": 46.625,
-          "y": 70.2312524883748,
-          "info": "Inside the radio hatch, rear fuselage."
-        },
-        {
-          "x": 76.875,
-          "y": 52.79375182318694,
-          "info": "Inside the front canopy."
-        },
-        {
-          "x": 36.375,
-          "y": 58.23125203061112,
-          "info": "Launching rails, wingtip. (Painted)"
-        },
-        {
-          "x": 40.125,
-          "y": 57.48125200200088,
-          "info": "Launching rails, wingtip. (Painted)"
-        },
-        {
-          "x": 52.87500000000001,
-          "y": 55.2312519161702,
-          "info": "Main cabin doors (upward-opening), both sides. Note: Removable parts. Treat c/n with caution as doors may have been swapped."
-        },
-        {
-          "x": 63.125,
-          "y": 41.73125140118604,
+          "x": 75.75,
+          "y": 39.351130433554644,
           "info": "Inside air intakes (Painted).",
           "cnImg": "Mi-24-loc1.jpg"
+        },
+        {
+          "x": 54.75,
+          "y": 68.27215379284274,
+          "info": "Main undercarriage interior.",
+          "cnImg": "Mi-24-loc2.jpg"
+        },
+        {
+          "x": 67.25,
+          "y": 54.82758552797379,
+          "info": "Cargo door interior.",
+          "cnImg": "Mi-24-loc3.jpg"
         }
       ]
     },
@@ -2241,6 +2214,18 @@ const permanentData = {
           "cnImg": "Queen Air-loc1.JPG"
         }
       ]
+    },
+    "Beechcraft 1900": {
+      "img": "Beechcraft 1900.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 79.375,
+          "y": 50.669607936220416,
+          "info": "Aft fuselage, left side below horizontal strake.",
+          "cnImg": "Beech1900-loc1.jpg"
+        }
+      ]
     }
   },
   "SOCATA": {
@@ -2820,6 +2805,20 @@ const permanentData = {
           "y": 55.0732224703262,
           "info": "Electronics compartment, nose left side forward bulkhead. Note (K-8): The plate may only show shortened digits (e.g., '3-16'). The full c/n is decoded as follows: 'L8' (Type) + '320' (Factory Code) + '0316' (Production Sequence) = L83200316.",
           "cnImg": "JL-8-loc2.jpg"
+        }
+      ]
+    }
+  },
+  "Diamond": {
+    "DA62": {
+      "img": "DA62.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 74.625,
+          "y": 47.27681038826137,
+          "info": "Tail, lower left side.",
+          "cnImg": "DA62-loc1.jpg"
         }
       ]
     }
