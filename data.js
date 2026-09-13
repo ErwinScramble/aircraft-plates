@@ -64,6 +64,23 @@ const permanentData = {
       "img": "Pa-28.jpeg",
       "warning": "",
       "dots": []
+    },
+    "Emb.326": {
+      "img": "MB326.png",
+      "warning": "",
+      "dots": []
+    },
+    "Emb.312": {
+      "img": "Emb312.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 84.25,
+          "y": 74.0875058953128,
+          "info": "Fuselage, left side below stabilizer.",
+          "cnImg": "Emb312-loc1.jpg"
+        }
+      ]
     }
   },
   "Atlas Aircraft Corporation": {
@@ -501,8 +518,8 @@ const permanentData = {
       "warning": "",
       "dots": [
         {
-          "x": 13,
-          "y": 53.4104976871221,
+          "x": 9,
+          "y": 59.54375208067903,
           "info": "Cockpit, bottom of the center console (left side).",
           "cnImg": "SA341-loc1.jpg"
         }
@@ -2057,7 +2074,7 @@ const permanentData = {
           "x": 13.375,
           "y": 46.23124871182437,
           "info": "Forward passenger door-frame, right-hand side (mounted high).",
-          "cnImg": ""
+          "cnImg": "A320-loc1.jpg"
         }
       ]
     },
@@ -2199,6 +2216,18 @@ const permanentData = {
           "x": 47.25,
           "y": 55.41874906229969,
           "info": "On the lower right fuselage, just behind the wing, sometimes partly obscured by the flaps.",
+          "cnImg": null
+        },
+        {
+          "x": 11.75,
+          "y": 33.85625110077862,
+          "info": "Tail, between fin and rudder.",
+          "cnImg": "Beech58-loc1.jpg"
+        },
+        {
+          "x": 20.25,
+          "y": 49.793748847722966,
+          "info": "Fuselage, right side below stabilizer.",
           "cnImg": ""
         }
       ]
@@ -2451,7 +2480,14 @@ const permanentData = {
     "Pa-32": {
       "img": "Pa-28.jpeg",
       "warning": "",
-      "dots": []
+      "dots": [
+        {
+          "x": 82.25,
+          "y": 58.23125203061112,
+          "info": "Fuselage, left side next to stabilizer.",
+          "cnImg": "Pa-32-loc1.jpg"
+        }
+      ]
     }
   },
   "Shaanxi": {
@@ -2819,6 +2855,41 @@ const permanentData = {
           "y": 47.27681038826137,
           "info": "Tail, lower left side.",
           "cnImg": "DA62-loc1.jpg"
+        }
+      ]
+    }
+  },
+  "Short": {
+    "Tucano": {
+      "img": "Emb312.jpeg",
+      "warning": "",
+      "dots": []
+    }
+  },
+  "Columbia": {
+    "Columbia 400": {
+      "img": "Columbia 400.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 72.125,
+          "y": 51.923541308026955,
+          "info": "Fuselage, left side below stabilizer.",
+          "cnImg": "Columbia 400-loc1.jpg"
+        }
+      ]
+    }
+  },
+  "Dassault": {
+    "Mirage 2000": {
+      "img": "Mirage 2000.jpeg",
+      "warning": "Manufacturer's plate, adjacent to \"Serie AMD-BA\" text.",
+      "dots": [
+        {
+          "x": 60.5,
+          "y": 54.374842759926224,
+          "info": "Left main landing gear bay.",
+          "cnImg": "Mirage 2000-loc1.jpg"
         }
       ]
     }
