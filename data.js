@@ -2857,6 +2857,30 @@ const permanentData = {
           "cnImg": "DA62-loc1.jpg"
         }
       ]
+    },
+    "DA40": {
+      "img": "DA40.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 79.625,
+          "y": 50.15680093831324,
+          "info": "Fuselage, left side next to tailfin.",
+          "cnImg": "Da40-loc1.jpg"
+        }
+      ]
+    },
+    "DA42": {
+      "img": "DA42.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 83.125,
+          "y": 53.886206517006904,
+          "info": "Fuselage, left side next to tailfin.",
+          "cnImg": "DA42-loc1.jpg"
+        }
+      ]
     }
   },
   "Short": {
