@@ -1077,26 +1077,20 @@ const permanentData = {
         }
       ]
     },
-    "Ka-50": {
+    "Ka-50 & Ka-52": {
       "img": "Ka-50.jpeg",
       "warning": "",
       "dots": [
         {
-          "x": 76.875,
-          "y": 54.93512200625178,
-          "info": "left-hand side of the tail boom, near the horizontal stabilizer.",
-          "cnImg": "Ka-50-loc1.jpg"
-        },
-        {
-          "x": 79,
-          "y": 51.26689303697969,
-          "info": "Underneath the horizontal stabilizer.",
+          "x": 76.125,
+          "y": 54.73133461755511,
+          "info": "Tailboom, left side under horizontal stabilizer (Painted).",
           "cnImg": "Ka-50-loc2.jpg"
         },
         {
-          "x": 85.875,
-          "y": 45.764549583071556,
-          "info": "Left-hand side of the rudder.",
+          "x": 86.375,
+          "y": 44.54180970291042,
+          "info": "Rudder, left side. (painted)",
           "cnImg": "Ka-50-loc1.jpg"
         }
       ]
@@ -2795,6 +2789,18 @@ const permanentData = {
           "cnImg": "SR22-loc1.jpg"
         }
       ]
+    },
+    "Vision SF50": {
+      "img": "Vision SF50.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 78.875,
+          "y": 52.23124894070621,
+          "info": "Lower fuselage, left side.",
+          "cnImg": "Vision SF50-loc1.jpg"
+        }
+      ]
     }
   },
   "Air Tractor": {
@@ -2914,6 +2920,46 @@ const permanentData = {
           "y": 54.374842759926224,
           "info": "Left main landing gear bay.",
           "cnImg": "Mirage 2000-loc1.jpg"
+        }
+      ]
+    }
+  },
+  "Rockwell": {
+    "Commander 114": {
+      "img": "Commander 114.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 71.625,
+          "y": 57.81830478227713,
+          "info": "Lower fuselage, left side.",
+          "cnImg": "Commander 114-loc1.jpg"
+        }
+      ]
+    },
+    "Commander 112": {
+      "img": "Commander 114.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 71.5,
+          "y": 57.2561736979561,
+          "info": "Lower fuselage, left side.",
+          "cnImg": "Commander 114-loc1.jpg"
+        }
+      ]
+    }
+  },
+  "CASA/IPTN": {
+    "CN-235": {
+      "img": "CN-235.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 18.375,
+          "y": 52.79374896216389,
+          "info": "Cockpit doorframe interior, behind left pilot seat.",
+          "cnImg": "CN-235-loc1.jpg"
         }
       ]
     }
