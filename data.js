@@ -2963,5 +2963,51 @@ const permanentData = {
         }
       ]
     }
+  },
+  "Agusta": {
+    "A109": {
+      "img": "A109.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 20.25,
+          "y": 63.49984551048671,
+          "info": "Center console, left side.",
+          "cnImg": "A109-loc1.jpg"
+        }
+      ]
+    },
+    "A129 Mangusta": {
+      "img": "A129.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 68.875,
+          "y": 63.856249384164784,
+          "info": "Forward cockpit, center console right side (Gunner knee level).",
+          "cnImg": "A129-loc1.jpg"
+        }
+      ]
+    }
+  },
+  "AgustaWestland": {
+    "AW139": {
+      "img": "AW139.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 36.125,
+          "y": 92.73179047294512,
+          "info": "Cockpit interior, right footwell.",
+          "cnImg": "AW139-loc1.jpg"
+        },
+        {
+          "x": 70.875,
+          "y": 62.456868007270685,
+          "info": "Fuselage exterior, left side (USA-built).",
+          "cnImg": "AW139-loc2.jpg"
+        }
+      ]
+    }
   }
 };
