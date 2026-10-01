@@ -1855,8 +1855,8 @@ const permanentData = {
         {
           "x": 67,
           "y": 42.08770930523847,
-          "info": "Cockpit interior, rear bulkhead right side.",
-          "cnImg": ""
+          "info": "Cockpit interior, rear bulkhead left side.",
+          "cnImg": "A-4-loc1.jpg"
         }
       ]
     }
