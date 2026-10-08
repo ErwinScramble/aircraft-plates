@@ -2113,12 +2113,12 @@ const permanentData = {
   },
   "Pilatus": {
     "PC-9": {
-      "img": "T-6-texan2.png",
+      "img": "T-6-texan2.jpeg",
       "warning": "",
       "dots": []
     },
     "PC-7": {
-      "img": "T-6-texan2.png",
+      "img": "T-6-texan2.jpeg",
       "warning": "",
       "dots": []
     }
@@ -3008,6 +3008,54 @@ const permanentData = {
           "cnImg": "AW139-loc2.jpg"
         }
       ]
+    }
+  },
+  "Ayres": {
+    "Thrush": {
+      "img": "Thrush.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 58.25,
+          "y": 43.62285185919028,
+          "info": "Fuselage, left side next to cockpit.",
+          "cnImg": "Thrush-loc1.jpg"
+        }
+      ]
+    }
+  },
+  "Extra": {
+    "EA-230": {
+      "img": "Extra Aerobatics.jpeg",
+      "warning": "",
+      "dots": []
+    },
+    "EA-200": {
+      "img": "Extra Aerobatics.jpeg",
+      "warning": "",
+      "dots": []
+    },
+    "EA-260": {
+      "img": "Extra Aerobatics.jpeg",
+      "warning": "",
+      "dots": []
+    },
+    "EA-300": {
+      "img": "Extra Aerobatics.jpeg",
+      "warning": "",
+      "dots": [
+        {
+          "x": 54.625,
+          "y": 54.09386684957466,
+          "info": "Fuselage, left side behind wing.",
+          "cnImg": "Extra EA-300-loc1.jpg"
+        }
+      ]
+    },
+    "Extra NG": {
+      "img": "Extra Aerobatics.jpeg",
+      "warning": "",
+      "dots": []
     }
   }
 };
